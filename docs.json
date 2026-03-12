@@ -100,7 +100,9 @@
                   "indicators/order-flow/ob-imbalance",
                   "indicators/order-flow/trades-filter",
                   "indicators/order-flow/clouds",
-                  "indicators/order-flow/dom-on-chart"
+                  "indicators/order-flow/dom-on-chart",
+                  "indicators/order-flow/ob-depth-overlay",
+                  "indicators/order-flow/diamond-alerts"
                 ]
               },
               {
@@ -236,7 +238,9 @@
                   "en/indicators/order-flow/ob-imbalance",
                   "en/indicators/order-flow/trades-filter",
                   "en/indicators/order-flow/clouds",
-                  "en/indicators/order-flow/dom-on-chart"
+                  "en/indicators/order-flow/dom-on-chart",
+                  "en/indicators/order-flow/ob-depth-overlay",
+                  "en/indicators/order-flow/diamond-alerts"
                 ]
               },
               {

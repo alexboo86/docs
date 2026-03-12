@@ -1,0 +1,54 @@
+---
+title: "OB Depth Overlay"
+description: "Order Book Depth Overlay — colored bands behind candles showing bid/ask dominance at multiple depth levels."
+icon: "layer-group"
+---
+
+# OB Depth Overlay
+
+OB Depth Overlay renders **colored bands behind each candle** that represent the bid/ask dominance in the order book at different depth levels. Unlike OB Imbalance (which draws in a subchart), this overlay paints directly on the price chart, giving an instant visual read of where buy or sell pressure concentrates.
+
+{/* screenshot: OB Depth Overlay showing green/red bands behind candles */}
+
+## How It Works
+
+At each candle close, the indicator takes the last order book snapshot and computes dominance at **5 configurable depth bands** measured as a percentage distance from the last price:
+
+```
+Dominance = (Bids − Asks) / (Bids + Asks) × 100
+```
+
+| Band | Default Range | Meaning |
+|------|--------------|---------|
+| Band 1 | 0–1% | Closest to price — tightest spreads |
+| Band 2 | 1–2.5% | Near-price depth |
+| Band 3 | 2.5–5% | Mid-range depth |
+| Band 4 | 5–10% | Wider depth (disabled by default) |
+| Band 5 | 10–25% | Full book depth (disabled by default) |
+
+- **Positive dominance** → green band (bids dominate) below the candle
+- **Negative dominance** → red band (asks dominate) above the candle
+- **Band opacity** scales with the strength of dominance (stronger = more opaque)
+
+## Settings
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| **Opacity Cap** | 85% | Maximum band opacity at 100% dominance |
+| **Min Ratio Bids** | 10 | Minimum bid dominance (%) to show green band |
+| **Min Ratio Asks** | 10 | Minimum ask dominance (%) to show red band |
+| **Per-band toggles** | Bands 1-3 on, 4-5 off | Enable/disable individual bands |
+| **Per-band colors** | Green (bids), Red (asks) | Customize colors per band |
+
+## Trading Applications
+
+- **Confluence with price action**: green bands below support levels confirm passive buying interest
+- **Divergence detection**: price rising but ask bands growing signals potential reversal
+- **Multi-timeframe depth**: compare narrow bands (0-1%) vs wide bands (2.5-5%) — tight dominance often leads price, wide dominance provides context
+- **Combine with Delta**: overlay shows resting orders, delta shows aggressive execution
+
+## Notes
+
+- Data comes from order book snapshots taken every ~15 seconds
+- Each candle shows the **last snapshot** of that candle interval (candle-close printing)
+- Only available on exchanges that provide order book data (Binance Futures and Spot)

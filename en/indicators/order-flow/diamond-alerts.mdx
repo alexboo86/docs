@@ -1,0 +1,70 @@
+---
+title: "Diamond Alerts"
+description: "Spot + Perpetual orderbook confluence detection for reversal signals."
+icon: "gem"
+---
+
+# Diamond Alerts
+
+Diamond Alerts detect potential market reversal points by finding **confluence between Spot and Perpetual order books**. When both markets simultaneously show strong bid or ask dominance at the same depth level, a Diamond signal fires — indicating aligned institutional positioning across both venues.
+
+{/* screenshot: Diamond markers on chart — green diamonds below candles, red above */}
+
+## How It Works
+
+For each candle, the system:
+
+1. Takes the last order book snapshot from **Perpetual** (futures) market
+2. Takes the last order book snapshot from **Spot** market
+3. Computes bid/ask dominance at the configured depth band (default: 1-2.5% from price)
+4. If both markets exceed their respective thresholds → **Diamond signal**
+
+### Signal Types
+
+| Signal | Condition | Marker |
+|--------|-----------|--------|
+| **Diamond Long** 💎 | Perp bids > 40% AND Spot bids > 70% | Green ◆ below candle |
+| **Diamond Short** 💎 | Perp asks > 40% AND Spot asks > 70% | Red ◆ above candle |
+| **Double Diamond Long** 💎💎 | Both primary AND secondary bands show Long confluence | Larger green ◆ with outline |
+| **Double Diamond Short** 💎💎 | Both primary AND secondary bands show Short confluence | Larger red ◆ with outline |
+
+### Default Thresholds
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| Perp Bid Threshold | 40% | Minimum bid dominance on futures |
+| Spot Bid Threshold | 70% | Minimum bid dominance on spot |
+| Perp Ask Threshold | 40% | Minimum ask dominance on futures |
+| Spot Ask Threshold | 70% | Minimum ask dominance on spot |
+| Primary Band | 1–2.5% | Main depth range for detection |
+| Secondary Band | 2.5–5% | Extended range for Double Diamond |
+
+Thresholds are asymmetric by design: spot markets require stronger dominance because they reflect real buying/selling intent without leverage.
+
+## Settings
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| **Single Diamond** | On | Enable single diamond detection |
+| **Double Diamond** | On | Enable double diamond detection |
+| **Perp/Spot Thresholds** | See above | Adjustable per-direction thresholds |
+| **Primary/Secondary Band** | 1-2.5% / 2.5-5% | Depth ranges for analysis |
+| **Long Color** | Green | Diamond marker color for longs |
+| **Short Color** | Red | Diamond marker color for shorts |
+| **Marker Size** | 14 | Size of diamond markers in pixels |
+| **Marker Opacity** | 90% | Transparency of markers |
+| **Alert Rules** | All enabled (trumpet) | Configurable sound alerts per signal type |
+
+## Trading Applications
+
+- **Reversal entries**: Diamond Long at support = strong buy signal with cross-market confirmation
+- **Confluence filter**: use Diamond signals to filter entries from other indicators (RSI Divergence, FVG, etc.)
+- **Double Diamond = high conviction**: when both depth bands agree, the signal is stronger
+- **Time filtering**: works best on 1m-15m timeframes where orderbook data updates frequently
+
+## Notes
+
+- Only available on **futures charts** (`binancef`) — the indicator fetches spot data automatically
+- Both Spot and Perpetual order book snapshots must be available for the same candle
+- One diamond per candle maximum (deduplication prevents multiple signals on the same candle)
+- Sound alerts support repeat mode — fires on every new diamond, not just the first

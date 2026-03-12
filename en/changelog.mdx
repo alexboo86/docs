@@ -10,6 +10,37 @@ All notable user-facing changes to Cluster Terminal are documented here.
 
 ---
 
+## 0.3.0
+
+### New Indicators
+
+- **OB Depth Overlay** — colored bands behind candles showing bid/ask dominance at 5 orderbook depth levels (0-1%, 1-2.5%, 2.5-5%, 5-10%, 10-25%). Dominance formula: `(bids - asks) / (bids + asks)`. Configurable thresholds, opacity, and per-band colors.
+- **Diamond Alerts** — Spot + Perpetual orderbook confluence detection. Detects reversal points when both markets show bid or ask dominance simultaneously. Single and Double Diamond types with sound alerts and visual markers on chart.
+
+### Bug Fixes
+
+- **Net Longs/Shorts** — fixed bars showing ~10 per candle instead of 1. Now uses candle-close bucketing (last heatmap snapshot per candle).
+- **CVD Divergence** — fixed O(n²) performance issue causing slowdowns on large datasets.
+- **Delta Divergence** — improved calculation accuracy.
+- **Orderflows Divergence** — fixed detection logic.
+- **VWAP** — corrected session reset behavior.
+- **Liquidation Levels** — rendering improvements.
+- **Market Structure** — improved swing point detection.
+
+### Server
+
+- Heatmap collector for spot + futures orderbooks (15s snapshots).
+- New API routes: funding rate, heatmap data, metrics.
+- Import scheduler improvements and blob codec optimizations.
+- Orderbook cache performance improvements.
+
+### UI
+
+- DOM on Chart overlay — expanded functionality.
+- Persistent cache improvements for faster data loading.
+
+---
+
 ## 0.2.0 — Closed Beta
 
 <Note>
