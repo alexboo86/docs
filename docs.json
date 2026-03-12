@@ -11,6 +11,17 @@
   "appearance": {
     "default": "dark"
   },
+  "navbar": {
+    "links": [
+      { "label": "Community", "href": "https://t.me/alexboo_chat" },
+      { "label": "Contact", "href": "https://t.me/alexboo86" }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "telegram": "https://t.me/alexboo_chat"
+    }
+  },
   "search": {
     "prompt": "Поиск..."
   },
@@ -18,18 +29,6 @@
     "languages": [
       {
         "language": "ru",
-        "default": true,
-        "navbar": {
-          "links": [
-            { "label": "Сообщество", "href": "https://t.me/alexboo_chat" },
-            { "label": "Контакты", "href": "https://t.me/alexboo86" }
-          ]
-        },
-        "footer": {
-          "socials": {
-            "telegram": "https://t.me/alexboo_chat"
-          }
-        },
         "groups": [
           {
             "group": "Начало работы",
@@ -165,17 +164,6 @@
       },
       {
         "language": "en",
-        "navbar": {
-          "links": [
-            { "label": "Community", "href": "https://t.me/alexboo_chat" },
-            { "label": "Contact", "href": "https://t.me/alexboo86" }
-          ]
-        },
-        "footer": {
-          "socials": {
-            "telegram": "https://t.me/alexboo_chat"
-          }
-        },
         "groups": [
           {
             "group": "Getting Started",
