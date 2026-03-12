@@ -31,6 +31,12 @@
   "search": {
     "prompt": "Поиск..."
   },
+  "ai": {
+    "enabled": false
+  },
+  "chat": {
+    "enabled": false
+  },
   "navigation": {
     "languages": [
       {
