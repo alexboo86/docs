@@ -13,8 +13,14 @@
   },
   "navbar": {
     "links": [
-      { "label": "Community", "href": "https://t.me/alexboo_chat" },
-      { "label": "Contact", "href": "https://t.me/alexboo86" }
+      {
+        "label": "Community",
+        "href": "https://t.me/alexboo_chat"
+      },
+      {
+        "label": "Contact",
+        "href": "https://t.me/alexboo86"
+      }
     ]
   },
   "footer": {
@@ -29,107 +35,108 @@
     "languages": [
       {
         "language": "ru",
+        "default": true,
         "groups": [
           {
             "group": "Начало работы",
             "pages": [
-              "ru/index",
-              "ru/getting-started/installation",
-              "ru/getting-started/first-steps",
-              "ru/getting-started/licensing"
+              "index",
+              "getting-started/installation",
+              "getting-started/first-steps",
+              "getting-started/licensing"
             ]
           },
           {
             "group": "График",
             "pages": [
-              "ru/chart/candles",
-              "ru/chart/clusters",
-              "ru/chart/heatmap",
-              "ru/chart/tpo",
-              "ru/chart/drawing-tools"
+              "chart/candles",
+              "chart/clusters",
+              "chart/heatmap",
+              "chart/tpo",
+              "chart/drawing-tools"
             ]
           },
           {
             "group": "Оформление",
             "pages": [
-              "ru/appearance"
+              "appearance"
             ]
           },
           {
             "group": "Индикаторы",
             "pages": [
-              "ru/indicators/overview",
+              "indicators/overview",
               {
                 "group": "Классические",
                 "pages": [
-                  "ru/indicators/classic/sma",
-                  "ru/indicators/classic/ema",
-                  "ru/indicators/classic/vwap",
-                  "ru/indicators/classic/bollinger-bands",
-                  "ru/indicators/classic/rsi",
-                  "ru/indicators/classic/rsi-divergence",
-                  "ru/indicators/classic/macd",
-                  "ru/indicators/classic/session-levels",
-                  "ru/indicators/classic/volume-bars"
+                  "indicators/classic/sma",
+                  "indicators/classic/ema",
+                  "indicators/classic/vwap",
+                  "indicators/classic/bollinger-bands",
+                  "indicators/classic/rsi",
+                  "indicators/classic/rsi-divergence",
+                  "indicators/classic/macd",
+                  "indicators/classic/session-levels",
+                  "indicators/classic/volume-bars"
                 ]
               },
               {
                 "group": "Поток ордеров",
                 "pages": [
-                  "ru/indicators/order-flow/absorption-alpha",
-                  "ru/indicators/order-flow/delta-divergence",
-                  "ru/indicators/order-flow/cvd-divergence",
-                  "ru/indicators/order-flow/orderflows-divergence",
-                  "ru/indicators/order-flow/stacked-imbalance",
-                  "ru/indicators/order-flow/unfinished-business",
-                  "ru/indicators/order-flow/bar-statistics",
-                  "ru/indicators/order-flow/trade-counter",
-                  "ru/indicators/order-flow/ob-imbalance",
-                  "ru/indicators/order-flow/trades-filter",
-                  "ru/indicators/order-flow/clouds",
-                  "ru/indicators/order-flow/dom-on-chart"
+                  "indicators/order-flow/absorption-alpha",
+                  "indicators/order-flow/delta-divergence",
+                  "indicators/order-flow/cvd-divergence",
+                  "indicators/order-flow/orderflows-divergence",
+                  "indicators/order-flow/stacked-imbalance",
+                  "indicators/order-flow/unfinished-business",
+                  "indicators/order-flow/bar-statistics",
+                  "indicators/order-flow/trade-counter",
+                  "indicators/order-flow/ob-imbalance",
+                  "indicators/order-flow/trades-filter",
+                  "indicators/order-flow/clouds",
+                  "indicators/order-flow/dom-on-chart"
                 ]
               },
               {
                 "group": "Метрики",
                 "pages": [
-                  "ru/indicators/metrics/cvd",
-                  "ru/indicators/metrics/delta-volume",
-                  "ru/indicators/metrics/open-interest",
-                  "ru/indicators/metrics/net-longs",
-                  "ru/indicators/metrics/net-shorts",
-                  "ru/indicators/metrics/net-longs-shorts",
-                  "ru/indicators/metrics/funding-rate",
-                  "ru/indicators/metrics/liquidations",
-                  "ru/indicators/metrics/liquidation-map",
-                  "ru/indicators/metrics/liquidation-levels",
-                  "ru/indicators/metrics/active-buy-sell-volume",
-                  "ru/indicators/metrics/volume-ratio",
-                  "ru/indicators/metrics/trade-count-ratio",
-                  "ru/indicators/metrics/participation-ratio",
-                  "ru/indicators/metrics/transfer-of-contracts",
-                  "ru/indicators/metrics/avg-order-size",
-                  "ru/indicators/metrics/anchored-cvd",
-                  "ru/indicators/metrics/anchored-oi",
-                  "ru/indicators/metrics/long-short-ratio",
-                  "ru/indicators/metrics/whale-vs-retail",
-                  "ru/indicators/metrics/enhanced-liquidations"
+                  "indicators/metrics/cvd",
+                  "indicators/metrics/delta-volume",
+                  "indicators/metrics/open-interest",
+                  "indicators/metrics/net-longs",
+                  "indicators/metrics/net-shorts",
+                  "indicators/metrics/net-longs-shorts",
+                  "indicators/metrics/funding-rate",
+                  "indicators/metrics/liquidations",
+                  "indicators/metrics/liquidation-map",
+                  "indicators/metrics/liquidation-levels",
+                  "indicators/metrics/active-buy-sell-volume",
+                  "indicators/metrics/volume-ratio",
+                  "indicators/metrics/trade-count-ratio",
+                  "indicators/metrics/participation-ratio",
+                  "indicators/metrics/transfer-of-contracts",
+                  "indicators/metrics/avg-order-size",
+                  "indicators/metrics/anchored-cvd",
+                  "indicators/metrics/anchored-oi",
+                  "indicators/metrics/long-short-ratio",
+                  "indicators/metrics/whale-vs-retail",
+                  "indicators/metrics/enhanced-liquidations"
                 ]
               },
               {
                 "group": "SMC",
                 "pages": [
-                  "ru/indicators/smc/fvg",
-                  "ru/indicators/smc/market-structure",
-                  "ru/indicators/smc/order-blocks"
+                  "indicators/smc/fvg",
+                  "indicators/smc/market-structure",
+                  "indicators/smc/order-blocks"
                 ]
               },
               {
                 "group": "Профили",
                 "pages": [
-                  "ru/indicators/profiles/volume-profile",
-                  "ru/indicators/profiles/tpo-profile",
-                  "ru/indicators/profiles/multiple-hvn"
+                  "indicators/profiles/volume-profile",
+                  "indicators/profiles/tpo-profile",
+                  "indicators/profiles/multiple-hvn"
                 ]
               }
             ]
@@ -137,33 +144,33 @@
           {
             "group": "Рабочее пространство",
             "pages": [
-              "ru/workspace/workspaces",
-              "ru/workspace/tabs-layouts",
-              "ru/workspace/cloud-sync",
-              "ru/workspace/settings"
+              "workspace/workspaces",
+              "workspace/tabs-layouts",
+              "workspace/cloud-sync",
+              "workspace/settings"
             ]
           },
           {
             "group": "Дополнительно",
             "pages": [
-              "ru/advanced/dom",
-              "ru/advanced/hotkeys",
-              "ru/advanced/auto-updates",
-              "ru/advanced/alerts"
+              "advanced/dom",
+              "advanced/hotkeys",
+              "advanced/auto-updates",
+              "advanced/alerts"
             ]
           },
           {
             "group": "Поддержка",
             "pages": [
-              "ru/support/faq",
-              "ru/support/troubleshooting",
-              "ru/support/feedback"
+              "support/faq",
+              "support/troubleshooting",
+              "support/feedback"
             ]
           },
           {
             "group": "",
             "pages": [
-              "ru/changelog"
+              "changelog"
             ]
           }
         ]
