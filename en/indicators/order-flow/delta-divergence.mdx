@@ -1,0 +1,111 @@
+---
+title: "Delta Divergence"
+description: "Highlights candles where price direction contradicts the dominant delta."
+icon: "code-compare"
+---
+
+Delta Divergence identifies candles where the price direction and the delta (buy volume minus sell volume) disagree. This is one of the simplest yet most effective order flow signals: when a candle closes green but the net delta is negative, it means sellers were actually more aggressive despite the price increase. The opposite also applies -- a red candle with positive delta means buyers were dominant despite the price decline.
+
+These contradictions between price action and underlying order flow often mark exhaustion points and potential reversals.
+
+## How It Works
+
+For each completed candle, the indicator compares two values:
+
+1. **Price direction**: Did the candle close higher (bullish) or lower (bearish) than its open?
+2. **Net delta**: Was the total buy volume greater (positive delta) or less (negative delta) than the total sell volume?
+
+When these two values disagree, a divergence dot is placed on the candle.
+
+### Signal Types
+
+| Signal | Candle Close | Delta | Interpretation |
+|--------|-------------|-------|----------------|
+| **Bearish divergence** | Up (green candle) | Negative | Sellers were more aggressive, but price still rose. Buying pressure may be exhausting. |
+| **Bullish divergence** | Down (red candle) | Positive | Buyers were more aggressive, but price still fell. Selling pressure may be exhausting. |
+
+The logic behind delta divergence is rooted in market microstructure: if aggressive buyers are dominating (positive delta) but price cannot advance, it means passive sell limit orders are absorbing the buying pressure. This hidden supply or demand is a leading indicator of potential direction change.
+
+{/* screenshot: chart with delta divergence dots showing bearish divergence at a swing high and bullish divergence at a swing low */}
+
+## Lookback and Filtering
+
+The indicator uses a lookback mechanism to ensure that divergence signals occur at meaningful price levels rather than in the middle of random noise.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **lookbackPeriod** | Number of bars used to evaluate the context of the divergence. The indicator checks whether the current candle is at a local price extreme within this window. | 20 |
+| **localExtremumPeriod** | Number of bars on each side of the current candle required to confirm it as a local high or low. A value of 2 means the candle must be higher (or lower) than the 2 candles on each side. | 2 |
+
+<Note>
+The `localExtremumPeriod` acts as a noise filter. Higher values (3-5) ensure that divergence signals only appear at more significant swing points, but they also introduce a delay since the extremum cannot be confirmed until the required number of subsequent bars have formed.
+</Note>
+
+## Visual Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **bullishColor** | Color of the dot for bullish divergence signals. | #84cc16 |
+| **bearishColor** | Color of the dot for bearish divergence signals. | #ef4444 |
+| **dotSize** | Size of the divergence dot in pixels. | 8 |
+
+The dots are rendered directly on the candle where the divergence was detected -- bullish dots appear below the candle low, and bearish dots appear above the candle high.
+
+## Alert Rules
+
+| Event | Fires When |
+|-------|-----------|
+| **new_divergence** | A new delta divergence signal is confirmed at a local extremum. The alert payload includes the direction (bullish or bearish) and the candle timestamp. |
+
+Configure alert sounds and visual notifications in the global Alerts settings panel. Delta divergence alerts are especially useful on higher timeframes where each signal carries more weight.
+
+## Reading Delta Divergence
+
+### At Swing Highs (Bearish Divergence)
+
+When price makes a local high and the candle closes green, but delta is negative, it means:
+
+- Sellers were more aggressive than buyers inside that candle.
+- Despite the selling pressure, price managed to close higher -- likely due to thin liquidity above.
+- The move up may be exhaustion rather than genuine buying interest.
+- If subsequent candles fail to continue higher, the bearish divergence is confirmed.
+
+### At Swing Lows (Bullish Divergence)
+
+When price makes a local low and the candle closes red, but delta is positive, it means:
+
+- Buyers were more aggressive than sellers inside that candle.
+- Despite the buying pressure, price still closed lower -- likely due to thin liquidity below.
+- The move down may be exhaustion rather than genuine selling interest.
+- If subsequent candles fail to continue lower, the bullish divergence is confirmed.
+
+## Practical Usage
+
+### Best Timeframes
+
+| Timeframe | Suitability | Notes |
+|-----------|-------------|-------|
+| **1m - 5m** | Good | Frequent signals, best for scalping. Many will be noise. |
+| **15m - 1h** | Excellent | Balanced signal frequency and reliability. Ideal for intraday trading. |
+| **4h - 1d** | Strong | Fewer signals, but each one carries significant weight for swing trading. |
+
+### Confluence with Other Tools
+
+Delta divergence is a single-candle signal. Its reliability increases substantially when combined with:
+
+- **Market structure levels**: Divergence at a known support or resistance level is far more actionable than divergence in open space.
+- **Absorption Alpha**: If both absorption and delta divergence appear at the same level, the confluence is strong.
+- **Volume Profile VAH/VAL**: Divergence at a value area boundary suggests the market is rejecting an attempt to move outside fair value.
+- **CVD Divergence**: When single-candle delta divergence aligns with a multi-bar CVD divergence, the signal covers both micro and macro timeframes.
+
+### Common Pitfalls
+
+- **Trending markets**: In a strong trend, delta divergence signals against the trend are frequently overwhelmed by momentum. Use divergence as a reversal signal primarily at structural levels, not in the middle of a trend.
+- **Low volume candles**: Divergence on a candle with very low total volume is less meaningful. The delta difference may be just a few contracts rather than a genuine shift in aggression.
+- **Ignoring the lookback**: The lookback period and extremum filter exist for a reason. Without them, divergence would appear on nearly every other candle, making the signal useless.
+
+<Tip>
+Delta divergence at market structure levels (previous day high/low, weekly open, monthly VWAP) is one of the highest-probability reversal setups in order flow trading. When you see a divergence dot at a key level, watch the next 2-3 candles closely for follow-through.
+</Tip>
+
+{/* screenshot: delta divergence bearish signal at previous day high with subsequent reversal */}

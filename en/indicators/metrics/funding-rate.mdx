@@ -1,0 +1,96 @@
+---
+title: "Funding Rate"
+description: "Perpetual futures funding rate — shows whether longs or shorts are paying premium."
+icon: "percent"
+---
+
+## Overview
+
+**Funding Rate** displays the periodic fee exchanged between long and short position holders in perpetual futures markets. This mechanism keeps the perpetual contract price anchored to the spot price.
+
+- **Positive funding** = longs pay shorts. The market is over-leveraged long — more traders are betting on price going up, so longs pay a premium to shorts.
+- **Negative funding** = shorts pay longs. The market is over-leveraged short — shorts pay a premium.
+
+Funding rate is a direct measure of market sentiment and leverage positioning.
+
+{/* screenshot: Funding Rate histogram with green and red bars, showing extreme positive funding at a local top */}
+
+## How It Works
+
+Exchanges calculate funding rates at fixed intervals (typically every 8 hours on Binance). The rate is determined by the difference between the perpetual contract price and the spot index price, plus an interest rate component.
+
+When the perp trades above spot, funding is positive (longs pay). When below spot, funding is negative (shorts pay).
+
+## Chart Type
+
+| Property | Value |
+|----------|-------|
+| Type | Subchart |
+| Position | Below main chart |
+| Data source | Exchange-reported funding rate |
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| positiveColor | Color for positive funding (longs paying) | `#22c55e` |
+| negativeColor | Color for negative funding (shorts paying) | `#ef4444` |
+| lineWidth | Line thickness (in line mode) | `1.5` |
+| displayMode | Rendering style | `columns` |
+| highlightAnomalies | Flag statistical outliers | `false` |
+| anomalyThreshold | Standard deviation multiplier | `2.0` |
+| anomalyPeriod | Lookback period for anomaly stats | `30` |
+| gradientIntensity | Fill gradient strength (0-1) | `0` |
+
+## Interpretation
+
+### Normal Range
+
+Funding rates typically hover near zero (0.01% per 8h is considered baseline on Binance). Small fluctuations around this level are normal and reflect healthy market function.
+
+### Extreme Positive Funding
+
+When funding exceeds approximately 0.05-0.1% per interval, the market is heavily leveraged long. Longs are paying a significant premium to maintain their positions.
+
+<Tip>
+Extreme funding rates (above 0.1% or below -0.1%) often precede corrections. The market tends to move against the side paying premium as the cost becomes unsustainable and positions get closed.
+</Tip>
+
+### Extreme Negative Funding
+
+When funding drops well below zero, the market is heavily short. Shorts are paying longs to hold their positions. This can set up short squeezes.
+
+### Funding Rate Matrix
+
+| Funding | Price Action | Interpretation |
+|---------|-------------|----------------|
+| High positive | Price rising | Overheated rally — correction risk |
+| High positive | Price falling | Longs underwater and paying — capitulation likely |
+| High negative | Price falling | Overheated selloff — bounce risk |
+| High negative | Price rising | Shorts underwater and paying — squeeze in progress |
+| Near zero | Any | Balanced market — no leverage extreme |
+
+## Anomaly Detection
+
+When `highlightAnomalies` is enabled, funding rate readings that exceed the rolling average by more than the configured threshold are flagged. Funding anomalies often precede volatile moves as crowded positioning unwinds.
+
+<Warning>
+Funding rates are exchange-specific. Different exchanges may show different funding rates for the same asset. Cluster Terminal shows the rate for the selected exchange.
+</Warning>
+
+## Practical Examples
+
+- **Top detection**: Funding spikes to 0.15% during a rally — longs are extremely leveraged. High probability of a correction.
+- **Bottom fishing**: Funding deeply negative (-0.1%+) after a selloff — shorts are paying heavy premium, potential squeeze.
+- **Trend health**: Moderate positive funding (0.02-0.05%) during an uptrend — healthy, not overheated.
+- **Carry trade signal**: Consistently high funding creates a cost for holding longs — consider shorter holding periods.
+
+<Note>
+Funding rate alone is not a timing tool. Extreme funding can persist for extended periods during strong trends. Combine with price action and other indicators for entry timing.
+</Note>
+
+## Related Indicators
+
+- [Open Interest](/en/indicators/metrics/open-interest) — total positions (funding affects cost of holding)
+- [Liquidations](/en/indicators/metrics/liquidations) — forced closures when funding costs become unbearable
+- [Net Longs/Shorts](/en/indicators/metrics/net-longs-shorts) — order book positioning

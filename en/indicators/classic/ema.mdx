@@ -1,0 +1,137 @@
+---
+title: "EMA"
+description: "Exponential Moving Average — faster-reacting trend line."
+icon: "chart-line"
+---
+
+# Exponential Moving Average (EMA)
+
+The Exponential Moving Average is a trend-following indicator that places **greater weight on recent closing prices**, making it more responsive to new information than the Simple Moving Average. This faster reaction time makes the EMA popular among active traders who need timely signals.
+
+{/* screenshot: EMA(21) on a BTC/USDT 15m chart showing faster reaction to price moves compared to SMA */}
+
+## How It Works
+
+The EMA is calculated recursively using a smoothing multiplier:
+
+```
+Multiplier = 2 / (period + 1)
+EMA_today = (Close_today × Multiplier) + (EMA_yesterday × (1 - Multiplier))
+```
+
+For the initial value, the first EMA is seeded with a Simple Moving Average of the first `period` bars. From that point forward, each new bar's EMA depends on the previous EMA and the current close, creating an exponentially decaying weight distribution.
+
+### Weight Distribution
+
+In a 21-period EMA:
+
+- The most recent close receives approximately **9.5%** of the total weight.
+- The second-most-recent receives ~8.6%, the third ~7.8%, and so on.
+- Bars beyond 3 × period ago contribute negligibly.
+
+This front-loading of weight is what makes the EMA react faster to price changes — a sudden move in the latest candle immediately shifts the EMA, while an SMA must wait for the old data to rotate out of the window.
+
+### Indicator Type
+
+**Overlay** — the EMA line is drawn directly on the price chart, sharing the same Y-axis as candlesticks.
+
+## Settings
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `period` | number | 21 | Lookback period for the exponential calculation. Lower values react faster; higher values produce smoother lines. |
+| `color` | color | `#22c55e` | Color of the EMA line. |
+| `lineWidth` | number | 1.5 | Thickness of the EMA line in pixels. |
+
+### Period Selection Guide
+
+| Period | Common Use |
+|--------|------------|
+| 8–9 | Scalping on 1m–5m charts, very fast signals |
+| 12–13 | Short-term momentum, used inside MACD (fast component) |
+| 21 | Standard short-term trend reference (Fibonacci number) |
+| 26 | Used inside MACD (slow component) |
+| 50 | Intermediate trend, popular on daily and 4h charts |
+| 100 | Position trading filter |
+| 200 | Long-term institutional reference |
+
+<Tip>
+The 21-period EMA is the default because 21 is a Fibonacci number and closely approximates one month of trading on a daily chart. Many crypto traders use 8, 13, 21, 55 (all Fibonacci numbers) as their EMA periods for a natural scaling progression.
+</Tip>
+
+## Interpretation
+
+### Trend Identification
+
+- **Price above EMA**: Short-term trend is bullish. The EMA provides dynamic support.
+- **Price below EMA**: Short-term trend is bearish. The EMA provides dynamic resistance.
+- **EMA slope steep**: Strong momentum in the direction of the slope.
+- **EMA slope flattening**: Momentum is fading; potential reversal or consolidation ahead.
+
+### EMA as Dynamic Support/Resistance
+
+Because the EMA reacts faster to price, it hugs price action more tightly than the SMA. This makes it effective as a trailing dynamic level:
+
+- In a strong uptrend, price tends to bounce off the EMA on pullbacks.
+- In a strong downtrend, price tends to reject at the EMA on rallies.
+- The tighter the EMA follows price, the more "respect" the market shows for it.
+
+{/* screenshot: Price repeatedly bouncing off EMA(21) during a trending move on 15m chart */}
+
+### EMA Crossover Strategies
+
+Two EMAs of different periods produce crossover signals:
+
+- **Bullish crossover**: Fast EMA crosses above slow EMA — momentum shifting to buyers.
+- **Bearish crossover**: Fast EMA crosses below slow EMA — momentum shifting to sellers.
+
+Popular EMA crossover pairs:
+
+| Fast | Slow | Context |
+|------|------|---------|
+| 8 | 21 | Scalping and intraday |
+| 12 | 26 | MACD-derived signals |
+| 21 | 55 | Swing trading |
+| 50 | 200 | Position trading, major trend shifts |
+
+### EMA Ribbon
+
+An advanced technique uses 6–8 EMAs with incrementing periods (e.g., 8, 13, 21, 34, 55, 89) to create a "ribbon" effect:
+
+- **Ribbon fanning out**: Strong trend initiation. All EMAs spreading apart in order.
+- **Ribbon converging**: Trend weakening or transitioning. EMAs bunching together.
+- **Ribbon twisting**: Trend reversal in progress. Short EMAs crossing through long EMAs.
+
+To create a ribbon in Cluster Terminal, add multiple EMA instances with different periods and assign each a slightly different color shade.
+
+<Tip>
+EMA reacts faster than SMA to price changes, which makes it the preferred choice for short-term and intraday trading. However, this faster reaction also means more false signals in choppy, sideways markets. Consider pairing EMA with a trend strength indicator or a higher-timeframe filter.
+</Tip>
+
+## EMA vs. SMA — When to Choose EMA
+
+| Scenario | Recommendation |
+|----------|---------------|
+| Scalping or day trading | EMA — faster signals matter more than smoothness |
+| Identifying major trend direction | SMA — stability prevents premature signals |
+| Dynamic trailing stop | EMA — tighter tracking keeps stops closer to price |
+| Crossover signals | EMA — earlier signals (but confirm with volume) |
+| Long-term position filter | SMA — fewer whipsaws on daily/weekly charts |
+| Volatile crypto markets | EMA on lower TF, SMA on higher TF — best of both |
+
+## Practical Considerations
+
+- **First bars**: The EMA needs approximately `period × 3` bars of data to fully stabilize. Values in the first few bars after chart load may not be fully representative.
+- **Gap handling**: In traditional markets, gaps can distort the EMA. In 24/7 crypto markets, this is less of a concern, but exchange maintenance windows can still cause brief discontinuities.
+- **Multiple timeframe confirmation**: An EMA(21) bullish signal on the 15-minute chart is stronger if the 4-hour chart's EMA(21) is also in an uptrend. Always consider the higher timeframe context.
+
+## Alerts
+
+The EMA indicator does **not** support built-in alert rules. For EMA-based alerts (crossovers, price touching EMA), use the general Alerts system.
+
+## Related Indicators
+
+- [SMA](/en/indicators/classic/sma) — Simple Moving Average, equal-weight alternative
+- [VWAP](/en/indicators/classic/vwap) — Volume-weighted price average
+- [MACD](/en/indicators/classic/macd) — Built on EMA crossover logic (12/26/9)
+- [Bollinger Bands](/en/indicators/classic/bollinger-bands) — Volatility bands around a moving average

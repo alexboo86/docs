@@ -1,0 +1,129 @@
+---
+title: "Anchored OI"
+description: "Open Interest changes reset at session boundaries."
+icon: "anchor"
+---
+
+## Overview
+
+Anchored OI shows the cumulative change in Open Interest from a configurable session start. Instead of viewing raw OI values (which can be very large and hard to interpret), you see how much OI has **changed since the session opened**.
+
+- **Positive values** — Net positions opened since session start
+- **Negative values** — Net positions closed since session start
+
+{/* screenshot: Anchored OI subchart with blue positive and orange negative bars, daily resets visible */}
+
+## How It Works
+
+Open Interest represents the total number of outstanding futures contracts. Anchored OI tracks the **delta from session start**:
+
+```
+Anchored OI = Current OI - OI at Session Start
+```
+
+This resets at each session boundary (D1, 4H, or 1H), giving you a clean view of position flow within each session.
+
+The key insight comes from combining Anchored OI direction with price direction:
+
+| Anchored OI | Price | Interpretation |
+|-------------|-------|---------------|
+| Rising | Rising | New longs opening — bullish conviction |
+| Rising | Falling | New shorts opening — bearish conviction |
+| Falling | Rising | Short covering rally — potentially weak |
+| Falling | Falling | Long liquidation — potentially exhaustive |
+
+<Tip>
+Compare Anchored OI with Anchored CVD — if both rise, new longs are entering with buying pressure. If OI rises but CVD falls, new shorts are opening despite buying activity. This combination is one of the most powerful positioning signals available.
+</Tip>
+
+## Interpretation
+
+### Rising Anchored OI
+
+Positions are being **opened**. New money is entering the market. This adds fuel to the current move:
+
+- With rising price: new longs are confident, trend likely to continue
+- With falling price: new shorts are aggressive, downtrend has conviction
+
+### Falling Anchored OI
+
+Positions are being **closed**. Money is leaving the market. The current move may be running out of steam:
+
+- With rising price: short covering, not genuine buying — potential for reversal once covering ends
+- With falling price: long liquidation — once liquidation is done, selling pressure may ease
+
+### Flat Anchored OI
+
+No significant position changes. The market is in balance — existing participants are holding, but no new money is flowing in.
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `positiveColor` | Color for positive OI change (positions opening) | `#3b82f6` |
+| `negativeColor` | Color for negative OI change (positions closing) | `#f97316` |
+| `anchor` | Reset interval: `D1`, `4H`, or `1H` | `D1` |
+| `sessionStartHour` | Hour (UTC) for daily session start | `0` |
+| `displayMode` | Visualization style: `line`, `columns`, or `candles` | `columns` |
+| `highlightAnomalies` | Highlight extreme OI changes | `true` |
+| `anomalyThreshold` | Standard deviations for anomaly detection | `2.5` |
+| `anomalyPeriod` | Lookback period for anomaly calculation | `50` |
+| `gradientIntensity` | Scale bar opacity by magnitude | `true` |
+
+## Anchor Modes
+
+### D1 — Daily Reset
+
+Resets at `sessionStartHour` (UTC) each day. Shows total position change for the trading day. Most useful for swing and day trading.
+
+### 4H — Four-Hour Reset
+
+Resets every 4 hours from midnight UTC. Reveals position flow within 4H candle formation periods. Useful for medium-term analysis.
+
+### 1H — Hourly Reset
+
+Resets every hour. Shows micro-level position changes. Best for scalping and very short-term trading.
+
+## Display Modes
+
+- **Columns** — Default histogram. Blue above zero (positions opening), orange below (positions closing).
+- **Line** — Continuous plot of OI change from session start.
+- **Candles** — OHLC rendering of OI change values per bar.
+
+<Note>
+Anchored OI is a futures-only indicator. It requires open interest data from the exchange and is not available for spot markets.
+</Note>
+
+## Anomaly Detection
+
+With `highlightAnomalies` enabled, extreme OI changes within a session are highlighted. These typically indicate:
+
+- Large fund entering or exiting a position
+- Margin call cascades forcing position closure
+- Options expiry-related hedging flows
+- Market maker delta hedging activity
+
+## Combined Analysis: Anchored OI + Anchored CVD
+
+The most powerful use of Anchored OI is in combination with Anchored CVD:
+
+| Anchored OI | Anchored CVD | Signal |
+|-------------|-------------|--------|
+| Rising | Rising | New longs — strongest bullish signal |
+| Rising | Falling | New shorts — strongest bearish signal |
+| Falling | Rising | Short covering — weak bullish |
+| Falling | Falling | Long liquidation — weak bearish |
+
+## Practical Examples
+
+**Genuine Breakout**: Price breaks above resistance. Anchored OI surges positive — new positions are being opened at the breakout level, confirming genuine interest rather than just stop runs.
+
+**Short Squeeze Detection**: Price rises sharply. Anchored OI falls while Anchored CVD rises — shorts are being forced to close. Once the short covering ends, the rally may stall.
+
+**Distribution Detection**: Price makes new session highs but Anchored OI is flat or falling — no new longs are being added at higher prices. Smart money may be distributing to late buyers.
+
+## Related Indicators
+
+- [Anchored CVD](/en/indicators/metrics/anchored-cvd) — Volume delta from session start
+- [Open Interest](/en/indicators/metrics/open-interest) — Raw open interest data
+- [Transfer of Contracts](/en/indicators/metrics/transfer-of-contracts) — Net contract flow

@@ -1,0 +1,179 @@
+---
+title: "Indicators Overview"
+description: "How to add, configure, and manage indicators in Cluster Terminal."
+icon: "flask"
+---
+
+# Indicators Overview
+
+Cluster Terminal provides a comprehensive set of **38 technical indicators** spanning classic analysis, order flow metrics, volume profiling, and smart money concepts. Every indicator is fully configurable and can be combined freely on any chart.
+
+## Opening the Indicators Panel
+
+To add indicators to your chart:
+
+1. Click the **Indicators** button in the chart toolbar (flask icon), or press the keyboard shortcut **`I`**.
+2. The indicator browser opens, organized by category: Classic, Order Flow, Metrics, Profiles, and SMC.
+3. Use the search bar at the top to filter by name.
+4. Click on any indicator to add it to the active chart.
+
+{/* screenshot: Indicator browser panel with category tabs and search bar */}
+
+<Tip>
+You can add the same indicator multiple times with different settings — for example, three SMA overlays with periods 20, 50, and 200.
+</Tip>
+
+## Indicator Types
+
+Every indicator belongs to one of three display types, which determines where it renders on the chart:
+
+| Type | Description | Examples |
+|------|-------------|----------|
+| **Overlay** | Drawn directly on the price chart, sharing the price axis | SMA, EMA, VWAP, Bollinger Bands, Session Levels |
+| **Subchart** | Rendered in a separate panel below the main chart with its own Y-axis | RSI, MACD, CVD, Delta, Funding Rate |
+| **Side Panel** | Displayed as a vertical panel alongside the chart | Volume Profile, TPO Profile |
+
+Overlay indicators do not affect the price scale unless their values diverge significantly from price. Subchart indicators automatically allocate vertical space and can be resized by dragging the divider between panels.
+
+## Adding and Removing Indicators
+
+### Adding
+
+Select any indicator from the browser to add it. The indicator immediately appears on the chart with default settings. A settings dialog opens automatically so you can customize parameters before closing.
+
+### Removing
+
+To remove an indicator:
+
+1. Right-click on the indicator's label in the chart legend (overlays) or the subchart header (subchart indicators).
+2. Select **Remove** from the context menu.
+
+Alternatively, open the indicator's settings dialog and click the **Delete** button at the bottom.
+
+### Reordering
+
+Subchart indicators can be reordered by dragging their header panels up or down. The order is preserved in your workspace.
+
+## Common Settings
+
+Many indicators share a standard set of configuration options. These are documented once here to avoid repetition on individual indicator pages.
+
+### Display Mode
+
+```
+displayMode: "line" | "columns" | "candles"
+```
+
+Controls how the indicator's data series is rendered:
+
+| Mode | Description |
+|------|-------------|
+| `line` | Continuous line connecting data points. Best for smooth oscillators (RSI, MACD line). |
+| `columns` | Vertical bars anchored to the zero line. Best for histogram-style data (Delta, Volume). |
+| `candles` | OHLC-style candle bodies. Used when the indicator produces open/high/low/close values. |
+
+Not all modes are available for every indicator — the settings dialog only shows applicable options.
+
+### Anomaly Highlighting
+
+When enabled, the indicator highlights bars that are statistical outliers — values significantly above the recent average.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `highlightAnomalies` | boolean | `false` | Enable/disable anomaly highlighting |
+| `anomalyThreshold` | number | 2.0–3.0 | Number of standard deviations above the mean to qualify as anomaly |
+| `anomalyPeriod` | number | 20–50 | Lookback window (in bars) for calculating mean and standard deviation |
+
+The calculation is straightforward: for each bar, compute the mean and standard deviation of the indicator's value over the last `anomalyPeriod` bars. If the current value exceeds `mean + (anomalyThreshold × stddev)`, it is flagged as an anomaly and rendered with a distinct highlight color.
+
+<Tip>
+Start with the default threshold and adjust based on how many highlights you see. Lower values (1.5–2.0) produce more highlights; higher values (3.0+) only flag extreme spikes.
+</Tip>
+
+### Gradient Intensity
+
+When enabled, bar opacity scales proportionally with the value's magnitude relative to the visible range.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `gradientIntensity` | boolean | `false` | Enable/disable gradient opacity scaling |
+| `minOpacity` | number | 0.25 | Minimum opacity for the lowest-value bars (range 0.0–1.0) |
+
+Bars with higher values appear more opaque, while low-value bars fade toward `minOpacity`. This provides an intuitive visual heat effect without adding extra indicators.
+
+### Bar Width
+
+```
+barWidth: 0.7
+```
+
+Controls the width of columns relative to the candle spacing. A value of `1.0` means columns touch edge-to-edge with no gap; `0.5` means each column occupies half the available space. The default `0.7` provides a balanced look.
+
+## Premium Visual Styles
+
+Four premium rendering styles are available on select indicators (currently 4 indicators support them):
+
+| Style | Description |
+|-------|-------------|
+| **Flat** | Standard solid-color rendering with no effects. The default. |
+| **Neon** | Bright, saturated colors with a soft outer glow resembling neon signage. |
+| **Gradient** | Top-to-bottom color gradient within each bar or line stroke. |
+| **Chrome** | Metallic reflective sheen with highlight and shadow gradients. |
+
+Premium styles are purely cosmetic and do not affect indicator calculations.
+
+### Glow Effect
+
+Indicators that support premium styles also expose glow controls:
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `enableGlow` | boolean | `false` | Enable the outer glow effect around the indicator |
+| `glowIntensity` | number | 0.5 | Brightness of the glow (0.0–1.0) |
+| `glowLayers` | number | 2 | Number of stacked glow layers for a more pronounced bloom |
+
+Higher `glowLayers` values create a more diffuse, atmospheric glow but may slightly increase rendering cost on large charts.
+
+## Alerts
+
+**18 out of 38** indicators support configurable alert rules. When an indicator's conditions are met, Cluster Terminal fires an alert with sound and visual notification.
+
+Alert-capable indicators display an **Alert** section in their settings dialog where you can:
+
+- Enable or disable alert firing for that indicator instance.
+- Choose which conditions trigger the alert (e.g., RSI crossing above overbought, MACD signal crossover).
+- Set a cooldown period to avoid repeated alerts from the same condition.
+
+For full details on configuring and managing alerts, see the [Alerts](/en/alerts) documentation page.
+
+## Indicator Categories
+
+Cluster Terminal organizes indicators into five categories:
+
+| Category | Count | Description |
+|----------|-------|-------------|
+| **Classic** | ~12 | Traditional technical analysis: moving averages, oscillators, bands, levels |
+| **Order Flow** | ~10 | Trade-level analysis: delta, CVD, absorption, footprint metrics |
+| **Metrics** | ~8 | Derived market metrics: funding rate, open interest, liquidations |
+| **Profiles** | ~4 | Volume and time-based profile visualizations |
+| **SMC** | ~4 | Smart money concepts: order blocks, fair value gaps, structure |
+
+Browse each category in the sidebar to learn about individual indicators, their settings, and practical usage tips.
+
+<Tip>
+You can combine indicators from different categories on the same chart. A common setup is VWAP + Volume Profile + Delta — mixing classic, profile, and order flow perspectives.
+</Tip>
+
+## Performance Considerations
+
+All indicators are computed client-side using WebGL-accelerated rendering via SciChart. However, a few guidelines help keep the experience smooth:
+
+- **Limit subchart count**: More than 5–6 subchart panels on a single chart tab can reduce vertical space for each panel. Consider splitting across tabs.
+- **Anomaly + gradient**: Enabling both `highlightAnomalies` and `gradientIntensity` on many indicators simultaneously adds per-bar computation. On charts with 10,000+ bars, this may cause a brief delay on initial load.
+- **Glow layers**: Setting `glowLayers` above 3 on multiple indicators is GPU-intensive. Use sparingly on lower-end hardware.
+
+## Next Steps
+
+- Browse individual indicator pages in the sidebar for detailed settings and usage tips.
+- Learn how to set up [Alerts](/en/alerts) on supported indicators.
+- Explore [Workspaces](/en/workspaces) to save and share your indicator configurations.

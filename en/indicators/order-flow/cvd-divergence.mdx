@@ -1,0 +1,132 @@
+---
+title: "CVD Divergence"
+description: "Detects divergences between price and Cumulative Volume Delta."
+icon: "code-merge"
+---
+
+CVD Divergence detects situations where price makes a new swing high or low, but the Cumulative Volume Delta (the running total of buy volume minus sell volume) fails to confirm the move. Unlike Delta Divergence which analyzes a single candle, CVD Divergence examines the trend of cumulative order flow over multiple bars, making it a structural rather than tactical signal.
+
+## What Is CVD?
+
+Cumulative Volume Delta (CVD) is the running sum of delta across all candles in the visible range. Starting from a reset point (session open, day start, or the beginning of the chart), each candle's delta (buy volume minus sell volume) is added to the running total.
+
+- **Rising CVD**: Buyers have been more aggressive than sellers over the accumulation period.
+- **Falling CVD**: Sellers have been more aggressive than buyers over the accumulation period.
+
+When price and CVD move together, the trend is internally consistent. When they diverge, it signals that the underlying order flow does not support the price trend -- a condition that often precedes reversals.
+
+## How CVD Divergence Works
+
+The indicator identifies swing highs and swing lows in both price and CVD using a fractal-based method. It then compares the two series:
+
+### Bearish CVD Divergence
+
+Price makes a **higher high**, but CVD makes a **lower high** (or fails to make a new high). This means:
+
+- Price reached a new extreme, but the cumulative buying pressure behind it was weaker than the previous swing.
+- The rally is losing order flow support.
+- Sellers may be gaining control beneath the surface.
+
+### Bullish CVD Divergence
+
+Price makes a **lower low**, but CVD makes a **higher low** (or fails to make a new low). This means:
+
+- Price reached a new low, but cumulative selling pressure was weaker than the previous swing.
+- The decline is losing order flow support.
+- Buyers may be absorbing the selling pressure.
+
+{/* screenshot: chart with CVD subchart showing bearish divergence -- price higher high, CVD lower high, with connecting lines */}
+
+## Settings
+
+### Detection Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **lookbackPeriod** | Number of bars the indicator scans to find swing points for divergence comparison. Larger values detect longer-term divergences. | 20 |
+| **minDistanceBetweenPoints** | Minimum number of bars that must separate two swing points used in a divergence. Prevents detecting divergences between adjacent candles. | 3 |
+| **fractalSize** | The strength of the fractal used to identify swing highs and lows. A fractal of size N requires N bars on each side of the pivot to confirm it. Options: `3`, `4`, `5`. | 5 |
+| **resetPeriod** | How often the CVD running total resets to zero: `none`, `day`, `week`, `month`. Resetting prevents old data from dominating the cumulative calculation. | day |
+
+<Note>
+The `fractalSize` parameter has a significant impact on signal behavior. A fractal size of 3 detects smaller, more frequent swings and produces more divergence signals. A fractal size of 5 requires stronger, more established swing points and produces fewer but more reliable signals. For swing trading, use 5. For intraday scalping, 3 or 4 may be more appropriate.
+</Note>
+
+### Visual Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **dotSize** | Size of the divergence marker dot in pixels. | 8 |
+| **showLines** | Draw connecting lines between the two swing points that form the divergence. These lines make the divergence pattern visually obvious. | true |
+| **bullishColor** | Color for bullish divergence markers and lines. | #84cc16 |
+| **bearishColor** | Color for bearish divergence markers and lines. | #ef4444 |
+
+## Display Modes
+
+CVD Divergence operates as both an **overlay** and a **subchart**:
+
+- **Overlay**: Divergence dots and connecting lines appear directly on the price chart at the swing points where the divergence was detected.
+- **Subchart**: The CVD line itself is plotted in a separate panel below the price chart, allowing you to visually compare the CVD trend with price action.
+
+The combination of both views makes it straightforward to verify divergences: the connecting lines on the price chart highlight the divergence, and the subchart shows the actual CVD trajectory.
+
+## Reset Period
+
+The reset period determines when the CVD running total resets to zero. This is an important parameter because CVD is a cumulative measure, and without resets, data from days or weeks ago can dominate the current reading.
+
+| Reset Period | Behavior | Best For |
+|-------------|----------|----------|
+| **none** | CVD never resets. The running total accumulates from the first visible bar. | Long-term structural analysis |
+| **day** | CVD resets at the start of each trading day (00:00 UTC). | Intraday trading (recommended default) |
+| **week** | CVD resets at the start of each week. | Swing trading across multiple days |
+| **month** | CVD resets at the start of each month. | Position trading |
+
+<Tip>
+Match the reset period to your trading session. If you trade intraday and close all positions by end of day, use `day`. If you hold positions for multiple days, `week` or `none` provides better context for multi-day divergences.
+</Tip>
+
+## Alert Rules
+
+| Event | Fires When |
+|-------|-----------|
+| **new_divergence** | A new CVD divergence is confirmed after the fractal swing point is validated. The alert includes direction (bullish or bearish) and the bar timestamp. |
+
+Because CVD divergence requires fractal confirmation (waiting for N bars after the swing point), alerts fire with a delay equal to the fractal size. This delay is inherent to the signal and ensures the swing point is genuine.
+
+## CVD Divergence vs. Delta Divergence
+
+These two indicators are complementary, not redundant:
+
+| Aspect | Delta Divergence | CVD Divergence |
+|--------|-----------------|----------------|
+| **Scope** | Single candle | Multi-bar trend |
+| **Speed** | Real-time (fires on bar close) | Delayed (requires fractal confirmation) |
+| **Signal type** | Tactical (entry timing) | Structural (trend exhaustion) |
+| **Noise level** | Higher (many single-bar anomalies) | Lower (cumulative smoothing) |
+| **Best use** | Scalp entries at known levels | Identifying trend reversals |
+
+When both indicators align -- a CVD divergence at a swing high combined with a delta divergence on the candle at that high -- the confluence creates a high-probability reversal setup.
+
+## Practical Usage
+
+### Best Timeframes
+
+| Timeframe | Suitability | Notes |
+|-----------|-------------|-------|
+| **1m - 5m** | Moderate | Many signals, frequent resets needed. Best with `day` reset. |
+| **15m - 1h** | Excellent | Strong balance of signal quality and frequency. |
+| **4h - 1d** | Excellent | Fewer signals but very reliable for swing trading. Use `week` or `none` reset. |
+
+### Confluence Setups
+
+- **Support/Resistance levels**: CVD divergence at a major support or resistance level adds order flow confirmation to a structural price level.
+- **Volume Profile extremes**: Divergence at a low-volume node (LVN) suggests the market is rejecting an attempt to push through thin liquidity.
+- **Absorption Alpha**: When absorption markers appear at the same swing point where CVD divergence is detected, the signal is reinforced from both micro and macro perspectives.
+
+### Common Pitfalls
+
+- **Wrong reset period**: Using `none` on a 1-minute chart accumulates days of data, making the CVD line dominated by old history. Always match the reset period to your trading horizon.
+- **Fractal too small**: A fractal size of 3 on a 1-minute chart fires frequently and many signals will be noise. Increase fractal size on lower timeframes.
+- **Ignoring the trend**: CVD divergence in the middle of a strong trend may be premature. The most reliable signals occur at established price extremes where the trend is extended.
+
+{/* screenshot: CVD divergence bullish signal at a multi-day low with CVD subchart showing higher low while price made lower low */}

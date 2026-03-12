@@ -1,0 +1,157 @@
+---
+title: "Volume Bars"
+description: "Volume histogram at the bottom of the chart showing traded volume per candle."
+icon: "chart-column"
+---
+
+# Volume Bars
+
+Volume Bars display the **total traded volume for each candlestick** as vertical bars at the bottom of the price chart. Volume is the single most important confirmation tool in technical analysis — it validates (or invalidates) every price move, breakout, and reversal. A price move without supporting volume is suspect; a price move with strong volume is conviction.
+
+{/* screenshot: Volume Bars at the bottom of a BTC/USDT 1h chart with green/red coloring matching candle direction */}
+
+## How It Works
+
+For each bar on the chart, the indicator draws a vertical column whose height represents the total volume traded during that candle's time period. The volume includes both buy and sell trades aggregated together.
+
+The bars are colored based on the **candle direction**:
+
+- **Up candle** (close >= open): Bar uses the `upColor`.
+- **Down candle** (close < open): Bar uses the `downColor`.
+
+The bars are rendered in the lower portion of the price chart, occupying a configurable percentage of the chart height. They do not have their own Y-axis — instead, the tallest bar in the visible range fills the allocated height, and all other bars scale proportionally.
+
+### Volume Data Source
+
+In Cluster Terminal, volume data comes from the centralized server which aggregates trade data from the exchange. The volume values represent:
+
+- **Futures**: The total notional value or contract count traded (depending on exchange reporting).
+- **Spot**: The total base currency volume traded.
+
+Volume is pre-aggregated to match the selected chart timeframe. A 1-hour candle shows 1 hour of cumulative volume; a daily candle shows 24 hours.
+
+### Indicator Type
+
+**Overlay** (bottom area) — Volume Bars are drawn in the lower portion of the main price chart, overlapping with the candlestick area but visually separated by transparency.
+
+## Settings
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `upColor` | color | `#22c55e` | Color for volume bars on up candles (close >= open). |
+| `downColor` | color | `#ef4444` | Color for volume bars on down candles (close < open). |
+| `opacity` | number | 0.35 | Transparency of the volume bars (0.0 = invisible, 1.0 = solid). The default 0.35 keeps bars visible without obscuring price action. |
+| `heightPercent` | number | 20 | Percentage of the chart height occupied by volume bars. Range: 5–50. |
+| `useThemeColors` | boolean | `true` | When enabled, up/down colors automatically match the chart's candle colors from the current theme. When disabled, uses the custom `upColor` and `downColor` values. |
+
+### Height Percent Guide
+
+| Value | Visual Effect | Best For |
+|-------|--------------|----------|
+| 5–10 | Minimal, subtle background | Maximizing price chart space, volume as secondary reference |
+| 15–20 | Balanced (default range) | General trading, volume visible without dominating |
+| 25–35 | Prominent | Volume-focused analysis, order flow trading |
+| 40–50 | Dominant | Volume is the primary analysis focus, price secondary |
+
+<Tip>
+An opacity of 0.30–0.40 and height of 20% strikes the best balance: volume bars are clearly visible for analysis but transparent enough that candlestick patterns near the bottom of the chart remain readable.
+</Tip>
+
+## Interpretation
+
+### Volume Confirms Price
+
+The foundational principle of volume analysis:
+
+| Price Action | Volume | Interpretation |
+|-------------|--------|----------------|
+| Price rising | Volume increasing | Strong bullish move — conviction from buyers. Trend likely to continue. |
+| Price rising | Volume decreasing | Weak rally — fewer participants buying at higher prices. Potential exhaustion. |
+| Price falling | Volume increasing | Strong bearish move — conviction from sellers. Decline likely to continue. |
+| Price falling | Volume decreasing | Weak selloff — selling pressure fading. Potential bottoming. |
+
+### Volume Spikes
+
+A volume spike is a bar with significantly higher volume than the surrounding bars (typically 2x or more the recent average). Volume spikes are important because they mark moments of high conviction or panic:
+
+- **Volume spike at support**: Buyers aggressively defending a level. Potential bottom.
+- **Volume spike at resistance**: Sellers aggressively capping price. Potential top.
+- **Volume spike on breakout**: Genuine breakout with participation. Likely to follow through.
+- **Volume spike on reversal candle**: Climactic move. Often marks the exhaustion point of a trend.
+
+{/* screenshot: Volume spike at a support level with a bullish engulfing candle */}
+
+### Volume and Breakouts
+
+Volume is the most reliable breakout confirmation tool:
+
+| Breakout Type | Volume Behavior | Reliability |
+|--------------|-----------------|-------------|
+| Breakout with volume surge (2x+ average) | High conviction, many participants | High — likely to sustain |
+| Breakout with average volume | Moderate conviction | Medium — monitor for follow-through |
+| Breakout with low volume | Low conviction, few participants | Low — likely a false breakout |
+
+A common pattern is the **volume dry-up** before a breakout: volume contracts over several bars as price consolidates in a tight range, then explodes on the breakout bar. This sequence (low volume → spike) is one of the most reliable patterns in technical analysis.
+
+### Volume Profile vs. Volume Bars
+
+Volume Bars show volume **over time** (per candle), while Volume Profile shows volume **by price level**. They answer different questions:
+
+- **Volume Bars**: "How much was traded during this period?" — temporal analysis.
+- **Volume Profile**: "How much was traded at this price?" — spatial analysis.
+
+Both are valuable and complementary. Volume Bars help you assess momentum and conviction in real-time; Volume Profile helps you identify key price levels where significant activity occurred.
+
+<Tip>
+Volume spikes at support or resistance levels are among the most reliable signals in technical analysis. A high-volume bounce off support shows strong demand; a high-volume rejection at resistance shows strong supply. Always check volume when price reaches a key level.
+</Tip>
+
+### Volume Patterns
+
+Several recognizable volume patterns provide trading insight:
+
+**Climax Volume:**
+An extremely high volume bar (3x+ average) often marks the end of a move, not the beginning. When a trend culminates in a climax volume bar, it frequently represents the last burst of buying (in an uptrend) or selling (in a downtrend) before exhaustion.
+
+**Volume Dry-Up:**
+A series of decreasing volume bars indicates waning interest at the current price level. This often precedes either:
+- A breakout (if occurring during consolidation near a key level).
+- A reversal (if occurring during a trend, suggesting participants are no longer interested in continuing).
+
+**Volume Divergence:**
+When price makes a new high but volume on that bar is lower than the previous high's volume, it signals weakening momentum. This is the volume equivalent of RSI divergence and is especially powerful when both occur simultaneously.
+
+**Accumulation/Distribution:**
+- **Accumulation**: Price in a range with higher volume on up bars than down bars. Smart money is quietly buying.
+- **Distribution**: Price in a range with higher volume on down bars than up bars. Smart money is quietly selling.
+
+## Combining with Other Indicators
+
+| Companion | Combined Insight |
+|-----------|-----------------|
+| **VWAP** | High volume at VWAP = institutional activity at the benchmark price |
+| **Session Levels** | Volume spike at PDH/PDL = strong conviction at the session boundary |
+| **Bollinger Bands** | Squeeze breakout + volume spike = confirmed volatility expansion |
+| **RSI** | RSI divergence + volume divergence = double momentum warning |
+| **MACD** | MACD crossover + volume surge = confirmed momentum shift |
+| **Delta** | Volume spike + neutral delta = two-sided battle; volume spike + one-sided delta = directional conviction |
+
+## Practical Considerations
+
+- **Relative, not absolute**: Volume should always be assessed relative to recent average volume, not as an absolute number. 10,000 BTC volume is high for an altcoin but low for BTC/USDT.
+- **Time-of-day effects**: Crypto volume follows predictable intraday patterns — higher during US and Asian market hours, lower during off-hours. A "spike" at 3 AM UTC may simply be normal Asian session volume. Compare to the same time of day, not to the daily average.
+- **Weekend volume**: Saturday and Sunday typically see 30–50% lower volume than weekdays. Breakouts on weekends with low volume are less reliable.
+- **Exchange-specific**: Volume data is exchange-specific. Binance Futures volume is not the same as Bybit volume. Cluster Terminal sources from the configured exchange.
+- **Futures vs. spot**: Futures volume can be inflated by leverage. A $100M volume bar in perpetual futures does not mean $100M of capital changed hands — much of it is leveraged. Spot volume is a more accurate measure of real capital flow.
+- **Opacity tuning**: If you find volume bars obscuring important candlestick patterns at the bottom of the chart, reduce opacity to 0.2–0.25 or reduce `heightPercent`. If volume is your primary analysis tool, increase both.
+
+## Alerts
+
+Volume Bars do **not** support built-in alert rules. For volume-based alerts (e.g., volume spike detection), use the general Alerts system or consider the anomaly highlighting feature on order flow indicators that incorporate volume.
+
+## Related Indicators
+
+- [VWAP](/en/indicators/classic/vwap) — Volume-weighted price average, the institutional volume benchmark
+- [SMA](/en/indicators/classic/sma) — Apply an SMA to volume to create a "volume moving average" for spike detection
+- [Bollinger Bands](/en/indicators/classic/bollinger-bands) — Volatility context that pairs with volume analysis
+- [Session Levels](/en/indicators/classic/session-levels) — Key levels where volume behavior is most meaningful

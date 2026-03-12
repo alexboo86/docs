@@ -1,0 +1,88 @@
+---
+title: "Trade Count Ratio"
+description: "Normalized ratio of buy to sell trade count — ranges from -1 to +1."
+icon: "sliders"
+---
+
+## Overview
+
+Trade Count Ratio applies the same normalization as Volume Ratio but uses the **number of trades** instead of volume:
+
+```
+Trade Count Ratio = (buyTrades - sellTrades) / (buyTrades + sellTrades)
+```
+
+The result ranges from **-1** (all trades are sells) to **+1** (all trades are buys). This reveals whether directional activity is driven by many participants or a few large players.
+
+{/* screenshot: Trade Count Ratio histogram in subchart, green and red bars */}
+
+## How It Works
+
+While Volume Ratio tells you the magnitude of buying vs selling, Trade Count Ratio tells you the **breadth**. A high Volume Ratio with a low Trade Count Ratio means a small number of large orders are driving the imbalance — likely institutional activity.
+
+This distinction is critical for understanding the nature of market moves:
+
+- **High trade count + high volume** — Broad-based move with strong conviction
+- **Low trade count + high volume** — Few large players driving the move
+- **High trade count + low volume** — Many small participants, retail-dominated
+
+## Interpretation
+
+| Scenario | Volume Ratio | Trade Count Ratio | Meaning |
+|----------|-------------|-------------------|---------|
+| Institutional buying | High positive | Near zero or low | Few large buy orders |
+| Retail panic selling | Near zero | High negative | Many small sell orders |
+| Broad-based rally | High positive | High positive | Everyone buying |
+| Institutional distribution | Near zero or negative | Near zero | Large sells absorbed by retail buys |
+
+<Tip>
+Compare Trade Count Ratio with Volume Ratio side by side. When trade count shows buying but volume shows selling, large sellers are disguising their activity among many small retail buys.
+</Tip>
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `positiveColor` | Color for positive (buy-dominant) bars | `#22c55e` |
+| `negativeColor` | Color for negative (sell-dominant) bars | `#ef4444` |
+| `displayMode` | Visualization style: `line`, `columns`, or `candles` | `columns` |
+| `highlightAnomalies` | Highlight statistically unusual readings | `true` |
+| `anomalyThreshold` | Standard deviations for anomaly detection | `2.5` |
+| `anomalyPeriod` | Lookback period for anomaly calculation | `30` |
+| `gradientIntensity` | Scale bar opacity by value magnitude | `true` |
+
+## Display Modes
+
+- **Columns** — Default histogram view. Best for quick visual scanning.
+- **Line** — Continuous line connecting ratio values. Good for identifying trends.
+- **Candles** — OHLC representation of ratio values per bar.
+
+## Anomaly Detection
+
+When `highlightAnomalies` is enabled, bars that deviate more than `anomalyThreshold` standard deviations from the rolling mean are visually highlighted. Anomalies in trade count ratio often indicate:
+
+- Flash crash or flash rally events
+- Coordinated bot activity
+- Sudden shift in market participant composition
+
+## Gradient Intensity
+
+With `gradientIntensity` enabled, bar opacity scales proportionally to the absolute ratio value. Near-zero readings fade out, keeping your focus on meaningful imbalances.
+
+<Note>
+Trade Count Ratio is most informative on lower timeframes (1m–15m) where individual trade granularity is preserved. On higher timeframes, aggregation dilutes the signal.
+</Note>
+
+## Practical Examples
+
+**Detecting Iceberg Orders**: Price drops sharply, Trade Count Ratio is near zero (few trades), but Volume Ratio is very negative — a single large seller using iceberg orders.
+
+**Retail FOMO Detection**: After a breakout, Trade Count Ratio spikes to extreme positive while Volume Ratio is moderate — many small buyers chasing the move.
+
+**Smart Money Accumulation**: Trade Count Ratio oscillates near zero while price slowly grinds up and Volume Ratio trends positive — large players accumulating quietly.
+
+## Related Indicators
+
+- [Volume Ratio](/en/indicators/metrics/volume-ratio) — Same concept using volume instead of trade count
+- [Average Order Size](/en/indicators/metrics/avg-order-size) — Direct measure of order size
+- [Whale vs Retail](/en/indicators/metrics/whale-vs-retail) — Explicit size-based segmentation

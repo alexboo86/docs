@@ -1,0 +1,308 @@
+---
+title: "Appearance"
+description: "Customize themes, fonts, colors, crosshair, and visual templates for your trading workspace."
+icon: "palette"
+---
+
+Cluster Terminal provides extensive visual customization to match your trading environment. Every color, font, and visual element can be adjusted through the appearance settings panel, accessible from the toolbar gear icon or via **Settings → Appearance**.
+
+## Themes
+
+Themes control the base color palette across the entire application -- chart background, grid, axis labels, toolbar, DOM panel, indicator overlays, and all dialog windows.
+
+### Available Themes
+
+| Theme           | Background   | Style                                                        |
+|-----------------|--------------|--------------------------------------------------------------|
+| Dark            | `#1a1a2e`    | Default. Deep dark background optimized for extended trading sessions. |
+| Light           | `#f8f9fa`    | Clean white surface for bright ambient environments.         |
+| Moderate Dark   | `#2d2d3d`    | Softer dark with reduced contrast, less eye strain.          |
+| Moderate Light  | `#e8e8e8`    | Warm off-white, comfortable under mixed lighting.            |
+| Dracula         | `#282a36`    | Purple-accented dark theme with vivid syntax colors.         |
+| Nord            | `#2e3440`    | Cool blue-gray palette from the Nord color project.          |
+| Solarized       | `#002b36`    | Ethan Schoonover's precision-engineered color scheme.        |
+| Tokyo Night     | `#1a1b26`    | Vibrant dark theme with neon accent colors.                  |
+| Gruvbox         | `#282828`    | Retro warm palette with earthy tones.                        |
+
+Switching themes updates all panels simultaneously -- chart surfaces, the DOM widget, indicator sub-charts, the toolbar, and workspace dialogs all inherit the new palette. Theme changes apply instantly with no restart required.
+
+<Tip>
+If you trade on multiple monitors with different brightness levels, consider Moderate Dark or Nord. They produce less eye strain than pure black backgrounds under mixed lighting conditions.
+</Tip>
+
+## Font Settings
+
+Typography settings control text rendering across the entire terminal.
+
+### Font Family
+
+Choose from a curated list of monospace and proportional fonts. Monospace fonts are recommended for cluster and DOM panels where column alignment matters.
+
+| Font              | Type        | Best For                                    |
+|-------------------|-------------|---------------------------------------------|
+| Inter             | Proportional| Toolbar, dialogs, general UI (default)      |
+| JetBrains Mono    | Monospace   | Cluster cells, DOM, numeric data            |
+| Fira Code         | Monospace   | Cluster cells with ligature support         |
+| Roboto Mono       | Monospace   | Compact numeric display                     |
+| System Default    | Varies      | Uses your operating system font             |
+
+### Font Size
+
+Font size is configurable independently for different areas of the interface:
+
+- **Chart axis labels** -- price scale and time scale text (default: 11px)
+- **Cluster cell values** -- volume numbers inside cluster cells (default: 10px)
+- **Indicator labels** -- indicator names and current values on the chart (default: 11px)
+- **DOM panel** -- price levels and volume columns (default: 12px)
+- **Toolbar** -- button labels and dropdown text (default: 12px)
+
+{/* screenshot: font-size-comparison.png -- side-by-side of 10px, 12px, and 14px cluster text */}
+
+<Tip>
+On high-DPI displays (4K, Retina), increase font sizes by 1--2px above the defaults. The terminal respects your system DPI scaling, but manual fine-tuning often produces better results for numeric-heavy panels like clusters and DOM.
+</Tip>
+
+### Text Rendering
+
+Text rendering quality can be set to **Auto**, **Subpixel** (ClearType on Windows), or **Grayscale**. Subpixel rendering produces sharper text on LCD monitors. Grayscale is preferred for OLED displays where subpixel patterns can cause color fringing.
+
+## Chart Colors
+
+Override individual chart element colors without switching your entire theme. Color overrides are applied on top of the active theme and persist independently.
+
+### Grid Lines
+
+Configure horizontal and vertical grid lines separately:
+
+| Property         | Options                        | Default          |
+|------------------|--------------------------------|------------------|
+| Horizontal color | Any color via picker           | Theme-dependent  |
+| Vertical color   | Any color via picker           | Theme-dependent  |
+| Opacity          | 0% (hidden) to 100%           | 15%              |
+| Style            | Solid, Dashed, Dotted         | Solid            |
+
+<Tip>
+Reduce grid opacity to 5--10% when using cluster or heatmap mode. Grid lines at full opacity compete with volume-colored cells for visual attention.
+</Tip>
+
+### Axis Text
+
+- **Price axis color** -- text color for the vertical price scale
+- **Time axis color** -- text color for the horizontal time scale
+- **Current price label** -- background and text color of the real-time price marker on the Y axis
+
+### Watermark
+
+The watermark displays the current symbol name (e.g., BTCUSDT) as a semi-transparent label centered on the chart background. Configure visibility (on/off), opacity (0--30%, default 8%), font size (small/medium/large), and color.
+
+{/* screenshot: watermark-example.png -- chart with BTCUSDT watermark at 8% opacity */}
+
+## Candlestick Colors
+
+Customize bullish and bearish candle rendering with full control over body, border, and wick colors.
+
+### Bullish (Up) Candles
+
+| Element   | Description                              | Default      |
+|-----------|------------------------------------------|--------------|
+| Body      | Fill color of the candle body            | `#10b981` (green) |
+| Border    | Outline drawn around the candle body     | Same as body |
+| Wick      | Vertical line extending from body to H/L | Same as body |
+
+### Bearish (Down) Candles
+
+| Element   | Description                              | Default      |
+|-----------|------------------------------------------|--------------|
+| Body      | Fill color of the candle body            | `#ef4444` (red) |
+| Border    | Outline drawn around the candle body     | Same as body |
+| Wick      | Vertical line extending from body to H/L | Same as body |
+
+<Note>
+Candle color overrides apply per workspace by default. To set global candle colors that apply to all workspaces, use **Settings → Global Defaults → Candle Colors**. Setting the border to a slightly different shade than the body creates a subtle 3D effect on dense timeframes.
+</Note>
+
+{/* screenshot: candle-color-settings.png -- the candle color picker panel */}
+
+## Cluster Colors
+
+Cluster cell coloring is driven by volume intensity -- cells with higher volume receive more saturated colors, letting you identify significant levels instantly.
+
+### Color Scheme
+
+Select from predefined color schemes or create custom gradients:
+
+| Scheme         | Low Volume     | High Volume     | Character                          |
+|----------------|----------------|-----------------|------------------------------------|
+| Default Green  | Dark green     | Bright green    | Neutral, works with most themes    |
+| Heat           | Dark red       | Bright yellow   | Aggressive, highlights extremes    |
+| Blue Gradient  | Navy           | Cyan            | Cool-toned, low visual fatigue     |
+| Monochrome     | Dark gray      | White           | Minimal, pairs well with indicators|
+| Custom         | User-defined   | User-defined    | Full control over gradient stops   |
+
+### Gradation Strength
+
+Controls how aggressively color scales with volume. A value of **1.0** applies linear scaling. Values above 1.0 use exponential scaling that makes high-volume cells stand out more, while values below 1.0 compress the range so moderate volumes also receive visible coloring. Range: 0.5 (compressed) to 2.0 (aggressive). Default: 1.0.
+
+### Cell Text and Readability
+
+- **Text color** -- the numeric value displayed inside each cell (default: white)
+- **Text shadow** -- a subtle dark halo behind the text to ensure readability against bright cell backgrounds. Enabled by default; disable if you prefer a flat look.
+- **Transparency** -- global cell opacity (default: 90%). Lowering transparency lets grid lines and indicators show through cluster cells.
+
+### POC (Point of Control)
+
+The POC line marks the highest-volume price level in each candle:
+
+| Property     | Options                     | Default          |
+|--------------|-----------------------------|------------------|
+| Color        | Any color via picker        | `#f59e0b` (amber)|
+| Style        | Solid, Dashed, Dotted      | Solid            |
+| Width        | 1px, 2px, 3px              | 2px              |
+| Extend       | Within candle / Full width  | Within candle    |
+
+### Value Area
+
+The value area highlights the price range containing approximately 70% of the candle's total volume:
+
+| Property     | Options                     | Default          |
+|--------------|-----------------------------|------------------|
+| Fill color   | Any color via picker        | Theme accent     |
+| Opacity      | 0% to 50%                  | 15%              |
+| Border       | On / Off                    | Off              |
+| Percentage   | 50% to 90%                 | 70%              |
+
+{/* screenshot: cluster-colors-panel.png -- the cluster color settings with gradient preview */}
+
+<Tip>
+For long trading sessions, use the Blue Gradient or Monochrome scheme with gradation strength around 1.2. These combinations minimize eye fatigue while keeping significant volume levels clearly visible.
+</Tip>
+
+## Heatmap Colors
+
+The heatmap visualizes order book depth as a color field behind the price chart. Color settings control how bid and ask liquidity are rendered.
+
+### Color Gradient
+
+The heatmap uses a cold-to-hot gradient where low liquidity maps to cold colors and high liquidity maps to hot colors:
+
+| Level        | Default Color  | Represents                         |
+|--------------|----------------|------------------------------------|
+| None         | Transparent    | No resting orders at this level    |
+| Low          | Dark blue      | Thin liquidity                     |
+| Medium       | Purple / Magenta| Moderate order density            |
+| High         | Yellow / White | Heavy liquidity walls              |
+
+Custom gradients support up to 5 color stops for precise control.
+
+### Opacity and Contrast
+
+- **Opacity** (default: 70%) -- controls how much the candlestick chart shows through. Lower values let candles dominate; higher values make the liquidity map more prominent.
+- **Contrast** -- adjusts the curve between low and high values. Low contrast shows all liquidity levels evenly. High contrast makes only major walls visible while noise fades away.
+
+{/* screenshot: heatmap-contrast-comparison.png -- low, medium, and high contrast side by side */}
+
+## Crosshair
+
+The crosshair tracks your cursor position and displays real-time price and time coordinates.
+
+### Mode
+
+| Mode             | Description                                           |
+|------------------|-------------------------------------------------------|
+| Cross            | Full crosshair -- horizontal and vertical lines (default) |
+| Horizontal Only  | Price tracking line only                              |
+| Vertical Only    | Time tracking line only                               |
+| Off              | No crosshair displayed                                |
+
+### Style
+
+| Property     | Options                     | Default   |
+|--------------|-----------------------------|-----------|
+| Color        | Any color via picker        | Gray      |
+| Line style   | Solid, Dashed, Dotted      | Dashed    |
+| Width        | 1px, 2px, 3px              | 1px       |
+
+### Labels and Snap
+
+- **Price label** -- shows the exact price at the cursor position on the Y axis. Background color matches the crosshair color.
+- **Time label** -- shows the exact timestamp at the cursor position on the X axis.
+- **OHLCV tooltip** -- displays open, high, low, close, and volume for the candle under the cursor.
+- **Snap to OHLC** -- when enabled, the horizontal line snaps to the nearest open, high, low, or close value instead of tracking raw mouse position. Useful for precise alignment with key price levels.
+
+<Tip>
+Use a dotted crosshair with reduced opacity when working with the heatmap. A solid crosshair at full opacity can obscure the underlying order book visualization.
+</Tip>
+
+## Indicator Colors
+
+Indicators use a default color palette that automatically assigns distinct colors to each active indicator. You can override colors individually per indicator.
+
+### Default Palette and Per-Indicator Overrides
+
+The default palette contains 12 visually distinct colors designed for readability against both dark and light themes. When you add a new indicator, it receives the next unused color from the palette. Each indicator also exposes its own color settings in its configuration panel:
+
+- **Line color** -- primary line or histogram fill
+- **Signal line** -- secondary line (e.g., signal line on MACD)
+- **Fill color** -- area fill between lines (e.g., Bollinger Band fill)
+- **Zero line** -- baseline reference for oscillators
+- **Positive / Negative** -- directional coloring for histogram-style indicators
+
+### Premium Visual Styles
+
+Cluster Terminal includes four premium rendering styles that transform how indicators are drawn:
+
+| Style     | Description                                                           |
+|-----------|-----------------------------------------------------------------------|
+| Flat      | Standard solid fill, clean and minimal (default)                      |
+| Neon      | Bright edges with outer glow effect, cyberpunk aesthetic              |
+| Gradient  | Smooth color transitions from peak to trough, adds depth             |
+| Chrome    | Metallic sheen with highlight reflections, high visual impact         |
+
+### Glow Intensity
+
+For Neon, Gradient, and Chrome styles, a glow intensity slider (0--100%, default 50%) controls the strength of the luminous effect.
+
+### Anomaly Highlighting
+
+When anomaly detection is active on an indicator, extreme values are highlighted with a pulsing border or background flash. Configure the anomaly highlight color independently from the indicator's base color.
+
+{/* screenshot: premium-styles-comparison.png -- flat, neon, gradient, chrome side by side on RSI */}
+
+<Note>
+Premium visual styles use WebGL shaders. On systems with older integrated graphics, Flat style provides the best performance.
+</Note>
+
+## Visual Templates
+
+Visual templates let you save a complete appearance configuration -- theme, all color overrides, font settings, crosshair preferences -- as a named preset you can recall instantly.
+
+### Creating a Template
+
+1. Configure your theme, colors, fonts, and crosshair as desired.
+2. Open the appearance panel and click **Save as Template**.
+3. Enter a descriptive name (e.g., "Night Session - High Contrast Clusters").
+
+### Applying a Template
+
+<Tabs>
+  <Tab title="Single Chart">
+    Right-click the chart tab and select **Apply Template**, then choose from your saved templates. Only the selected chart is affected.
+  </Tab>
+  <Tab title="All Charts">
+    Open the appearance panel and click **Apply to All Charts** next to the template name. Every open chart pane updates to match.
+  </Tab>
+</Tabs>
+
+Templates persist across workspaces and sessions. They are included in cloud sync if your license includes the `cloud_sync` feature, so your visual presets follow you across devices. You can also rename, duplicate, or delete templates from the template list.
+
+<Tip>
+Create separate templates for different trading scenarios -- for example, a high-contrast cluster template for scalping and a muted heatmap template for swing analysis. Switching templates takes one click and reconfigures your entire visual environment instantly.
+</Tip>
+
+## Resetting Appearance
+
+Open **Settings → Appearance** and click **Reset to Theme Defaults** to clear all color overrides while keeping your current theme, or **Reset All** to restore the factory Dark theme and clear all overrides, font changes, and crosshair settings.
+
+<Warning>
+Reset All cannot be undone. Saved templates are not affected -- only the active appearance settings are reset.
+</Warning>

@@ -1,0 +1,169 @@
+---
+title: "Stacked Imbalance"
+description: "Detects consecutive price levels with strong buy/sell imbalance — key supply/demand zones."
+icon: "layer-group"
+---
+
+Stacked Imbalance detects zones where multiple consecutive price levels within a candle exhibit a strong directional volume imbalance. When three or more adjacent price levels all show buying dominance (or selling dominance) beyond a configurable ratio, it signals aggressive institutional commitment at that price zone. These stacked zones frequently become future support or resistance levels.
+
+## How Imbalance Stacking Works
+
+At each price level within a cluster candle, the indicator calculates the ratio between buy volume and sell volume. An imbalance exists when one side exceeds the other by the configured ratio threshold. For example, with a ratio of 150% (1.5:1):
+
+- A level with 300 buy volume and 180 sell volume has a ratio of 1.67:1 -- **buy imbalance detected**.
+- A level with 100 buy volume and 200 sell volume has a ratio of 2.0:1 (sell side) -- **sell imbalance detected**.
+
+A **stacked imbalance** occurs when three or more consecutive price levels in the same candle all show imbalance in the same direction. This is significant because it means aggressive one-sided activity was sustained across a range of prices, not just at a single isolated level.
+
+### Buy Stacked Imbalance
+
+When multiple consecutive levels show dominant ask (buy) volume, it indicates aggressive buying across a price zone. The base of a buy stacked imbalance (the lowest price level in the stack) often acts as future support, because buyers demonstrated willingness to aggressively lift offers across that entire zone.
+
+### Sell Stacked Imbalance
+
+When multiple consecutive levels show dominant bid (sell) volume, it indicates aggressive selling across a price zone. The top of a sell stacked imbalance (the highest price level in the stack) often acts as future resistance, because sellers demonstrated willingness to aggressively hit bids across that entire zone.
+
+{/* screenshot: cluster candle with a buy stacked imbalance highlighted at 4 consecutive levels near the bottom, with the resulting support line extending right */}
+
+## Core Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **imbalanceRatio** | Ratio threshold for declaring a single level as imbalanced. Expressed as a percentage: 150 means one side must be at least 1.5x the other. Higher values demand stronger imbalances. | 150 |
+| **consecutiveLevels** | Minimum number of consecutive price levels that must be imbalanced in the same direction to qualify as a stacked imbalance. | 3 |
+| **minVolume** | Minimum total volume (in thousands) required at each price level for it to count toward the stack. Filters out low-volume levels where ratios can be misleading. | 0 |
+| **lookbackDays** | Number of days of history to analyze. Set to 0 for all available data. Limiting the lookback reduces visual clutter from old, potentially irrelevant levels. | 0 |
+
+<Note>
+The `minVolume` filter is critical for avoiding false signals on low-liquidity instruments or during low-activity periods. A level where 3 contracts bought vs. 1 contract sold has a 3:1 ratio, but it is statistically meaningless. Set `minVolume` appropriately for your instrument's typical volume per level.
+</Note>
+
+## Line Settings
+
+Stacked imbalance zones are visualized as horizontal lines on the chart. These lines extend to the right from the candle where the imbalance was detected, serving as dynamic support and resistance levels.
+
+### Style Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **lineStyle** | Line dash pattern: `solid`, `dash`, `dot`. | solid |
+| **lineVisual** | Rendering style: `flat`, `neon`, `gradient`, `chrome`. Premium styles add visual effects. | neon |
+| **lineOpacity** | Line opacity from 0 (invisible) to 100 (fully opaque). | 100 |
+
+### Width Scaling
+
+Line width is dynamically scaled based on the total volume in the imbalance zone. Zones with more volume produce thicker, more prominent lines.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **minLineWidth** | Minimum line width in pixels. Applied to zones with the least volume. | 1 |
+| **maxLineWidth** | Maximum line width in pixels. Applied to zones with the highest volume. | 5 |
+| **volumeStep** | Volume increment (in contracts) per width step. Controls how quickly line width scales with volume. | 1000 |
+
+For example, with `minLineWidth: 1`, `maxLineWidth: 5`, and `volumeStep: 1000`:
+- A zone with 500 total volume renders at width 1.
+- A zone with 3000 total volume renders at width 3.
+- A zone with 5000+ total volume renders at maximum width 5.
+
+### Labels and Visibility
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showVolumeLabel** | Display the total volume of the imbalance zone as a text label on the line. | false |
+| **hideCrossedLines** | Automatically hide lines that price has already crossed through. Keeps the chart clean by removing levels that have been invalidated. | false |
+
+<Tip>
+Enable `hideCrossedLines` to keep your chart focused on active levels. Lines that have been crossed are generally less reliable as future support or resistance, although some traders watch for retests of crossed levels.
+</Tip>
+
+## Glow Effects
+
+Premium glow effects make stacked imbalance lines visually prominent, especially on dark chart backgrounds.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **enableGlow** | Enable the glow effect around stacked imbalance lines. | false |
+| **glowIntensity** | Brightness of the glow effect on a scale of 0 to 100. | 50 |
+| **glowLayers** | Number of glow layers. More layers create a wider, softer glow. | 2 |
+
+Glow is available with all line visual styles but is most effective with the `neon` style, which adds a colored aura that matches the line color.
+
+## Premium Styles
+
+Stacked Imbalance supports Cluster Terminal's premium rendering engine for line visuals:
+
+| Style | Appearance |
+|-------|-----------|
+| **Flat** | Solid colored line with no additional effects. Clean and minimal. |
+| **Neon** | Colored glow aura around the line, simulating a neon light effect. Most visible on dark backgrounds. |
+| **Gradient** | Smooth color transition along the line from full opacity at the origin to faded at the end. |
+| **Chrome** | Metallic reflective effect on the line surface, giving a three-dimensional appearance. |
+
+{/* screenshot: comparison of all four line styles (flat, neon, gradient, chrome) for stacked imbalance lines */}
+
+## Alert Rules
+
+| Event | Fires When |
+|-------|-----------|
+| **line_tested** | Price returns to and touches a previously established stacked imbalance line. This event fires on each retest, allowing you to monitor how many times a level has been tested. |
+
+Alerts for stacked imbalance line retests are valuable for notification-based trading workflows. When a known imbalance zone is retested, you can evaluate whether the level holds (potential entry) or breaks (invalidation of the thesis).
+
+## Reading Stacked Imbalances
+
+### Strength Assessment
+
+Not all stacked imbalances are equal. Several factors determine the strength of a zone:
+
+| Factor | Stronger Signal | Weaker Signal |
+|--------|----------------|---------------|
+| **Consecutive levels** | 4-5+ levels stacked | Minimum 3 levels (threshold) |
+| **Imbalance ratio** | 3:1 or higher | Just above the threshold |
+| **Volume at levels** | High absolute volume | Low volume (ratio may be coincidental) |
+| **Location in candle** | At the high or low (extremes) | In the middle of the candle body |
+| **Subsequent price action** | Level holds on first retest | Level immediately crossed |
+
+### Location Matters
+
+Stacked imbalances at the extremes of candles (in the wicks) are generally more significant than those in the candle body:
+
+- **At the candle low**: A buy stacked imbalance at the low indicates aggressive buyers stepped in to halt the decline. This is classic demand.
+- **At the candle high**: A sell stacked imbalance at the high indicates aggressive sellers capped the rally. This is classic supply.
+- **In the body**: Imbalances in the candle body show directional aggression during the move, but they may not create as reliable support/resistance as extreme-level imbalances.
+
+## Practical Usage
+
+### Best Timeframes
+
+| Timeframe | Suitability | Notes |
+|-----------|-------------|-------|
+| **1m** | Good | Many zones detected, useful for micro-level scalping. Use `hideCrossedLines` to manage clutter. |
+| **5m - 15m** | Excellent | Best balance of signal quality and frequency for intraday trading. |
+| **1h - 4h** | Strong | Fewer but more significant zones for swing trading. |
+| **1d** | Limited | Tick aggregation on daily candles dilutes the imbalance signal. |
+
+### Tuning for Your Instrument
+
+Different instruments require different settings due to varying liquidity profiles:
+
+| Instrument Type | Suggested Ratio | Suggested Levels | Suggested minVolume |
+|----------------|-----------------|-------------------|---------------------|
+| **BTCUSDT** (high liquidity) | 150 | 3 | 500 |
+| **Major altcoins** (ETHUSDT, SOLUSDT) | 150-200 | 3 | 200 |
+| **Mid-cap altcoins** | 200-300 | 3-4 | 50 |
+| **Low-cap altcoins** | 300+ | 4+ | 10 |
+
+### Confluence Setups
+
+Stacked imbalance lines are strongest when they align with:
+
+- **Absorption Alpha levels**: A stacked imbalance zone that also shows absorption confirms that institutional activity occurred from both aggressive and passive sides.
+- **Volume Profile POC or HVN**: An imbalance zone at a high-volume node indicates institutional defense of a fair-value level.
+- **Unfinished Business**: A stacked imbalance near an unfinished auction level creates two independent reasons for price to react at that level.
+- **Session highs/lows**: Imbalance zones that coincide with previous session extremes gain significance from the structural level.
+
+<Tip>
+Higher consecutive levels (4 or 5) produce significantly stronger zones. If you find yourself overwhelmed by too many lines on the chart, increase `consecutiveLevels` to 4 before adjusting the ratio. Lines that hold on their first retest become high-priority levels for future trading sessions.
+</Tip>
+
+{/* screenshot: stacked imbalance neon lines at multiple levels with volume labels, showing price reacting at a 5-level buy imbalance zone */}

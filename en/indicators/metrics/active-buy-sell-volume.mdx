@@ -1,0 +1,135 @@
+---
+title: "Active Buy/Sell Volume"
+description: "Separates active (aggressive) buy and sell volume with anomaly detection."
+icon: "chart-mixed"
+---
+
+## Overview
+
+**Active Buy/Sell Volume** displays buy and sell volume as separate series with built-in statistical anomaly detection. Unlike standard volume bars that show total volume, this indicator splits it into aggressive buying and aggressive selling, then highlights bars where volume significantly exceeds the rolling average.
+
+This is the go-to indicator for spotting institutional-size activity hidden within normal market noise.
+
+{/* screenshot: Active Buy/Sell Volume with green buy and red sell columns, anomaly bars highlighted in lime and orange with dots */}
+
+## How It Works
+
+For each bar, the indicator:
+1. Separates total volume into buy volume (trades executed at the ask) and sell volume (trades executed at the bid).
+2. Displays them as separate columns in the subchart.
+3. Computes a rolling average and standard deviation over the `calculationPeriod`.
+4. Flags bars where volume exceeds the rolling mean by more than `stdDevMultiplier` standard deviations.
+5. Renders anomaly bars in distinct colors and places a dot marker above/below them.
+
+## Chart Type
+
+| Property | Value |
+|----------|-------|
+| Type | Subchart |
+| Position | Below main chart |
+| Data source | Trade-level buy/sell classification |
+
+## Settings
+
+### Core Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| calculationPeriod | Lookback period for rolling statistics | `50` |
+| stdDevMultiplier | Standard deviations for anomaly threshold | `2` |
+| minVolumeThreshold | Minimum volume to consider (filters noise) | `0` |
+
+### Colors
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| buyColor | Normal buy volume bar color | `#22c55e` |
+| sellColor | Normal sell volume bar color | `#ef4444` |
+| anomalyBuyColor | Anomaly buy volume bar color | `#84cc16` |
+| anomalySellColor | Anomaly sell volume bar color | `#f97316` |
+| dotSize | Size of anomaly marker dots | `8` |
+
+### Display Options
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| displayMode | Rendering style | `columns` |
+| highlightAnomalies | Enable anomaly detection | `true` |
+| anomalyThreshold | Override threshold multiplier | `2.5` |
+| anomalyPeriod | Override lookback period | `50` |
+| gradientIntensity | Fill gradient strength (0-1) | `0` |
+
+## Anomaly Detection
+
+The anomaly system is the core feature of this indicator. It uses a simple but effective statistical model:
+
+```
+anomaly = (volume - rollingMean) > (stdDevMultiplier * rollingStdDev)
+```
+
+When a bar qualifies as an anomaly:
+- The bar is rendered in the anomaly color (lime green for buy, orange for sell).
+- A dot marker of `dotSize` pixels is placed above (buy) or below (sell) the bar.
+
+### Tuning the Detection
+
+| Setting | Lower Value | Higher Value |
+|---------|------------|--------------|
+| calculationPeriod | More sensitive, adapts faster | Smoother baseline, fewer false positives |
+| stdDevMultiplier | More anomalies flagged | Only extreme outliers flagged |
+| minVolumeThreshold | All volume included | Small trades filtered out |
+
+<Tip>
+Anomaly bars in volume often coincide with institutional activity. Look for direction confirmation — an anomaly buy bar at support is more significant than one in the middle of a range.
+</Tip>
+
+## Interpretation
+
+### Normal vs. Anomaly Bars
+
+Normal bars (green/red) represent typical market activity within the expected range. Anomaly bars (lime/orange) represent statistically significant deviations — something unusual happened.
+
+### Anomaly Patterns
+
+| Pattern | Interpretation |
+|---------|----------------|
+| Single anomaly buy bar at support | Potential institutional buying, strong bounce candidate |
+| Single anomaly sell bar at resistance | Potential institutional selling, rejection likely |
+| Consecutive anomaly bars (same direction) | Sustained institutional flow, trend continuation |
+| Anomaly buy and sell in same bar | Large two-sided activity, likely a significant event |
+| Anomaly bar with no price movement | Volume absorbed by passive orders — hidden accumulation/distribution |
+
+### Volume Asymmetry
+
+When buy anomalies appear but sell volume remains normal (or vice versa), there is a clear directional asymmetry. This is often more significant than overall volume spikes because it shows one-sided aggression.
+
+<Note>
+The `minVolumeThreshold` parameter is useful on lower timeframes where small trades can create statistical noise. Set it above the typical small-trade size for your market to focus on meaningful activity.
+</Note>
+
+## Display Modes
+
+While the default `columns` mode is most intuitive for volume data, other modes are available:
+
+| Mode | Description |
+|------|-------------|
+| `columns` | Side-by-side buy/sell histogram (default). Best for volume comparison. |
+| `line` | Continuous lines for buy and sell volume. Useful for trend analysis. |
+| `candles` | OHLC representation. Less common for this indicator. |
+
+## Practical Examples
+
+- **Support defense**: Price tests support, anomaly buy bar appears — institutional buyer stepping in, strong bounce signal.
+- **Breakout confirmation**: Price breaks resistance with anomaly buy volume — real demand behind the move.
+- **Exhaustion detection**: Anomaly sell bar after extended downtrend, price stabilizes — selling climax, potential bottom.
+- **Absorption**: Anomaly buy bars with flat price — someone is buying heavily but price is not moving, absorption by passive sellers (or vice versa).
+
+<Warning>
+Anomaly detection is backward-looking by nature. The rolling period establishes what is "normal," so the first `calculationPeriod` bars on any chart will not produce reliable anomaly signals.
+</Warning>
+
+## Related Indicators
+
+- [Delta Volume](/en/indicators/metrics/delta-volume) — net difference (buy minus sell) per bar
+- [CVD](/en/indicators/metrics/cvd) — cumulative delta for trend analysis
+- [Liquidations](/en/indicators/metrics/liquidations) — forced volume events

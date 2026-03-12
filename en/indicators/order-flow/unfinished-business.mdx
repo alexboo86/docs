@@ -1,0 +1,134 @@
+---
+title: "Unfinished Business"
+description: "Marks candle extremes where the auction was incomplete — price likely to return."
+icon: "flag-checkered"
+---
+
+Unfinished Business detects candles where the high or low had zero volume on one side of the trade (all buys and no sells, or all sells and no buys). These levels represent incomplete auctions -- prices where the market did not find two-sided participation. Auction Market Theory holds that price tends to return to unfinished levels to "complete" the auction, making them natural price targets.
+
+## Auction Market Theory Background
+
+Every trade requires a buyer and a seller. At most price levels, both aggressive buyers (lifting the ask) and aggressive sellers (hitting the bid) are present in some proportion. However, at candle extremes, the market sometimes runs out of participants on one side:
+
+- **At the candle high with only buy volume**: Aggressive buyers pushed price to this level, but no aggressive sellers met them. The auction was one-sided -- it is "unfinished" because the market never tested whether sellers exist at this price.
+- **At the candle low with only sell volume**: Aggressive sellers pushed price to this level, but no aggressive buyers met them. Again, the auction is incomplete.
+
+Unfinished auctions act as magnets for future price action. The market has a natural tendency to revisit these levels to determine whether two-sided trading will occur, effectively "finishing" what was left incomplete.
+
+{/* screenshot: chart with unfinished business dots at candle highs and lows, with arrows showing price returning to these levels later */}
+
+## How Detection Works
+
+For each completed candle, the indicator examines the highest and lowest price levels within the cluster data:
+
+1. **Check the candle high**: Is the volume at the highest price level entirely on one side (all ask volume, zero bid volume)? If yes, the high is an unfinished auction.
+2. **Check the candle low**: Is the volume at the lowest price level entirely on one side (all bid volume, zero ask volume)? If yes, the low is an unfinished auction.
+3. **Optional clustering**: When `minClusterCount` is greater than 1, the indicator requires multiple candles within `maxBarsBetweenClusters` bars to have unfinished auctions at similar levels before generating a signal.
+4. **Reversal confirmation**: The `barsToConfirmReversal` parameter optionally waits for price to move away from the unfinished level before placing the marker, confirming that the level was indeed rejected.
+
+## Signal Types
+
+The indicator can show two types of levels:
+
+| Setting Value | What It Shows |
+|--------------|---------------|
+| **unfinished** | Levels where the auction is incomplete (default). These are the traditional unfinished business targets. |
+| **finished** | Levels where a previously unfinished auction has been completed (price returned and two-sided trading occurred). Useful for tracking which targets have been hit. |
+
+## Settings
+
+### Detection Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **auctionTypeToShow** | Whether to display `unfinished` or `finished` auction levels. | unfinished |
+| **minClusterCount** | Minimum number of clustered unfinished auctions required before displaying a signal. A value of 1 means every qualifying candle is shown. Higher values require multiple candles near the same level. | 1 |
+| **maxBarsBetweenClusters** | Maximum number of bars that can separate candles when counting toward a cluster. Only relevant when `minClusterCount` is greater than 1. | 3 |
+| **lookbackBars** | How many bars back the indicator scans for unfinished business levels. Limits the historical depth to avoid visual clutter from old, potentially irrelevant levels. | 120 |
+| **barsToConfirmReversal** | Number of bars price must move away from the unfinished level before the signal is confirmed. A value of 0 shows signals immediately. Higher values reduce noise but delay the marker. | 2 |
+
+<Note>
+The `lookbackBars` parameter is important for chart readability. On a 1-minute chart, 120 bars covers 2 hours. On a 15-minute chart, 120 bars covers 30 hours. Adjust this value based on your timeframe and how far back you want to track unfinished levels.
+</Note>
+
+### Visual Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **maxColor** | Color for high-side (candle maximum) unfinished business signals. Red by default because an unfinished high is a potential resistance target where a reversal may occur. | #ef4444 |
+| **minColor** | Color for low-side (candle minimum) unfinished business signals. Blue by default because an unfinished low is a potential support target. | #3b82f6 |
+| **finishedMaxColor** | Color for completed high-side auctions (when `auctionTypeToShow` is set to `finished`). | #22c55e |
+| **finishedMinColor** | Color for completed low-side auctions (when `auctionTypeToShow` is set to `finished`). | #84cc16 |
+| **dotSize** | Size of the marker dot in pixels. | 8 |
+
+## Reading Unfinished Business
+
+### As Price Targets
+
+The most common use of Unfinished Business is as a collection of price targets. Each unfinished level represents a price where the market "owes" a visit to complete the auction:
+
+- **Unfinished highs above current price**: Price may rally to these levels to test whether sellers exist there.
+- **Unfinished lows below current price**: Price may drop to these levels to test whether buyers exist there.
+
+When price reaches an unfinished level and two-sided trading occurs (both buys and sells transact), the auction is considered "finished" and the target is consumed.
+
+### As Reversal Zones
+
+While unfinished levels are targets (price tends to go there), they can also act as reversal zones once reached. When price arrives at an unfinished level and aggressive participation from the other side appears, it often marks a turning point:
+
+- Price rallies to an unfinished high and meets heavy selling -- potential short entry.
+- Price drops to an unfinished low and meets heavy buying -- potential long entry.
+
+### Clustering Significance
+
+When multiple candles create unfinished business at the same or similar price levels (controlled by `minClusterCount` and `maxBarsBetweenClusters`), the level gains significance. A cluster of unfinished auctions at the same price means the market repeatedly failed to find two-sided trading there, increasing the probability of a future visit.
+
+{/* screenshot: clustered unfinished business at a session low with 3 consecutive candles all having unfinished lows at adjacent prices */}
+
+## Practical Usage
+
+### Best Timeframes
+
+| Timeframe | Suitability | Notes |
+|-----------|-------------|-------|
+| **1m** | Good | Many unfinished levels due to thin extremes on short candles. Useful for scalping targets. |
+| **5m - 15m** | Excellent | Good balance of signal density and significance. Primary timeframe for this indicator. |
+| **1h** | Good | Fewer levels, each more significant. Good for intraday swing targets. |
+| **4h+** | Moderate | Cluster aggregation on higher timeframes can mask the zero-volume condition. |
+
+### Session-Based Trading
+
+Unfinished Business is particularly effective in a session-based context:
+
+- **Opening drive**: During the first 30-60 minutes of a session, strong directional moves often create unfinished extremes. These become targets for the remainder of the session.
+- **Session highs/lows**: Unfinished business at the session high or low is a strong magnet. If the high or low was set with one-sided trading, the market frequently revisits it before the session ends.
+- **Overnight levels**: Unfinished levels from the overnight session are often completed during the regular session when liquidity increases.
+
+<Tip>
+Unfinished business at session highs and lows often gets revisited within the same or next trading session. Mark these levels at the start of your session and watch for price to return to them as natural targets.
+</Tip>
+
+### Confluence Setups
+
+Unfinished Business levels gain strength when they coincide with:
+
+- **Stacked Imbalance zones**: An unfinished level that also has a stacked imbalance provides two independent reasons for price to react.
+- **Volume Profile LVN**: Unfinished business at a low-volume node (gap in the profile) is a double magnet -- both the incomplete auction and the thin-liquidity zone attract price.
+- **Absorption Alpha**: When price reaches an unfinished level and absorption is detected, it suggests the auction is being completed with institutional participation.
+- **Round numbers / psychological levels**: Unfinished business at a round number (e.g., $60,000 on BTC) adds a psychological dimension to the order flow signal.
+
+### Common Pitfalls
+
+- **Over-reliance as targets**: Not every unfinished level will be revisited. Strong trends can leave many unfinished levels behind that are never completed. Use lookback limits to focus on recent, relevant levels.
+- **Ignoring volume context**: An unfinished level where only 2 contracts traded is far less significant than one where 200 contracts traded one-sided. Consider the absolute volume at the level when assessing signal importance.
+- **Stale levels**: Very old unfinished levels (from days or weeks ago) lose relevance as market conditions change. Use `lookbackBars` to age out old signals or manually clear them.
+
+### Finished Auction Tracking
+
+Setting `auctionTypeToShow` to `finished` provides a different analytical perspective: instead of showing where price needs to go, it shows where price has already completed previously incomplete auctions. This is useful for:
+
+- **Confirming level consumption**: Verify that a target was hit and two-sided trading occurred.
+- **Tracking market efficiency**: Markets that quickly complete unfinished auctions are more efficient. Markets that leave many auctions unfinished for extended periods suggest directional imbalance.
+- **Post-trade review**: After a session, switch to `finished` mode to see which of your anticipated targets were hit.
+
+{/* screenshot: chart showing both unfinished (red/blue dots) and finished (green dots) levels, with price path connecting them */}

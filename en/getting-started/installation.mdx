@@ -1,0 +1,320 @@
+---
+title: "Installation"
+description: "Download, install, and set up Cluster Terminal on your machine."
+icon: "download"
+---
+
+Cluster Terminal is a professional-grade crypto futures trading terminal built for
+cluster analysis, volume profiling, and order flow research. This guide walks you
+through the full installation process, from verifying system requirements to
+launching the application for the first time.
+
+## System Requirements
+
+Before downloading, make sure your machine meets the minimum specifications.
+Cluster Terminal relies on WebGL 2.0 for high-performance chart rendering and
+maintains a persistent WebSocket connection for real-time market data.
+
+| Component | Minimum | Recommended |
+|-----------|---------|-------------|
+| **Operating System** | Windows 10 64-bit (version 1809+) | Windows 11 64-bit |
+| **RAM** | 4 GB | 8 GB or more |
+| **CPU** | Dual-core, 2 GHz | Quad-core, 3 GHz+ |
+| **GPU** | WebGL 2.0 compatible (integrated) | Dedicated GPU (NVIDIA / AMD) |
+| **Disk Space** | 200 MB for application | 500 MB including cache and data |
+| **Display** | 1366 x 768 | 1920 x 1080 or higher |
+| **Network** | Stable broadband connection | Low-latency connection (< 50 ms to server) |
+
+<Note>
+  Cluster Terminal renders all chart surfaces — candles, clusters, heatmaps, and overlays — using
+  WebGL 2.0 via the SciChart engine. If your GPU drivers are outdated, the application may fall back
+  to software rendering, which significantly impacts performance. Update your GPU drivers to the
+  latest version before installing.
+</Note>
+
+### Verifying WebGL Support
+
+If you are unsure whether your system supports WebGL 2.0, open any Chromium-based
+browser (Chrome, Edge) and navigate to `chrome://gpu`. Look for the line
+**WebGL2: Hardware accelerated**. If it reads "Software only" or "Unavailable,"
+you need to update your GPU drivers or check that hardware acceleration is enabled
+in your system BIOS.
+
+<Tip>
+  Cluster Terminal ships with its own embedded Chromium runtime (via Tauri), so
+  browser-level WebGL settings do not apply directly. However, the same GPU
+  driver requirements apply. If WebGL works in Chrome, it will work in Cluster Terminal.
+</Tip>
+
+## Downloading Cluster Terminal
+
+Cluster Terminal is distributed as a standard Windows NSIS installer. You can
+obtain the latest version in one of the following ways:
+
+- **Official distribution channel** — Download from the link provided by your
+  administrator or the official Cluster Terminal Telegram group.
+- **Direct link from your server admin** — If your organization runs a
+  self-hosted server, your admin may provide a direct download URL from the
+  admin panel.
+
+The installer file follows the naming convention:
+
+```
+ClusterTerminal_X.Y.Z_x64-setup.exe
+```
+
+where `X.Y.Z` is the version number (for example, `1.2.0`).
+
+<Warning>
+  Only download the installer from official or trusted sources. Do not use
+  third-party download sites. The installer binary is code-signed with an
+  Ed25519 signature that the auto-updater validates on every subsequent update.
+</Warning>
+
+## Running the Installer
+
+<Steps>
+  <Step title="Launch the installer">
+    Double-click `ClusterTerminal_X.Y.Z_x64-setup.exe` to start the NSIS
+    setup wizard. If Windows SmartScreen displays a warning because the app
+    is not widely distributed yet, click **More info** and then **Run anyway**.
+
+    {/* screenshot: Windows SmartScreen warning with "More info" and "Run anyway" highlighted */}
+  </Step>
+
+  <Step title="Accept the license agreement">
+    Read the End User License Agreement and click **I Agree** to continue.
+  </Step>
+
+  <Step title="Choose the installation directory">
+    The default path is `C:\Program Files\Cluster Terminal`. You can change
+    this to any directory, but an SSD location is recommended for faster
+    startup and cache operations. Click **Next** to proceed.
+
+    {/* screenshot: NSIS directory selection dialog */}
+  </Step>
+
+  <Step title="Select Start Menu folder">
+    Choose or confirm the Start Menu folder name. The default is
+    **Cluster Terminal**. Click **Install** to begin the installation.
+  </Step>
+
+  <Step title="Wait for installation to complete">
+    The installer copies application files, registers the auto-updater, and
+    creates desktop and Start Menu shortcuts. This typically takes under
+    30 seconds.
+
+    {/* screenshot: NSIS installation progress bar */}
+  </Step>
+
+  <Step title="Finish and launch">
+    When the progress bar completes, click **Finish**. If the "Run Cluster
+    Terminal" checkbox is selected, the application launches immediately.
+  </Step>
+</Steps>
+
+<Tip>
+  The installer does not require a system restart. You can begin using
+  Cluster Terminal immediately after installation completes.
+</Tip>
+
+## First Launch — Connecting to the Data Server
+
+On the very first launch, Cluster Terminal needs to know where to fetch
+market data. This is the data server that provides historical candles,
+cluster volumes, open interest, and the real-time WebSocket feed.
+
+<Steps>
+  <Step title="Enter the server URL">
+    A setup screen appears asking for your **Server URL**. This is the address
+    of the Cluster Terminal data server. If you received a URL from your
+    administrator (for example, `https://data.example.com`), enter it here.
+    If you are using the default hosted service, the URL may already be
+    pre-filled.
+
+    {/* screenshot: Server URL input on first launch */}
+  </Step>
+
+  <Step title="Verify connection">
+    After entering the URL, the application attempts to connect. A green
+    status indicator confirms a successful connection. If the indicator
+    turns red, double-check the URL and your network connection.
+  </Step>
+
+  <Step title="Start your free trial">
+    Once connected, a **7-day free trial** begins automatically. No account
+    creation, email address, or credit card is required. The trial gives
+    you access to all core features so you can evaluate the platform.
+
+    {/* screenshot: Trial started confirmation banner */}
+  </Step>
+</Steps>
+
+<Note>
+  The server URL is saved locally on your device and does not need to be
+  entered again unless you reinstall the application or switch to a
+  different server. You can change it later from **Settings**.
+</Note>
+
+### What the Server Provides
+
+The data server is the single source of truth for all market information
+displayed in Cluster Terminal:
+
+| Data Type | Description |
+|-----------|-------------|
+| **Historical candles** | OHLCV candlestick data across all supported timeframes |
+| **Cluster volumes** | Per-price-level buy/sell volume breakdown for each candle |
+| **Open interest** | Historical and real-time open interest data |
+| **Order book snapshots** | Depth of market data for the DOM widget |
+| **Real-time feed** | WebSocket stream for live candle, trade, and volume updates |
+
+All data is fetched over HTTPS (REST) and WebSocket (WSS) protocols. No
+third-party APIs or browser plugins are required.
+
+## Auto-Update System
+
+Cluster Terminal includes a built-in auto-update mechanism that keeps the
+application current without manual intervention.
+
+### How It Works
+
+1. **Automatic check** — Every time you launch the application, it queries the
+   update server for new releases.
+2. **Notification banner** — If a newer version is available, a banner appears
+   at the top of the window showing the new version number and release notes.
+3. **One-click download** — Click the **Update** button in the banner. The new
+   installer downloads in the background while you continue working.
+4. **Install on restart** — Once the download completes, click **Restart Now**
+   to apply the update. The application closes, the NSIS installer runs silently,
+   and the new version launches automatically.
+
+{/* screenshot: Update notification banner with version number and "Update" button */}
+
+<Warning>
+  Do not force-close the application while an update is downloading or
+  installing. Wait for the restart to complete to avoid corrupting the
+  installation.
+</Warning>
+
+### Update Security
+
+Every update binary is signed with an Ed25519 key. The application verifies
+the signature before applying any update. If the signature does not match,
+the update is rejected and an error is displayed. This ensures that only
+authentic, untampered releases are installed on your machine.
+
+<Note>
+  Updates are incremental. You do not need to re-download the full installer.
+  The updater fetches only the new version's setup file and applies it
+  automatically.
+</Note>
+
+## Troubleshooting Installation
+
+### Windows SmartScreen Warning
+
+Because Cluster Terminal is a specialized application and may not yet have
+widespread distribution, Windows SmartScreen may flag the installer as
+"unrecognized." This is a standard warning for newer applications and does
+not indicate a security threat.
+
+**Solution:** Click **More info** on the SmartScreen dialog, then click
+**Run anyway**.
+
+### Antivirus False Positives
+
+Some antivirus software may quarantine or block the installer or the
+application executable. This can happen because the app uses WebSocket
+connections and local file system access patterns that heuristic scanners
+sometimes flag.
+
+**Solution:**
+- Add an exception for the Cluster Terminal installation directory
+  (default: `C:\Program Files\Cluster Terminal`).
+- Add an exception for the application data directory:
+  `%APPDATA%\com.clusterterminal.app`.
+- If your antivirus quarantined the installer, restore it from quarantine
+  and add it to the allowlist before running again.
+
+<Tip>
+  If you are in a corporate environment with managed antivirus, ask your
+  IT administrator to whitelist the Cluster Terminal executable and its
+  installation path.
+</Tip>
+
+### Firewall and Network Issues
+
+Cluster Terminal requires outbound access on the following:
+
+| Protocol | Port | Purpose |
+|----------|------|---------|
+| HTTPS | 443 | REST API for historical data, license validation, updates |
+| WSS | 443 (or custom) | WebSocket for real-time market data |
+
+If you are behind a corporate firewall or proxy:
+
+- Ensure outbound HTTPS and WebSocket connections are permitted to your
+  server's domain or IP address.
+- If your organization uses a proxy, Cluster Terminal respects system-level
+  proxy settings configured in Windows.
+- VPN connections may increase latency on the WebSocket feed, which can
+  cause delayed real-time updates.
+
+### WebGL Rendering Issues
+
+If charts appear blank, flicker, or render incorrectly:
+
+1. **Update GPU drivers** — Visit your GPU manufacturer's website (NVIDIA,
+   AMD, or Intel) and install the latest drivers.
+2. **Disable hardware acceleration in other apps** — Resource-heavy
+   applications competing for GPU access can cause rendering issues. Close
+   unnecessary GPU-intensive programs.
+3. **Check for integrated vs. dedicated GPU** — On laptops with dual GPUs,
+   ensure Cluster Terminal is set to use the dedicated GPU. You can configure
+   this in NVIDIA Control Panel or AMD Radeon Settings under per-application
+   GPU assignment.
+
+### Application Data Location
+
+Cluster Terminal stores its configuration, license data, and cached files in:
+
+```
+%APPDATA%\com.clusterterminal.app
+```
+
+This directory contains:
+
+- **License and trial state** — Locally cached validation data.
+- **Server URL** — The configured data server endpoint.
+- **Workspace data** — Local copies of your workspaces (layouts, indicators,
+  drawings).
+- **Application logs** — Diagnostic logs useful for troubleshooting.
+
+<Warning>
+  Deleting this directory resets the application to a fresh state, including
+  your trial status and any locally saved workspaces. Back up your workspaces
+  before clearing application data.
+</Warning>
+
+### Reinstalling
+
+If you need to perform a clean reinstall:
+
+1. Uninstall Cluster Terminal from **Windows Settings > Apps > Installed apps**.
+2. Optionally delete the application data directory at
+   `%APPDATA%\com.clusterterminal.app` for a full reset.
+3. Download and run the latest installer.
+
+<Note>
+  Reinstalling on the same device preserves your device fingerprint. If you
+  had a license activated, it will re-use the same device slot and will not
+  count as a new device.
+</Note>
+
+## Next Steps
+
+Once Cluster Terminal is installed and connected to the data server, you are
+ready to create your first workspace and start analyzing. Proceed to
+[First Steps](/en/getting-started/first-steps) to learn how to set up charts,
+add indicators, and save your layout.

@@ -1,0 +1,162 @@
+---
+title: "RSI Divergence"
+description: "Detects bullish and bearish divergences between price and RSI."
+icon: "arrows-split-up-and-left"
+---
+
+# RSI Divergence
+
+The RSI Divergence indicator **automatically detects and marks divergences** between price action and the Relative Strength Index. A divergence occurs when price makes a new high or low, but RSI fails to confirm it — a classic early warning of momentum exhaustion and potential trend reversal.
+
+{/* screenshot: RSI Divergence showing bearish divergence markers on a BTC/USDT 1h chart with connecting lines */}
+
+## How It Works
+
+The indicator runs in real-time and performs three steps:
+
+### 1. Fractal Detection
+
+First, it identifies **swing highs and swing lows** on both the price chart and the RSI using a fractal algorithm. A fractal is confirmed when a bar's high (or low) is the highest (or lowest) within `fractalSpan` bars on each side.
+
+For example, with `fractalSpan: 3`, a swing high requires the bar's high to be greater than the highs of the 3 bars before and 3 bars after it.
+
+### 2. Pivot Pairing
+
+Next, the indicator looks for pairs of swing points that satisfy the divergence criteria within the `lookback` window:
+
+**Bearish Divergence (Regular):**
+- Price makes a **higher high** (second swing high is above the first).
+- RSI makes a **lower high** (RSI at the second swing is below RSI at the first).
+- Interpretation: Price is rising, but momentum is weakening. Sellers may soon overwhelm buyers.
+
+**Bullish Divergence (Regular):**
+- Price makes a **lower low** (second swing low is below the first).
+- RSI makes a **higher low** (RSI at the second swing is above RSI at the first).
+- Interpretation: Price is falling, but selling momentum is decreasing. Buyers may soon step in.
+
+### 3. Visual Marking
+
+Confirmed divergences are displayed as:
+- **Colored dots** at the divergence point on the price chart.
+- **Connecting lines** between the two swing points (optional, controlled by `showLines`).
+- The RSI subchart also shows the RSI values at the divergence points.
+
+### Indicator Type
+
+**Overlay + Subchart** — Divergence markers appear on the price chart (dots and lines), and the RSI with its divergence lines appears in a subchart below.
+
+## Settings
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `lookback` | number | 120 | Maximum number of bars to search back for divergence pivot pairs. Higher values find more divergences but may identify stale ones. |
+| `fractalSpan` | number | 3 | Number of bars on each side required to confirm a swing high/low. Higher values produce fewer but more significant pivots. |
+| `minBarsBetween` | number | 4 | Minimum number of bars between the two pivots forming a divergence. Prevents detecting noise-level divergences on adjacent bars. |
+| `dotSize` | number | 8 | Diameter (in pixels) of the divergence marker dot on the price chart. |
+| `showLines` | boolean | `true` | Draw connecting lines between the two pivot points that form the divergence. |
+| `bullishColor` | color | `#84cc16` | Color for bullish divergence markers and lines. |
+| `bearishColor` | color | `#ef4444` | Color for bearish divergence markers and lines. |
+
+### Parameter Tuning Guide
+
+| Parameter | Lower Value | Higher Value |
+|-----------|-------------|-------------|
+| `lookback` | Fewer divergences, only recent ones | More divergences, including older setups |
+| `fractalSpan` | More swing points detected, noisier | Fewer swing points, only major swings |
+| `minBarsBetween` | Allows tighter divergences (more signals) | Requires wider divergences (fewer, stronger signals) |
+
+<Tip>
+The default settings are balanced for most timeframes. If you see too many divergences on lower timeframes (1m–5m), increase `fractalSpan` to 5 and `minBarsBetween` to 8 to filter out noise.
+</Tip>
+
+## Types of Divergence
+
+### Regular Divergence (Trend Reversal)
+
+Regular divergences signal potential trend reversals:
+
+| Type | Price | RSI | Signal |
+|------|-------|-----|--------|
+| **Bearish regular** | Higher high | Lower high | Uptrend weakening, potential reversal down |
+| **Bullish regular** | Lower low | Higher low | Downtrend weakening, potential reversal up |
+
+Regular divergences are the primary signals this indicator detects.
+
+{/* screenshot: Bullish regular divergence — price lower low, RSI higher low, with green dots and connecting lines */}
+
+### Hidden Divergence (Trend Continuation)
+
+Hidden divergences signal potential trend continuation:
+
+| Type | Price | RSI | Signal |
+|------|-------|-----|--------|
+| **Bearish hidden** | Lower high | Higher high | Downtrend likely to continue |
+| **Bullish hidden** | Higher low | Lower low | Uptrend likely to continue |
+
+Hidden divergences are less commonly traded but can be powerful in trending markets. They indicate that the prevailing trend still has strength despite a temporary momentum shift.
+
+## Interpretation
+
+### Divergence Strength
+
+Not all divergences are equal. Factors that increase reliability:
+
+1. **Location**: Divergences at key levels (support, resistance, VWAP, VA boundaries) are far more significant than those in open space.
+2. **Timeframe**: A divergence on the 4-hour or daily chart carries more weight than one on the 5-minute chart.
+3. **Angle**: The steeper the divergence (larger difference between price and RSI slopes), the stronger the signal.
+4. **RSI zone**: Bearish divergences with RSI in overbought territory (above 70) and bullish divergences with RSI in oversold territory (below 30) are highest probability.
+5. **Number of touches**: A "triple divergence" (three successive higher highs with RSI making lower highs each time) is stronger than a simple two-point divergence.
+
+### Trading Divergences
+
+A systematic approach to trading RSI divergences:
+
+1. **Identify the divergence**: The indicator marks it automatically.
+2. **Confirm the context**: Is the divergence at a meaningful level (S/R, VWAP, previous day high/low)?
+3. **Wait for trigger**: Do not enter immediately on the divergence. Wait for price to confirm the reversal — a break of a local trendline, a strong rejection candle, or a close back inside a key level.
+4. **Set stops**: Place stops beyond the extreme of the divergence (the second swing point).
+5. **Target the mean**: First target is often the SMA(20) or VWAP — the "mean" of the recent move.
+
+<Tip>
+Divergences are most reliable at key structural levels — support, resistance, value area boundaries, or previous session highs and lows. A divergence in open space with no structural confluence has a much lower success rate.
+</Tip>
+
+### Common False Signals
+
+Divergences can fail, especially in:
+
+- **Strong trends**: In a powerful rally, you may see bearish divergence after bearish divergence as price continues higher. Each one "fails" until the trend finally turns.
+- **Low-volume periods**: Weekend crypto trading or Asian session lulls can produce meaningless small swings that register as divergences.
+- **Very short timeframes**: On 1-minute charts, the noise-to-signal ratio is high. Divergences are most reliable on 15-minute and higher timeframes.
+
+## Alerts
+
+RSI Divergence supports the following **alert rule**:
+
+| Alert Event | Description |
+|-------------|-------------|
+| `new_divergence` | A new bullish or bearish divergence is detected and confirmed |
+
+The alert fires once per divergence when the second pivot point is confirmed (after `fractalSpan` bars have passed to validate the swing).
+
+## Combining with Other Indicators
+
+| Companion | Enhanced Signal |
+|-----------|----------------|
+| **VWAP** | Bullish divergence + price at VWAP = institutional buying zone |
+| **Session Levels** | Divergence at previous day high/low = structural confluence |
+| **Volume Bars** | Divergence + declining volume on second leg = momentum truly fading |
+| **Bollinger Bands** | Divergence at outer band = double mean-reversion signal |
+| **Delta** | Bearish divergence + negative delta on second high = aggressive selling despite higher price |
+
+## Practical Considerations
+
+- **Repainting**: The indicator requires `fractalSpan` bars after the pivot to confirm the swing point. This means the divergence marker appears `fractalSpan` bars after the actual pivot, not in real-time. This is by design — it prevents false signals from unconfirmed swings.
+- **Lookback scope**: Very large `lookback` values (200+) can identify divergences where the two pivots are far apart. While technically valid, widely-separated divergences are less actionable because the market conditions may have fundamentally changed between the two points.
+- **Multiple divergences**: It is common to see 2–3 divergences form before a trend actually reverses. The first divergence is an early warning; the second or third, especially with a trigger confirmation, is often the tradeable one.
+
+## Related Indicators
+
+- [RSI](/en/indicators/classic/rsi) — The underlying oscillator; understanding RSI mechanics helps interpret divergences
+- [MACD](/en/indicators/classic/macd) — MACD divergences provide similar signals from a different mathematical basis
+- [Bollinger Bands](/en/indicators/classic/bollinger-bands) — Volatility context for divergence trades

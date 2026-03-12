@@ -1,0 +1,171 @@
+---
+title: "Auto Updates"
+description: "Cluster Terminal updates automatically -- here's how the update system works."
+icon: "rotate"
+---
+
+# Auto Updates
+
+Cluster Terminal includes a built-in auto-update system that delivers new features, performance improvements, bug fixes, and security patches without manual intervention. Updates are downloaded in the background, cryptographically verified, and installed seamlessly when you restart.
+
+{/* screenshot: update notification dialog showing version and release notes */}
+
+## How Updates Work
+
+### Update Process
+
+<Steps>
+  <Step title="Check for updates">
+    The app checks for new versions on launch and periodically while running. It contacts the update server to compare your current version with the latest available release.
+  </Step>
+  <Step title="Download in background">
+    When a new version is found, the installer is downloaded in the background without interrupting your work. A progress indicator shows download status in the notification area.
+  </Step>
+  <Step title="Verify signature">
+    The downloaded installer is cryptographically verified using Ed25519 digital signatures. This ensures the update is authentic and has not been tampered with during transit.
+  </Step>
+  <Step title="Show notification">
+    Once the download is complete and verified, a notification appears showing the new version number and release notes (changelog) describing what changed.
+  </Step>
+  <Step title="Install on restart">
+    Click **Install & Restart** to apply the update. The NSIS installer handles the upgrade seamlessly -- your settings, workspaces, license, and all user data are preserved.
+  </Step>
+</Steps>
+
+## Update Notification
+
+When an update is ready to install, the notification component appears in the terminal UI with:
+
+| Element | Description |
+|---------|-------------|
+| **Version number** | The new version available (e.g., "v1.3.0") |
+| **Release notes** | A brief changelog describing new features, fixes, and improvements |
+| **Install & Restart** | Applies the update immediately and relaunches the terminal |
+| **Dismiss** | Close the notification; the update installs on next manual restart |
+
+The notification is non-blocking -- it does not prevent you from trading. You can dismiss it and the update will apply the next time you restart the terminal normally.
+
+<Tip>
+Read the release notes before installing. They may describe new features you want to explore, or behavior changes that affect your workflow.
+</Tip>
+
+## Security
+
+All updates are **cryptographically signed** using Ed25519 digital signatures. The signing process ensures end-to-end integrity:
+
+1. **At build time** -- the installer binary is signed with a private key stored securely in the build environment
+2. **Signature published** -- the signature is uploaded alongside the installer to the release server
+3. **At update time** -- the terminal downloads both the installer and its signature, then verifies the signature against the embedded public key
+4. **Rejection on failure** -- if the signature does not match, the update is rejected entirely and the terminal reports the verification failure
+
+<Note>
+You cannot install unsigned or third-party updates. This protects you from malicious software even if the download is intercepted.
+</Note>
+
+<Warning>
+Never install Cluster Terminal from unofficial sources. The auto-update system guarantees authenticity only for updates delivered through the official channel. Manually downloaded installers from third-party sites may not be genuine.
+</Warning>
+
+## Update Server Endpoint
+
+The terminal checks for updates by querying the server's updater endpoint:
+
+```
+GET /api/v1/updater/{target}/{arch}/{current_version}
+```
+
+| Parameter | Example Value | Description |
+|-----------|--------------|-------------|
+| `target` | `windows-x86_64` | Operating system and architecture |
+| `current_version` | `1.2.0` | Currently installed version |
+
+The server responds with:
+
+- **HTTP 200** with a JSON manifest containing the download URL, version, release notes, and signature -- when an update is available
+- **HTTP 204** (No Content) -- when the installed version is already the latest
+
+## Update Settings
+
+| Setting | Description |
+|---------|-------------|
+| **Auto-check** | Enabled by default -- checks for updates automatically on launch and periodically |
+| **Manual check** | Trigger a check from Settings or the update notification area |
+
+### Manual Update Check
+
+If you want to check immediately without waiting for the automatic cycle:
+
+<Steps>
+  <Step title="Open the update area">
+    Look for the update icon in the toolbar or navigate to **Settings**.
+  </Step>
+  <Step title="Click Check for Updates">
+    The terminal queries the update server immediately.
+  </Step>
+  <Step title="Install if available">
+    If a new version is found, the download-and-verify process begins. The notification appears when the download completes.
+  </Step>
+</Steps>
+
+## Installation Details
+
+On Windows, Cluster Terminal uses the **NSIS** (Nullsoft Scriptable Install System) installer. When you accept an update:
+
+1. The terminal saves all workspace states and closes gracefully
+2. The NSIS installer launches and performs an in-place upgrade
+3. Application files are replaced with the new version
+4. User data (workspaces, settings, license, drawings) is preserved
+5. The terminal reopens automatically on the new version
+
+<Note>
+Your workspaces, indicators, drawings, settings, and license activation are never affected by updates. The installer only replaces application binaries and assets. All user data persists through the upgrade.
+</Note>
+
+## Rollback Behavior
+
+If an update installation fails for any reason (power loss, disk error, corrupted download), the previous version remains intact. The NSIS installer performs the upgrade atomically -- it either completes fully or rolls back to the prior state.
+
+In the rare event of a failed update:
+
+1. The terminal reopens on your previous working version
+2. The failed update is not re-attempted immediately
+3. On the next launch, the update check may offer the same version again
+4. If the problem persists, download the latest version manually from the official site or contact support
+
+## Release Cadence
+
+Updates are released as needed. A typical cadence includes:
+
+| Release Type | Frequency | Contents |
+|-------------|-----------|----------|
+| **Feature release** | Every 2-4 weeks | New indicators, chart types, UI features |
+| **Bug fix release** | As needed | Fixes for reported issues |
+| **Security update** | As needed (priority) | Critical security patches |
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Update fails to download">
+    Check your internet connection and firewall settings. The app needs access to the update server on the configured server URL. Verify the server is reachable in **Settings > Server URL**.
+  </Accordion>
+
+  <Accordion title="Update fails to install">
+    Close all instances of Cluster Terminal and try again. Ensure no other process is locking files in the installation directory.
+  </Accordion>
+
+  <Accordion title="No update notification appears">
+    Verify the server connection in Settings. If the server is unreachable, update checks will silently fail. Try a manual check from Settings.
+  </Accordion>
+
+  <Accordion title="Version unchanged after update">
+    Close all terminal windows completely and relaunch. Check the About dialog to confirm your version number.
+  </Accordion>
+
+  <Accordion title="Terminal does not reopen after update">
+    Launch manually from the Start menu or desktop shortcut. The update completed but the auto-relaunch may have been blocked by system permissions.
+  </Accordion>
+</AccordionGroup>
+
+<Tip>
+Keep auto-updates enabled to always have the latest features and security fixes. Release notes are shown in the update notification so you can review changes before installing.
+</Tip>

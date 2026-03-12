@@ -1,0 +1,90 @@
+---
+title: "Net Shorts"
+description: "Net short positioning from order book depth data."
+icon: "arrow-trend-down"
+---
+
+## Overview
+
+**Net Shorts** measures the net short bias extracted from order book depth data. It quantifies how much selling interest (ask-side depth) exists relative to a baseline, revealing passive seller positioning before trades execute.
+
+This is the sell-side counterpart to Net Longs. Together, they provide a full picture of order book positioning.
+
+{/* screenshot: Net Shorts subchart with red histogram bars showing varying levels of short positioning */}
+
+## How It Works
+
+The indicator analyzes order book snapshots and computes the net short bias at a configurable depth bucket. The `depthIndex` parameter controls how deep into the ask side of the book the measurement reaches.
+
+## Chart Type
+
+| Property | Value |
+|----------|-------|
+| Type | Subchart |
+| Position | Below main chart |
+| Data source | Order book depth snapshots |
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| color | Bar/line color | `#ef4444` |
+| depthIndex | Depth bucket to analyze (0-9) | `3` |
+| displayMode | Rendering style | `columns` |
+| highlightAnomalies | Flag statistical outliers | `false` |
+| anomalyThreshold | Standard deviation multiplier | `2.5` |
+| anomalyPeriod | Lookback period for anomaly stats | `30` |
+| gradientIntensity | Fill gradient strength (0-1) | `0` |
+
+### Depth Index
+
+| depthIndex | Typical Range | Use Case |
+|------------|---------------|----------|
+| 0-2 | Near best ask | Scalping, short-term positioning |
+| 3-5 | Mid-depth | Swing trading, general analysis |
+| 6-9 | Deep book | Institutional positioning, macro view |
+
+## Interpretation
+
+### Rising Net Shorts
+
+Increasing short positioning in the order book signals growing selling interest. Passive sellers are stacking offers, which can act as resistance or signal informed selling.
+
+### Declining Net Shorts
+
+Sellers pulling their orders reduces overhead supply. This often precedes breakouts as the resistance above price thins out.
+
+### Net Shorts at Key Levels
+
+<Tip>
+Spikes in Net Shorts at resistance levels often precede reversals. When sellers aggressively stack orders at a technical level, it reinforces that level as a ceiling.
+</Tip>
+
+### Divergence Signals
+
+| Net Shorts | Price | Interpretation |
+|------------|-------|----------------|
+| Rising | Rising | Sellers positioning against the rally — potential reversal zone |
+| Rising | Falling | Sellers piling on — trend continuation likely |
+| Falling | Rising | Resistance thinning — breakout potential |
+| Falling | Falling | Sellers covering — potential bottom forming |
+
+## Anomaly Detection
+
+When `highlightAnomalies` is enabled, periods where Net Shorts exceed the rolling average by more than the configured threshold are flagged. Anomalous spikes in short positioning often precede significant moves.
+
+<Note>
+Net Shorts reflects passive positioning (limit orders in the book), not aggressive selling. For active selling pressure, use Delta Volume or CVD.
+</Note>
+
+## Practical Examples
+
+- **Resistance reinforcement**: Net Shorts spike at a known resistance level — sellers are defending aggressively.
+- **Short squeeze setup**: Net Shorts elevated but price starts pushing through — trapped sellers may be forced to cover.
+- **Breakdown signal**: Net Shorts building during consolidation at support — potential breakdown.
+
+## Related Indicators
+
+- [Net Longs](/en/indicators/metrics/net-longs) — the buy-side counterpart
+- [Net Longs/Shorts](/en/indicators/metrics/net-longs-shorts) — combined overlay of both
+- [Liquidations](/en/indicators/metrics/liquidations) — forced closures from leveraged positions

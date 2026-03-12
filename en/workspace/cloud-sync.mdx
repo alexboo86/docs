@@ -1,0 +1,144 @@
+---
+title: "Cloud Sync"
+description: "Synchronize workspaces across devices."
+icon: "cloud"
+---
+
+# Cloud Sync
+
+Cloud Sync keeps your workspaces synchronized across multiple devices. All your charts, indicators, drawings, and layout settings travel with you automatically.
+
+{/* screenshot: workspace dialog showing cloud sync badges */}
+
+## Requirements
+
+<Note>
+  Cloud Sync requires an active license with the **cloud_sync** feature enabled. Check your license details in **Settings > License** or contact support if you are unsure whether your license includes this feature.
+</Note>
+
+To use Cloud Sync you need:
+
+1. **An active license** with the `cloud_sync` feature.
+2. **A server connection** -- the application must be able to reach the Cluster Terminal server.
+3. **The same license key** activated on all devices you want to sync.
+
+## How It Works
+
+Cloud Sync operates on a **fire-and-forget** model combined with periodic full synchronization.
+
+### Automatic Sync Triggers
+
+| Trigger | When | What Happens |
+|---------|------|--------------|
+| **On save** | Every time you modify a workspace | Changes are pushed to the cloud immediately in the background |
+| **On delete** | When you delete a workspace | Deletion is propagated to the cloud |
+| **Periodic** | Every 5 minutes | Full sync -- uploads local changes and downloads remote changes |
+| **On close** | When closing the application | Final sync attempt before the app shuts down |
+
+### Conflict Resolution
+
+Cloud Sync uses a **last-write-wins** strategy. If the same workspace is modified on two devices between sync cycles, the most recent save takes precedence.
+
+<Warning>
+  If you work on the same workspace from two devices simultaneously, changes from one device may overwrite the other. To avoid conflicts, close the application on one device before opening on another, or use separate workspaces per device.
+</Warning>
+
+## Manual Sync
+
+You can trigger an immediate sync without waiting for the 5-minute cycle.
+
+<Steps>
+  <Step title="Open the workspace dialog">
+    Click the workspace name in the header bar.
+  </Step>
+  <Step title="Click Sync Now">
+    Click the **Sync Now** button at the top of the workspace dialog. A spinner indicates the sync is in progress.
+  </Step>
+  <Step title="Check results">
+    Once complete, workspace badges update to reflect the current sync state.
+  </Step>
+</Steps>
+
+{/* screenshot: Sync Now button in workspace dialog */}
+
+## Sync Status Badges
+
+The workspace dialog shows sync status next to each workspace name:
+
+| Badge | Meaning |
+|-------|---------|
+| Cloud icon (solid) | Fully synced with the cloud |
+| Upload arrow | Local changes waiting to be uploaded |
+| Download arrow | Remote changes available for download |
+| No badge | Workspace is local only (cloud sync not available) |
+
+## Offline Queue
+
+If the server is unreachable when a sync is triggered, changes are queued locally in the browser's `localStorage`. The queue is processed automatically on the next successful sync.
+
+<Tip>
+  You can work fully offline. All changes accumulate in the offline queue and sync when connectivity is restored. No data is lost.
+</Tip>
+
+### How the Offline Queue Works
+
+1. You modify or delete a workspace while offline.
+2. The change is added to the local offline queue.
+3. On the next periodic sync (or manual Sync Now), the application attempts to connect.
+4. If the server is reachable, all queued changes are pushed in order.
+5. The queue is cleared after successful upload.
+
+## Data Stored in the Cloud
+
+Each synced workspace stores:
+
+- **Workspace metadata** -- name, ID, last-modified timestamp
+- **Configuration** -- full workspace state as a JSON blob, including:
+  - Chart settings (symbol, exchange, timeframe, chart type)
+  - All indicator configurations
+  - All drawing annotations with coordinates
+  - Tab and pane layout
+  - Alert definitions
+
+<Note>
+  Cloud Sync does **not** store market data, cached candles, or application settings (theme, language, server URL). These remain local to each device.
+</Note>
+
+## API Details
+
+Cloud Sync communicates with the server over HTTPS using JWT authentication derived from your license key.
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/workspaces` | `GET` | List all workspaces for the current license |
+| `/api/v1/workspaces` | `PUT` | Create or update a workspace |
+| `/api/v1/workspaces` | `DELETE` | Delete a workspace by ID |
+
+All requests require an `Authorization: Bearer <JWT>` header. The JWT is obtained automatically during license validation and refreshed periodically.
+
+## Troubleshooting Cloud Sync
+
+<AccordionGroup>
+  <Accordion title="Sync badge shows upload arrow but never completes">
+    Check your internet connection and verify the server is reachable in **Settings > Server URL**. If the server is down, changes remain queued and will sync when connectivity resumes.
+  </Accordion>
+
+  <Accordion title="Workspaces disappeared after syncing on a new device">
+    Ensure both devices are using the same license key. Workspaces are scoped to the license. If you activated a different key, you will see that key's workspaces instead.
+  </Accordion>
+
+  <Accordion title="Sync Now button is not visible">
+    Cloud Sync is only available with a license that includes the `cloud_sync` feature. Check your license details in Settings.
+  </Accordion>
+
+  <Accordion title="Changes from another device are not appearing">
+    Click **Sync Now** to force a pull. If changes still do not appear, verify the other device completed its sync before going offline.
+  </Accordion>
+</AccordionGroup>
+
+## Security
+
+- All sync traffic is encrypted over HTTPS.
+- Workspace data is tied to your license key -- no other user can access your workspaces.
+- JWT tokens are short-lived and refreshed automatically.
+- The server stores workspace data in PostgreSQL with the workspace ID and license ID as keys.

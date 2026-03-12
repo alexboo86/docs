@@ -1,0 +1,146 @@
+---
+title: "VWAP"
+description: "Volume Weighted Average Price with optional standard deviation bands."
+icon: "chart-line"
+---
+
+# Volume Weighted Average Price (VWAP)
+
+VWAP is the **volume-weighted average price** calculated from the start of a trading session. It represents the average price a trader would have paid if they bought steadily throughout the session, weighted by volume at each price level. VWAP is the single most important benchmark for institutional execution quality.
+
+{/* screenshot: VWAP with standard deviation bands on a BTC/USDT 5m chart showing intraday session */}
+
+## How It Works
+
+VWAP is computed cumulatively from the session start:
+
+```
+VWAP = Σ(Typical Price × Volume) / Σ(Volume)
+
+where Typical Price = (High + Low + Close) / 3
+```
+
+At each bar, the running numerator (sum of price × volume) and denominator (sum of volume) are updated. The result is a single, ever-smoothing line that reflects the true average transaction price for the session.
+
+### Why VWAP Matters
+
+Large institutional orders are often benchmarked against VWAP. A buy order executed at a price below VWAP is considered "good execution" — the trader paid less than the market average. This creates a self-reinforcing dynamic:
+
+- When price is **below VWAP**, institutional buyers see an opportunity (discount to average).
+- When price is **above VWAP**, institutional sellers see an opportunity (premium to average).
+
+This gravitational pull toward VWAP makes it a powerful intraday reference.
+
+### Standard Deviation Bands
+
+Optional bands are plotted at a specified number of standard deviations from VWAP. The standard deviation is calculated using the same cumulative volume-weighted approach:
+
+```
+Variance = Σ(Volume × (Typical Price - VWAP)²) / Σ(Volume)
+Band = VWAP ± (bandMultiplier × √Variance)
+```
+
+These bands act as dynamic overbought/oversold zones: price reaching the upper band indicates an extended move above average, while the lower band indicates an extended move below.
+
+### Indicator Type
+
+**Overlay** — VWAP and its bands are drawn directly on the price chart.
+
+## Settings
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `sessionReset` | select | `day` | When to reset the VWAP calculation. Options: `none`, `day`, `week`, `month`. |
+| `sessionStartHour` | number | 0 | Hour (UTC, 0–23) at which the session begins. Only used when `sessionReset` is not `none`. |
+| `showBands` | boolean | `false` | Show standard deviation bands around VWAP. |
+| `bandMultiplier` | number | 1 | Number of standard deviations for band width. Common values: 1, 1.5, 2, 3. |
+| `bandColor` | color | `#a855f7` | Fill color for the area between bands. |
+| `bandOpacity` | number | 0.15 | Transparency of the band fill (0.0 = invisible, 1.0 = solid). |
+
+### Session Reset Options
+
+| Reset | Behavior | Best For |
+|-------|----------|----------|
+| `none` | VWAP accumulates continuously from the first visible bar. Never resets. | Multi-day context, position trading. |
+| `day` | Resets at `sessionStartHour` each day. Most common setting. | Intraday trading, daily benchmarks. |
+| `week` | Resets at the start of each calendar week (Monday at `sessionStartHour`). | Swing trading, weekly context. |
+| `month` | Resets at the start of each calendar month. | Monthly institutional benchmarks. |
+
+<Tip>
+For crypto futures trading, the default `sessionStartHour: 0` (midnight UTC) aligns with the daily funding timestamp on most exchanges. If you trade aligned to the CME session, set `sessionStartHour` to 14 or 15 (UTC) to match the US equity open.
+</Tip>
+
+### Band Multiplier Guide
+
+| Multiplier | Interpretation |
+|------------|---------------|
+| 1.0 | One standard deviation. Price exits this band roughly 32% of the time. Good for identifying mild extensions. |
+| 1.5 | Moderate extension. A popular middle ground. |
+| 2.0 | Two standard deviations. Price exits only ~5% of the time. Strong overbought/oversold signal. |
+| 3.0 | Extreme extension. Rarely reached; when it is, a mean-reversion snap is likely. |
+
+{/* screenshot: VWAP with 1σ and 2σ bands showing price bouncing between bands */}
+
+## Interpretation
+
+### Intraday Trend Filter
+
+The simplest VWAP application is as a trend filter:
+
+- **Price above VWAP**: Intraday buyers are in control. Favor long entries.
+- **Price below VWAP**: Intraday sellers are in control. Favor short entries.
+
+This filter becomes more reliable as the session progresses and VWAP accumulates more data. Early in the session (first 30–60 minutes), VWAP is volatile and less meaningful.
+
+### VWAP as Support/Resistance
+
+VWAP frequently acts as intraday support or resistance:
+
+- In an uptrending day, price often pulls back to VWAP and bounces.
+- In a downtrending day, price often rallies to VWAP and rejects.
+- The first test of VWAP after a move tends to be the strongest.
+
+### Band Mean Reversion
+
+When price reaches the outer bands (especially 2σ or 3σ), it has stretched significantly from the session average. These zones are high-probability mean-reversion areas:
+
+- **Price at upper band**: Consider short entries or profit-taking on longs.
+- **Price at lower band**: Consider long entries or profit-taking on shorts.
+- **Price returning to VWAP from a band**: The "rubber band" snap-back, one of the most reliable intraday patterns.
+
+<Tip>
+Price above VWAP means institutional buyers are in control; below means sellers. The standard deviation bands act as dynamic support and resistance levels that expand with volatility and contract during consolidation.
+</Tip>
+
+### VWAP Anchoring
+
+By setting `sessionReset: none`, you create an anchored VWAP that accumulates from the beginning of the visible chart data. This is useful for analyzing the average cost basis of all participants since a significant event (trend start, breakdown, etc.).
+
+## Combining VWAP with Other Indicators
+
+VWAP is most powerful when combined with:
+
+| Companion Indicator | Combined Signal |
+|-------------------|-----------------|
+| **Volume Bars** | VWAP bounce + volume spike = strong confirmation |
+| **Delta** | Price at VWAP + positive delta = aggressive buying at the average |
+| **Session Levels** | VWAP near previous day high/low = confluence zone |
+| **Volume Profile** | VWAP near POC (Point of Control) = double-strength magnet |
+
+## Practical Considerations
+
+- **First 30 minutes**: VWAP is unstable early in the session because few data points have accumulated. Avoid trading VWAP signals in the first 30 minutes after session reset.
+- **Flat days**: When the market ranges tightly, VWAP sits in the middle and price oscillates around it. In this context, band bounces become the primary tradeable signal.
+- **Gap days**: If price gaps sharply at the session open, VWAP may take hours to "catch up." In this case, the bands are more useful than VWAP itself.
+- **Session reset timing**: In 24/7 crypto markets, there is no official "session." The choice of `sessionStartHour` is subjective. Midnight UTC and 8:00 AM UTC (Asian open) are common choices.
+
+## Alerts
+
+VWAP does **not** currently support built-in alert rules. Use the general Alerts system for VWAP-based conditions.
+
+## Related Indicators
+
+- [SMA](/en/indicators/classic/sma) — Simple Moving Average, non-volume-weighted
+- [EMA](/en/indicators/classic/ema) — Exponential Moving Average
+- [Bollinger Bands](/en/indicators/classic/bollinger-bands) — Volatility bands around an SMA
+- [Session Levels](/en/indicators/classic/session-levels) — Previous session high/low/open as static levels

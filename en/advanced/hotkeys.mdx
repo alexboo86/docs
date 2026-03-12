@@ -1,0 +1,157 @@
+---
+title: "Keyboard Shortcuts"
+description: "Speed up your workflow with keyboard shortcuts for chart navigation, drawing, and indicators."
+icon: "keyboard"
+---
+
+Keyboard shortcuts let you perform common actions without reaching for the mouse. Learning the core shortcuts dramatically speeds up chart analysis -- especially during fast-moving markets where seconds matter.
+
+## Chart Navigation
+
+Navigation shortcuts control scrolling, zooming, and positioning within the chart.
+
+| Shortcut                     | Action                                                    |
+|------------------------------|-----------------------------------------------------------|
+| Scroll wheel                 | Zoom in / zoom out (horizontal time axis)                 |
+| Ctrl + Scroll wheel          | Zoom in / zoom out (vertical price axis)                  |
+| Click + Drag (middle mouse)  | Pan the chart in any direction                            |
+| Left Arrow                   | Scroll chart left (back in time) by one bar               |
+| Right Arrow                  | Scroll chart right (forward in time) by one bar           |
+| Home                         | Jump to the earliest loaded data                          |
+| End                          | Jump to the latest data (current time)                    |
+| Ctrl + 0                     | Reset zoom to default level                               |
+
+### Scrolling Behavior
+
+The scroll wheel zooms horizontally by default, expanding or compressing the time axis. Holding **Ctrl** while scrolling changes to vertical zoom, adjusting the price scale. This two-axis zoom gives you precise control over how much data is visible.
+
+<Tip>
+Press **End** to quickly snap back to the current market price after scrolling through historical data. This is the fastest way to return to live trading view.
+</Tip>
+
+## Crosshair
+
+| Shortcut    | Action                                                         |
+|-------------|----------------------------------------------------------------|
+| C           | Toggle crosshair on/off                                       |
+| Ctrl + C    | Cycle crosshair modes (none, crosshair, horizontal only, vertical only) |
+
+The crosshair displays a vertical and horizontal guide line that follows your cursor, with price and time labels on the axes. Crosshair modes let you choose the level of visual guidance you prefer.
+
+{/* screenshot: crosshair-modes.png -- side-by-side comparison of crosshair, horizontal-only, and vertical-only modes */}
+
+## Drawing Tools
+
+Drawing shortcuts activate the corresponding tool. Once activated, click on the chart to place the drawing. Press **Escape** to cancel the current drawing operation and return to the pointer tool.
+
+| Shortcut    | Tool                                                           |
+|-------------|----------------------------------------------------------------|
+| H           | Horizontal Line                                                |
+| T           | Trend Line                                                     |
+| R           | Ray (semi-infinite line)                                       |
+| F           | Fibonacci Retracement                                          |
+| B           | Rectangle / Box                                                |
+| Escape      | Cancel current drawing, return to pointer                      |
+| Delete      | Delete the selected drawing                                    |
+
+### Drawing Workflow
+
+<Steps>
+  <Step title="Activate the tool">
+    Press the shortcut key (e.g., **H** for horizontal line) or select the tool from the toolbar.
+  </Step>
+  <Step title="Place the drawing">
+    Click on the chart to set the first anchor point. For multi-point tools (trend line, Fibonacci), click again to set the second point.
+  </Step>
+  <Step title="Adjust if needed">
+    After placement, click and drag the anchor handles to reposition. The drawing snaps to price levels for precision.
+  </Step>
+  <Step title="Deactivate the tool">
+    Press **Escape** or click the pointer tool in the toolbar. The drawing remains on the chart.
+  </Step>
+</Steps>
+
+<Note>
+Drawings are saved per-tab within the workspace. They persist across sessions and are included in cloud sync if enabled.
+</Note>
+
+## Selection and Editing
+
+| Shortcut         | Action                                                    |
+|------------------|-----------------------------------------------------------|
+| Click on drawing | Select the drawing (shows anchor handles)                 |
+| Delete           | Delete the currently selected drawing                     |
+| Ctrl + Z         | Undo the last drawing action                              |
+| Ctrl + Shift + Z | Redo the last undone action                               |
+| Ctrl + A         | Select all drawings on the current chart                  |
+
+## Indicator Shortcuts
+
+| Shortcut    | Action                                                         |
+|-------------|----------------------------------------------------------------|
+| I           | Open the indicator search/add dialog                           |
+| Ctrl + I    | Toggle indicator panel visibility (show/hide all indicators)   |
+
+The indicator dialog provides a searchable list of all available indicators. Type to filter by name, then press **Enter** to add the selected indicator to the active chart pane.
+
+## Workspace Management
+
+| Shortcut         | Action                                                    |
+|------------------|-----------------------------------------------------------|
+| Ctrl + N         | Create a new tab in the current workspace                 |
+| Ctrl + W         | Close the active tab                                      |
+| Ctrl + Tab       | Switch to the next tab                                    |
+| Ctrl + Shift+Tab | Switch to the previous tab                                |
+| Ctrl + 1-9       | Switch to tab by position (1 = first tab, 2 = second)    |
+
+<Tip>
+**Ctrl + Tab** and **Ctrl + Shift + Tab** cycle through tabs like a browser. Combined with numbered tab shortcuts (**Ctrl + 1** through **Ctrl + 9**), you can navigate complex multi-tab workspaces without touching the mouse.
+</Tip>
+
+## General
+
+| Shortcut         | Action                                                    |
+|------------------|-----------------------------------------------------------|
+| F11              | Toggle fullscreen mode                                    |
+| Ctrl + ,         | Open Settings                                             |
+| Ctrl + S         | Force save current workspace state                        |
+| Ctrl + F         | Open symbol search                                        |
+
+## Symbol Search
+
+Pressing **Ctrl + F** opens the symbol search overlay. Type any part of a symbol name to filter the available instruments. Use the arrow keys to navigate results and **Enter** to select. The chart in the active pane switches to the selected symbol immediately.
+
+{/* screenshot: symbol-search.png -- symbol search overlay with "ETH" typed, showing ETHUSDT and related results */}
+
+## Customization
+
+Keyboard shortcuts are currently pre-configured and cannot be remapped through the UI. The shortcuts are designed to be consistent with common trading terminal conventions and avoid conflicts with operating system shortcuts.
+
+<Note>
+On macOS, replace **Ctrl** with **Cmd** for all shortcuts. For example, **Cmd + Tab** switches tabs, **Cmd + N** creates a new tab, and **Cmd + ,** opens Settings.
+</Note>
+
+## Quick Reference Card
+
+For convenient reference during trading, here are the most frequently used shortcuts:
+
+| Action               | Shortcut                    |
+|----------------------|-----------------------------|
+| Zoom time axis       | Scroll wheel                |
+| Zoom price axis      | Ctrl + Scroll wheel         |
+| Pan chart            | Middle mouse drag           |
+| Go to latest         | End                         |
+| Toggle crosshair     | C                           |
+| Horizontal line      | H                           |
+| Trend line           | T                           |
+| Cancel drawing       | Escape                      |
+| Delete drawing       | Delete                      |
+| Add indicator        | I                           |
+| New tab              | Ctrl + N                    |
+| Next tab             | Ctrl + Tab                  |
+| Symbol search        | Ctrl + F                    |
+| Fullscreen           | F11                         |
+
+<Tip>
+Print or screenshot this reference card and keep it next to your monitor while learning. Most traders internalize the top five shortcuts within a few days of active use.
+</Tip>

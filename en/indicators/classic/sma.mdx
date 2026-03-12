@@ -1,0 +1,120 @@
+---
+title: "SMA"
+description: "Simple Moving Average — smoothed price trend line."
+icon: "chart-line"
+---
+
+# Simple Moving Average (SMA)
+
+The Simple Moving Average is the most fundamental trend-following indicator in technical analysis. It calculates the **arithmetic mean of closing prices** over a specified number of periods, producing a smooth line that filters out short-term noise and reveals the underlying trend direction.
+
+{/* screenshot: SMA(20) overlaid on a BTC/USDT 1h chart showing the smooth trend line */}
+
+## How It Works
+
+For each bar on the chart, the SMA value is computed as:
+
+```
+SMA = (Close₁ + Close₂ + ... + Closeₙ) / N
+```
+
+Where **N** is the period (number of bars) and `Close₁` through `Closeₙ` are the most recent N closing prices.
+
+Every closing price in the window carries **equal weight** — this is the key distinction from the EMA, which weights recent prices more heavily. As a result, the SMA responds more slowly to sudden price changes but provides a more stable, less noisy signal.
+
+### Indicator Type
+
+**Overlay** — the SMA line is drawn directly on the price chart, sharing the same Y-axis as candlesticks.
+
+## Settings
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `period` | number | 20 | Number of bars used to calculate the average. Higher values produce smoother lines that react more slowly to price changes. |
+| `color` | color | `#f59e0b` | Color of the SMA line. |
+| `lineWidth` | number | 1.5 | Thickness of the SMA line in pixels. |
+
+### Period Selection Guide
+
+The period is the most important setting. Different periods serve different analytical purposes:
+
+| Period | Common Name | Use Case |
+|--------|-------------|----------|
+| 9–10 | Fast MA | Scalping, very short-term momentum |
+| 20 | Standard | Default swing trading reference, mean reversion |
+| 50 | Medium-term | Intermediate trend identification |
+| 100 | Slow | Position trading, major trend filter |
+| 200 | Long-term | Institutional benchmark, bull/bear market divider |
+
+<Tip>
+The 200-period SMA is widely watched by institutional traders. When price crosses above the 200 SMA, many algorithmic systems classify the market as bullish; below it, bearish. This self-reinforcing dynamic makes the 200 SMA significant even on its own.
+</Tip>
+
+## Interpretation
+
+### Trend Direction
+
+- **Price above SMA**: Uptrend. The SMA acts as dynamic support.
+- **Price below SMA**: Downtrend. The SMA acts as dynamic resistance.
+- **SMA slope rising**: Bullish momentum is increasing.
+- **SMA slope falling**: Bearish momentum is increasing.
+- **SMA flat**: Market is in consolidation or a range.
+
+### Dynamic Support and Resistance
+
+In trending markets, price often pulls back to the SMA and bounces. The SMA acts as a moving support (uptrend) or resistance (downtrend) level. The longer the period, the stronger this dynamic level tends to be.
+
+{/* screenshot: Price bouncing off SMA(50) multiple times during an uptrend */}
+
+### Moving Average Crossovers
+
+A common strategy uses two SMAs of different periods:
+
+- **Golden Cross**: Short-period SMA crosses above long-period SMA — bullish signal.
+- **Death Cross**: Short-period SMA crosses below long-period SMA — bearish signal.
+
+Popular crossover pairs include 9/21, 20/50, and 50/200. The 50/200 crossover (Golden Cross / Death Cross) receives significant media attention and is tracked by institutional desks.
+
+<Tip>
+Use multiple SMAs simultaneously — for example, 20, 50, and 200 — to build a layered view of trend strength. When all three are stacked in order (20 above 50 above 200 with price above all), the trend is strong. When they converge and intertwine, the market is directionless.
+</Tip>
+
+## Multi-SMA Setup Example
+
+A practical three-SMA configuration:
+
+| Instance | Period | Color | Purpose |
+|----------|--------|-------|---------|
+| SMA 1 | 20 | `#f59e0b` (amber) | Short-term trend, mean reversion target |
+| SMA 2 | 50 | `#3b82f6` (blue) | Medium-term trend filter |
+| SMA 3 | 200 | `#ef4444` (red) | Long-term trend, institutional reference |
+
+Add each SMA as a separate indicator instance and configure the period and color individually.
+
+## SMA vs. EMA
+
+| Characteristic | SMA | EMA |
+|---------------|-----|-----|
+| Weight distribution | Equal across all periods | Exponential decay, recent prices weighted more |
+| Reaction speed | Slower | Faster |
+| Noise sensitivity | Lower — smoother line | Higher — more reactive to spikes |
+| Lag | More lag | Less lag |
+| Best for | Identifying major trend direction, long-term levels | Short-term trading, momentum signals |
+
+Choose SMA when you need a stable, reliable trend reference. Choose EMA when you need quicker signals and are willing to accept more false moves.
+
+## Practical Considerations
+
+- **Timeframe matters**: An SMA(20) on a daily chart covers ~1 month of trading. The same SMA(20) on a 5-minute chart covers less than 2 hours. Always consider what time window your period actually represents.
+- **Volatile markets**: In highly volatile crypto markets, very short SMA periods (below 10) can produce excessive whipsaw. Consider using a slightly longer period or switching to EMA for faster response with less noise.
+- **Flat markets**: When price oscillates around the SMA in a range, the indicator generates many false signals. Combine with a trend filter (e.g., ADX or higher-timeframe SMA) to avoid trading during consolidation.
+
+## Alerts
+
+The SMA indicator does **not** support built-in alert rules. To create alerts based on SMA crossovers or price-SMA interactions, use the general Alerts system with custom conditions.
+
+## Related Indicators
+
+- [EMA](/en/indicators/classic/ema) — Exponential Moving Average, faster-reacting alternative
+- [VWAP](/en/indicators/classic/vwap) — Volume-weighted average, institutional benchmark
+- [Bollinger Bands](/en/indicators/classic/bollinger-bands) — SMA with volatility bands

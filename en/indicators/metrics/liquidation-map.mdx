@@ -1,0 +1,99 @@
+---
+title: "Liquidation Map"
+description: "Heatmap overlay showing estimated liquidation clusters at different price levels."
+icon: "map"
+---
+
+## Overview
+
+**Liquidation Map** projects a background heatmap onto the price chart showing where estimated liquidation clusters exist at various price levels. These clusters represent pools of liquidity — areas where forced closures would occur if price reaches those levels.
+
+- **Green zones** = long liquidation clusters (longs would be liquidated if price drops here).
+- **Red zones** = short liquidation clusters (shorts would be liquidated if price rises here).
+
+Price is often drawn toward these clusters because market makers and large participants target pools of resting liquidity.
+
+{/* screenshot: Price chart with semi-transparent green and red heatmap zones above and below current price, showing liquidation density */}
+
+## How It Works
+
+The indicator estimates liquidation levels based on:
+1. Current open interest distribution
+2. Common leverage tiers used by traders
+3. Estimated entry prices from recent position openings
+
+These estimates are projected onto the chart as colored zones with varying intensity. Brighter/denser zones indicate larger estimated liquidation clusters.
+
+<Note>
+Liquidation Map shows **estimated** levels based on statistical modeling. Actual liquidation prices depend on individual trader entries, leverage, and margin — data that is not publicly available.
+</Note>
+
+## Chart Type
+
+| Property | Value |
+|----------|-------|
+| Type | Side panel (heatmap background on chart) |
+| Position | Overlaid on the main price chart |
+| Rendering | Semi-transparent colored zones |
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| longZoneColor | Color for long liquidation clusters | `#22c55e55` |
+| shortZoneColor | Color for short liquidation clusters | `#ef444455` |
+| depthPct | Depth percentage from current price to scan | `2.5` |
+| minIntensity | Minimum intensity threshold to display (0-1) | `0.1` |
+
+### Color Format
+
+Colors include an alpha channel (the last two hex digits). The default `55` provides approximately 33% opacity, allowing the price chart to remain visible through the heatmap. Adjust the alpha value to increase or decrease the overlay intensity.
+
+### Depth Percentage
+
+The `depthPct` parameter controls how far above and below the current price the heatmap extends. At the default of `2.5`, the map shows estimated liquidations within 2.5% of the current price in both directions.
+
+| depthPct | Range | Use Case |
+|----------|-------|----------|
+| 1.0 | Tight range | Scalping, immediate liquidation zones |
+| 2.5 | Standard | General trading (default) |
+| 5.0+ | Wide range | Swing trading, macro liquidation structure |
+
+## Interpretation
+
+### Liquidity Magnet Effect
+
+<Tip>
+Price tends to gravitate toward liquidation clusters because they represent pools of liquidity. Market makers and large participants often push price into these zones to trigger forced orders that they can fill against.
+</Tip>
+
+### Dense Clusters
+
+Areas with high heatmap intensity represent large concentrations of estimated liquidations. These zones act as:
+- **Targets**: Price is drawn toward them.
+- **Acceleration zones**: Once price enters, cascading liquidations can push it through rapidly.
+- **Support/resistance**: After liquidations are triggered, the zone is "cleared" and may become less significant.
+
+### Asymmetric Clusters
+
+When liquidation density is much higher on one side (e.g., more long liquidations below than short liquidations above), price has a statistical tendency to move toward the denser side. The larger pool of liquidity is more attractive.
+
+### Cleared Zones
+
+After price sweeps through a liquidation cluster and triggers the forced closures, the zone is largely depleted. This is why price sometimes reverses after hitting a dense cluster — the liquidity has been consumed.
+
+## Practical Examples
+
+- **Liquidity hunt**: Dense long liquidation cluster just below a support level — if support breaks, expect acceleration as cascading liquidations trigger.
+- **Reversal zone**: Price enters a dense cluster, triggers liquidations, then reverses — the forced flow is exhausted.
+- **Directional bias**: Much larger short liquidation cluster above than long cluster below — magnetic pull is upward.
+
+<Warning>
+Liquidation maps are estimations, not guarantees. The actual distribution of liquidations depends on trader behavior that is not fully observable. Use as a probabilistic guide, not a precise map.
+</Warning>
+
+## Related Indicators
+
+- [Liquidation Levels](/en/indicators/metrics/liquidation-levels) — specific horizontal lines by leverage tier
+- [Liquidations](/en/indicators/metrics/liquidations) — actual triggered liquidations (historical)
+- [Open Interest](/en/indicators/metrics/open-interest) — total positions backing the estimates

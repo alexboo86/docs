@@ -1,0 +1,208 @@
+---
+title: "Candlestick Chart"
+description: "Configure candlestick display, colors, borders, shadows, and body styles."
+icon: "chart-candlestick"
+---
+
+Candlestick charts are the foundation of technical analysis. In Cluster Terminal, the candlestick mode renders standard Japanese candlesticks from Binance Futures OHLC data with full control over colors, borders, shadows, body opacity, corner rounding, and glow effects.
+
+## What Candlestick Charts Show
+
+Each candlestick represents price action over a single time period (determined by your selected timeframe). A candle encodes four data points:
+
+| Component | Description |
+|-----------|-------------|
+| **Open** | The price at the start of the period |
+| **High** | The highest price reached during the period |
+| **Low** | The lowest price reached during the period |
+| **Close** | The price at the end of the period |
+
+The rectangular **body** of the candle spans from the open to the close. The thin lines extending above and below the body are called **shadows** (or wicks), and they represent the high and low of the period.
+
+- A **bullish candle** (close > open) indicates that price moved up during the period. By default, bullish candles are colored green.
+- A **bearish candle** (close < open) indicates that price moved down during the period. By default, bearish candles are colored red.
+
+When the open and close are equal (or nearly equal), the candle appears as a thin horizontal line called a **doji**, signaling indecision between buyers and sellers.
+
+{/* screenshot: standard candlestick chart showing bullish and bearish candles with labeled OHLC components */}
+
+## Timeframe Selection
+
+The timeframe determines the duration each candle represents. Cluster Terminal supports the following timeframes:
+
+| Timeframe | Candle Duration | Typical Use Case |
+|-----------|----------------|------------------|
+| **1m** | 1 minute | Scalping, precise entries |
+| **5m** | 5 minutes | Short-term intraday trading |
+| **15m** | 15 minutes | Intraday swing setups |
+| **30m** | 30 minutes | Session-level analysis |
+| **1h** | 1 hour | Intraday trend identification |
+| **4h** | 4 hours | Swing trading, multi-session trends |
+| **1d** | 1 day | Daily bias, macro structure |
+| **1w** | 1 week | Long-term trend analysis |
+
+Select the timeframe from the dropdown in the chart toolbar. Changing the timeframe reloads the candle data from the server and re-renders the chart.
+
+<Note>
+All candle data originates from Binance Futures aggregate trades and is computed server-side. The server stores raw tick data and constructs candles dynamically for the requested timeframe, ensuring accuracy across all intervals.
+</Note>
+
+## Body Colors
+
+Cluster Terminal uses separate color settings for bullish and bearish candle bodies. You can customize these in **Appearance > Color Overrides** or through the chart settings panel.
+
+### Bullish (Up) Body Color
+
+The fill color for candles where close is greater than or equal to open. The default is a green shade optimized for dark themes.
+
+### Bearish (Down) Body Color
+
+The fill color for candles where close is less than open. The default is a red shade that provides clear contrast against the bullish color on any theme.
+
+<Tip>
+Choose colors with sufficient contrast between bullish and bearish candles. Avoid colors that are too similar in hue or brightness, as this makes it harder to read the chart at a glance. Many professional traders use green/red or blue/orange pairings.
+</Tip>
+
+### Body Opacity
+
+The **bodyOpacity** setting controls the transparency of the candle body fill. The default value is **0.88** (88% opaque), which provides a slightly translucent appearance. Reduce opacity if you want indicators or overlays behind the candles to show through.
+
+| Opacity Range | Visual Effect |
+|---------------|---------------|
+| **1.0** | Fully opaque, solid candles |
+| **0.7 -- 0.9** | Slightly translucent, default feel |
+| **0.4 -- 0.6** | Semi-transparent, overlays visible beneath |
+| **Below 0.3** | Ghost candles, primarily for background context |
+
+## Borders and Outlines
+
+Each candle body can display a distinct border (outline) with independent color control.
+
+### Border Width
+
+The **borderWidth** setting controls the thickness of the candle body outline in pixels. The default is **1px**. Set to **0** to disable borders entirely and show only filled bodies.
+
+### Border Colors
+
+Border colors are configured separately for bullish and bearish candles:
+
+- **Up Border** (`candleUpBorder`) -- the outline color for bullish candles. If not set, it defaults to a slightly darker shade of the up body color.
+- **Down Border** (`candleDownBorder`) -- the outline color for bearish candles. If not set, it defaults to a slightly darker shade of the down body color.
+
+<Note>
+Setting border colors independently from body colors is useful when you want a "hollow candle" look -- for example, a transparent body with a visible colored outline, or a filled body with a contrasting border for emphasis.
+</Note>
+
+## Shadows (Wicks)
+
+Shadows extend vertically from the candle body to the high and low prices. Their color is configurable independently from the body and border.
+
+### Shadow Colors
+
+- **Up Shadow** (`candleUpShadow`) -- the wick color for bullish candles.
+- **Down Shadow** (`candleDownShadow`) -- the wick color for bearish candles.
+
+By default, shadow colors match the body colors. Some traders prefer muted or gray wicks to keep focus on the body itself. Others set all wick colors to a single neutral color regardless of candle direction.
+
+## Corner Radius
+
+The **cornerRadius** setting rounds the corners of the candle body. The default is **1** (minimal rounding). Increase this value for a softer, more modern appearance. Set to **0** for perfectly sharp rectangular candles.
+
+| Value | Appearance |
+|-------|-----------|
+| **0** | Sharp rectangular corners |
+| **1** | Subtle rounding (default) |
+| **2 -- 4** | Noticeably rounded, pill-like feel |
+
+## Glow Effect
+
+The **glowIntensity** setting adds a luminous glow around candle bodies. The default value is **0.28** (subtle glow). This effect uses the body color to generate a soft halo, making candles stand out against the background.
+
+| Value | Effect |
+|-------|--------|
+| **0** | No glow |
+| **0.1 -- 0.3** | Subtle ambient glow (default range) |
+| **0.4 -- 0.7** | Moderate glow, candles "pop" from the background |
+| **0.8 -- 1.0** | Intense neon glow, high visual impact |
+
+<Tip>
+Glow effects work best on dark themes. On light themes, reduce the intensity or disable it entirely, as the glow can reduce contrast and make candles harder to read.
+</Tip>
+
+## Configuring Candle Appearance
+
+<Steps>
+  <Step title="Open the chart settings panel">
+    Click the **gear icon** in the chart toolbar, or right-click the chart background and select **Settings**.
+  </Step>
+  <Step title="Select the Candles preset">
+    In the preset dropdown at the top of the settings panel, choose **Candles**. This activates the candlestick display mode without cluster overlays.
+  </Step>
+  <Step title="Adjust candle style">
+    In the **Candle Style** section, configure corner radius, body opacity, border width, and glow intensity.
+  </Step>
+  <Step title="Override colors">
+    Switch to the **Appearance** panel and modify color overrides for up/down body, border, and shadow colors. You can also switch chart themes here.
+  </Step>
+</Steps>
+
+{/* screenshot: chart settings panel with candle style options expanded */}
+
+## When to Use Candlestick Mode
+
+Candlestick mode is the lightest rendering mode in Cluster Terminal. It does not load or render volume cluster data, which makes it ideal for several scenarios:
+
+### Higher Timeframe Overview
+
+Use candlestick mode on **4h** or **1d** charts to identify the broader trend and key price structure. Cluster data is less actionable at these timeframes because the volume is aggregated over very long periods.
+
+### Multi-Chart Layouts
+
+When running **four or more charts** simultaneously, switching some panes to candlestick mode reduces GPU and memory usage significantly. Each cluster chart requires rendering hundreds or thousands of individual cells; a candlestick chart renders only the candle bodies and wicks.
+
+### Pattern-Based Analysis
+
+If your trading methodology focuses on candlestick patterns (engulfing, doji, hammer, pin bar) or classical chart patterns (head and shoulders, triangles, wedges), candlestick mode provides a clean, uncluttered view.
+
+<Tip>
+A common professional setup is to use **candles on a higher timeframe** (1h or 4h) for directional bias, and **clusters on a lower timeframe** (1m or 5m) for precise entry timing. This combines the clarity of candlestick analysis with the depth of order flow data.
+</Tip>
+
+## Candlestick Mode vs. Other Modes
+
+| Feature | Candlestick | Cluster | Heatmap |
+|---------|------------|---------|---------|
+| Price action (OHLC) | Full | Full | With candle overlay |
+| Volume per price level | No | Yes | No |
+| Bid/Ask breakdown | No | Yes | No |
+| Order book depth | No | No | Yes |
+| Rendering cost | Low | High | Medium |
+| Best timeframes | All | 1m -- 1h | 1m -- 15m |
+
+## Color Override Reference
+
+All candle color overrides are found in the **Appearance** settings. These override the active theme's defaults:
+
+| Override Key | Controls | Default |
+|--------------|----------|---------|
+| `candleUpBg` | Bullish body fill | Theme green |
+| `candleDownBg` | Bearish body fill | Theme red |
+| `candleUpBorder` | Bullish body outline | Derived from body |
+| `candleDownBorder` | Bearish body outline | Derived from body |
+| `candleUpShadow` | Bullish wick color | Matches body |
+| `candleDownShadow` | Bearish wick color | Matches body |
+
+<Note>
+Color overrides persist independently of the selected theme. Switching themes does not reset your overrides. Use the **Reset to theme defaults** button in the Appearance panel to clear all customizations.
+</Note>
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| Scroll wheel | Zoom in/out on the time axis |
+| Click + drag | Pan the chart |
+| Double-click | Reset zoom to default range |
+| `Esc` | Deselect all drawings / close panels |
+
+{/* screenshot: side-by-side comparison of default candles vs customized candles with glow, rounded corners, and custom colors */}

@@ -1,0 +1,203 @@
+---
+title: "Troubleshooting"
+description: "Solutions for common issues."
+icon: "wrench"
+---
+
+# Troubleshooting
+
+This page covers solutions for the most common issues encountered in Cluster Terminal. If your issue is not listed here, reach out on [Telegram](https://t.me/clusterterminal) or submit a bug report via the [Feedback](/en/support/feedback) page.
+
+## Connection Issues
+
+<AccordionGroup>
+  <Accordion title="Cannot connect to server">
+    **Symptoms**: Charts show a loading spinner indefinitely, or an error message about server connectivity appears.
+
+    **Solutions**:
+    1. Verify the server URL in **Settings > Server**. It should include the protocol and port (e.g., `http://95.216.29.184:8080`).
+    2. Check your internet connection -- try opening the server URL in a browser. You should see a health check response.
+    3. Ensure your firewall or VPN is not blocking the connection.
+    4. If the server was recently updated or restarted, wait a minute and try again.
+
+    <Tip>
+      Open `http://your-server-url/health` in a browser. If you get a response, the server is running. If not, the server may be down.
+    </Tip>
+  </Accordion>
+
+  <Accordion title="WebSocket disconnects frequently">
+    **Symptoms**: Real-time data stops updating, then resumes after a few seconds. The chart may show gaps in forming candles.
+
+    **Solutions**:
+    1. Check your internet stability -- WebSocket connections are sensitive to network interruptions.
+    2. If you are behind a corporate proxy or firewall, it may be terminating long-lived connections. Contact your network administrator.
+    3. The application includes an integrity checker that detects stale data and automatically reconnects. If reconnection fails repeatedly, restart the application.
+  </Accordion>
+
+  <Accordion title="Data loads slowly">
+    **Symptoms**: Charts take a long time to populate, especially on first load or when switching symbols.
+
+    **Solutions**:
+    1. Enable **progressive loading** in Settings if it is not already on. This loads data in chunks with a progress bar instead of waiting for the entire dataset.
+    2. Reduce the history depth in Settings to load less data initially.
+    3. Lower timeframes (1m) with deep history have more data to load. Start with a higher timeframe and drill down.
+    4. Check server health -- if the server is under heavy import load, response times may increase.
+  </Accordion>
+</AccordionGroup>
+
+## Chart Issues
+
+<AccordionGroup>
+  <Accordion title="Charts not loading or blank screen">
+    **Symptoms**: The chart area is empty, shows a black screen, or displays a WebGL error.
+
+    **Solutions**:
+    1. **WebGL support**: Ensure your GPU drivers are up to date. Cluster Terminal requires WebGL 2.0.
+    2. **Hardware acceleration**: Make sure hardware acceleration is not disabled in your system settings.
+    3. **Restart the application** -- temporary rendering issues are often resolved by a restart.
+    4. **Check GPU memory**: If you have many panes open with heavy indicators, your GPU may run out of memory. Close some panes and try again.
+  </Accordion>
+
+  <Accordion title="Missing candles or gaps in data">
+    **Symptoms**: Some candles are missing from the chart, creating visible gaps.
+
+    **Solutions**:
+    1. The integrity checker (Level 2) automatically detects and refetches missing data every 60 seconds. Wait a minute and the gaps should fill.
+    2. If gaps persist, the server may not have imported data for that period yet. This is common for newly listed symbols or recent dates not yet processed by the daily import.
+    3. Try changing the timeframe and changing back to force a data reload.
+    4. Check the server admin dashboard for import status.
+  </Accordion>
+
+  <Accordion title="Cluster chart shows incorrect volumes">
+    **Symptoms**: Volume levels on the cluster chart seem inflated or do not match expected values.
+
+    **Solutions**:
+    1. Verify the timeframe -- cluster volumes aggregate differently on each timeframe.
+    2. The forming (current) candle updates in real time and may show partial data until the candle closes.
+    3. If the issue affects historical data, the server integrity digest should catch discrepancies. Force a data reload by switching timeframes.
+  </Accordion>
+</AccordionGroup>
+
+## Indicator Issues
+
+<AccordionGroup>
+  <Accordion title="Indicators not showing on chart">
+    **Symptoms**: An indicator was added but nothing appears on the chart.
+
+    **Solutions**:
+    1. Check if the indicator is hidden. Press `Ctrl + Click` on the indicator name in the panel to toggle visibility.
+    2. Some indicators require sufficient historical data. If you just loaded the chart, wait for the data to finish loading.
+    3. Verify the indicator settings -- some indicators have minimum bar count requirements or thresholds that may filter out signals on the current data range.
+    4. Check if the indicator is in a separate sub-panel below the main chart. Some indicators (RSI, MACD, CVD) render in their own panes.
+  </Accordion>
+
+  <Accordion title="Indicators causing lag">
+    **Symptoms**: The chart becomes sluggish after adding multiple indicators.
+
+    **Solutions**:
+    1. Remove indicators you are not actively using.
+    2. Increase the timeframe -- 1m charts with many indicators process the most data.
+    3. Reduce the number of visible panes -- each pane runs its own indicator calculations.
+    4. Close and reopen the tab to reset any accumulated state.
+
+    <Note>
+      Some indicators are computationally heavier than others. Order flow indicators that process cluster data (Absorption Alpha, Stacked Imbalance, Clouds) use more CPU than simple moving averages.
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+## Drawing Tool Issues
+
+<AccordionGroup>
+  <Accordion title="Drawings not appearing or disappearing">
+    **Symptoms**: After placing a drawing, it vanishes when scrolling or switching tabs.
+
+    **Solutions**:
+    1. Drawings are per-tab. If you switch to a different tab, drawings from the previous tab are not visible.
+    2. Check that you are not accidentally deleting drawings. Press `Ctrl + Z` to undo the last action.
+    3. Zoom out to see if the drawing is outside the visible price range.
+  </Accordion>
+
+  <Accordion title="Cannot select or move a drawing">
+    **Symptoms**: Clicking on a drawing does not select it, or the anchor handles do not appear.
+
+    **Solutions**:
+    1. Press `Escape` first to ensure no drawing tool is active. You need to be in pointer mode to select existing drawings.
+    2. Click directly on the line, not near it. The click detection zone is narrow.
+    3. If multiple drawings overlap, try clicking on a less crowded section of the drawing.
+  </Accordion>
+</AccordionGroup>
+
+## License Issues
+
+<AccordionGroup>
+  <Accordion title="License activation fails">
+    **Symptoms**: After entering a license key and clicking Activate, an error appears.
+
+    **Solutions**:
+    1. Verify the key format: `CT-XXXX-XXXX-XXXX-XXXX` (four groups of four characters separated by hyphens).
+    2. Check that the server URL is correct in Settings.
+    3. Ensure the license has not expired -- check with the administrator.
+    4. If you have reached the maximum device limit, deactivate another device first.
+    5. Verify your internet connection -- activation requires communication with the server.
+  </Accordion>
+
+  <Accordion title="Trial expired but I did not use 7 days">
+    **Symptoms**: Trial shows as expired shortly after installation.
+
+    **Solutions**:
+    1. Trial duration is calculated from first launch, not from installation date. If you installed earlier but only opened the app now, the trial may have been counting since the initial launch.
+    2. The trial period is configurable by the server administrator. It may have been set to fewer than 7 days.
+    3. If this seems incorrect, contact support with your device information.
+  </Accordion>
+</AccordionGroup>
+
+## Auto-Update Issues
+
+<AccordionGroup>
+  <Accordion title="Auto-update fails or never completes">
+    **Symptoms**: The update notification appears but the download fails, or the application does not update after restart.
+
+    **Solutions**:
+    1. Check your internet connection -- the update requires downloading the installer from the server.
+    2. Ensure no antivirus or firewall is blocking the download.
+    3. If the update downloads but does not install, close all instances of Cluster Terminal completely and relaunch.
+    4. As a fallback, download the latest installer manually and run it. See [Auto Updates](/en/advanced/auto-updates) for details.
+  </Accordion>
+</AccordionGroup>
+
+## Performance Issues
+
+<AccordionGroup>
+  <Accordion title="High memory usage">
+    **Symptoms**: The application uses more than 2-3 GB of RAM, or the system becomes sluggish.
+
+    **Solutions**:
+    1. Reduce the number of open panes and tabs. Each pane maintains its own data buffers.
+    2. Switch to higher timeframes where possible -- 1m cluster data consumes the most memory.
+    3. Restart the application periodically to release accumulated memory.
+    4. Close unused workspaces.
+  </Accordion>
+
+  <Accordion title="WebGL errors or rendering glitches">
+    **Symptoms**: Visual artifacts on charts, garbled rendering, or explicit WebGL error messages.
+
+    **Solutions**:
+    1. Update your GPU drivers to the latest version.
+    2. If using an integrated GPU (Intel), try switching to a dedicated GPU if available.
+    3. Reduce the number of indicators and panes to lower GPU load.
+    4. Restart the application -- WebGL context can become corrupted after long sessions.
+
+    <Warning>
+      If WebGL errors persist after updating drivers, your GPU may not fully support WebGL 2.0. Check the system requirements in the [FAQ](/en/support/faq).
+    </Warning>
+  </Accordion>
+</AccordionGroup>
+
+## Still Need Help?
+
+If none of the above solutions resolve your issue:
+
+1. Check the [FAQ](/en/support/faq) for general questions.
+2. Submit a detailed bug report via the [Feedback](/en/support/feedback) page.
+3. Reach out on [Telegram](https://t.me/clusterterminal) for direct support.

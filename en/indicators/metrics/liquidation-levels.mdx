@@ -1,0 +1,150 @@
+---
+title: "Liquidation Levels"
+description: "Horizontal lines showing estimated liquidation levels by leverage tier — low, medium, and high."
+icon: "crosshairs"
+---
+
+## Overview
+
+**Liquidation Levels** draws horizontal lines on the price chart at specific estimated prices where liquidations would trigger, grouped by leverage tier. Unlike Liquidation Map (which shows density zones), this indicator shows discrete price levels, making it easier to set alerts and identify exact targets.
+
+Three leverage tiers are supported:
+- **Low leverage** (1-20x) — larger positions, wider stop distances, harder to trigger.
+- **Medium leverage** (20-50x) — typical retail leverage, moderate sensitivity.
+- **High leverage** (50-200x) — highly leveraged positions, very sensitive to price moves.
+
+{/* screenshot: Price chart with horizontal lines at various levels, colored by leverage tier, with neon glow effect */}
+
+## How It Works
+
+The indicator estimates liquidation prices based on open interest distribution and common leverage levels within each tier. Lines are drawn at prices where significant liquidation volume is estimated to exist.
+
+Each tier has independent visual styling (color, line width, dash pattern) and can be toggled on or off for both long and short sides.
+
+## Chart Type
+
+| Property | Value |
+|----------|-------|
+| Type | Overlay (horizontal lines on main chart) |
+| Position | Main price chart |
+| Rendering | Styled horizontal lines with optional glow |
+
+## Settings
+
+### Display
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| displayMode | Rendering style | `lines` |
+| lineVisual | Line style preset | `neon` |
+| volumeGradation | Scale line opacity/width by estimated volume | `true` |
+| lookbackBars | History range for calculation (0 = all visible) | `0` |
+
+### Leverage Tier Ranges
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| leverageLowFrom | Low tier minimum leverage | `1` |
+| leverageLowTo | Low tier maximum leverage | `20` |
+| leverageMediumFrom | Medium tier minimum leverage | `20` |
+| leverageMediumTo | Medium tier maximum leverage | `50` |
+| leverageHighFrom | High tier minimum leverage | `50` |
+| leverageHighTo | High tier maximum leverage | `200` |
+
+### Visibility Toggles
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| showLongsLow | Show long liquidation levels (low tier) | `true` |
+| showLongsMed | Show long liquidation levels (medium tier) | `true` |
+| showLongsHigh | Show long liquidation levels (high tier) | `true` |
+| showShortsLow | Show short liquidation levels (low tier) | `true` |
+| showShortsMed | Show short liquidation levels (medium tier) | `true` |
+| showShortsHigh | Show short liquidation levels (high tier) | `true` |
+
+### Line Styling
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| lowWidth | Line width for low leverage tier | `1` |
+| medWidth | Line width for medium leverage tier | `1.5` |
+| highWidth | Line width for high leverage tier | `2` |
+| lowDash | Line style for low leverage tier | `dot` |
+| medDash | Line style for medium leverage tier | `dash` |
+| highDash | Line style for high leverage tier | `solid` |
+
+### Glow Effects
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| enableGlow | Enable glow effect on lines | `false` |
+| glowIntensity | Glow brightness (0-100) | `50` |
+| glowLayers | Number of glow layers | `2` |
+
+### Size Filters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| showSizeTier1 | Show small position liquidations | `true` |
+| showSizeTier2 | Show medium position liquidations | `true` |
+| showSizeTier3 | Show large position liquidations | `true` |
+
+## Premium Line Styles
+
+Liquidation Levels supports premium visual styles for enhanced chart aesthetics:
+
+| lineVisual | Description |
+|------------|-------------|
+| `flat` | Solid color, no effects. Clean and minimal. |
+| `neon` | Glowing neon effect with configurable intensity (default). |
+| `gradient` | Color gradient along the line length. |
+| `chrome` | Metallic reflective appearance. |
+
+When `enableGlow` is `true`, all styles gain an additional outer glow effect controlled by `glowIntensity` and `glowLayers`.
+
+## Interpretation
+
+### Leverage Tier Significance
+
+<Tip>
+High-leverage liquidation levels (50x+) are the most magnetic — price often hunts these levels because they represent the most sensitive positions. A small price move can trigger large cascading liquidations at these levels.
+</Tip>
+
+Low-leverage levels are harder to reach but represent larger positions. When price does hit a low-leverage liquidation cluster, the resulting forced orders are substantial.
+
+### Volume Gradation
+
+When `volumeGradation` is enabled, lines with larger estimated liquidation volume appear thicker or more opaque. This helps you instantly see which levels have the most "fuel" for cascading liquidations.
+
+### Level Clearing
+
+After price touches a liquidation level and triggers the forced closures, that level is effectively consumed. Watch for levels that have not yet been tested — they represent untapped liquidity.
+
+## Alerts
+
+Liquidation Levels supports `level_touched` alert events. When price reaches a liquidation level, an alert fires with details about the leverage tier and estimated volume at that level.
+
+| Alert Event | Trigger |
+|-------------|---------|
+| `level_touched` | Price reaches an estimated liquidation level |
+
+<Note>
+Configure alerts from the indicator settings panel. Alerts fire once per level touch and reset after price moves away.
+</Note>
+
+## Practical Examples
+
+- **Liquidity target**: Cluster of high-leverage short liquidation lines just above current price — potential short squeeze fuel.
+- **Stop placement**: Avoid placing stops near dense liquidation levels — they are frequently hunted.
+- **Cascade anticipation**: Price approaching a stack of same-direction liquidation levels — expect acceleration if the first level breaks.
+- **Tier analysis**: Only high-leverage levels nearby — move may be sharp but short-lived. Low-leverage levels present — more sustained forced flow expected.
+
+<Warning>
+Liquidation levels are estimates based on common leverage distributions. Actual liquidation prices depend on individual position entries and margin types (cross vs. isolated). Use as a probabilistic reference.
+</Warning>
+
+## Related Indicators
+
+- [Liquidation Map](/en/indicators/metrics/liquidation-map) — heatmap density view of the same data
+- [Liquidations](/en/indicators/metrics/liquidations) — actual historical liquidation events
+- [Open Interest](/en/indicators/metrics/open-interest) — the underlying position data

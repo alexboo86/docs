@@ -1,0 +1,86 @@
+---
+title: "Participation Ratio"
+description: "Measures market participation intensity relative to average."
+icon: "users"
+---
+
+## Overview
+
+Participation Ratio shows how current trading activity compares to its rolling average. It answers the question: **is the market more or less active than usual right now?**
+
+High readings indicate increased market participation — more traders are actively involved. Low readings suggest a quiet, low-interest environment.
+
+{/* screenshot: Participation Ratio subchart with blue positive and orange negative bars */}
+
+## How It Works
+
+The indicator computes the ratio of current period activity (combining trade count and volume metrics) against a rolling average. The result is expressed as a deviation:
+
+- **Positive values** — Participation above average (market heating up)
+- **Negative values** — Participation below average (market cooling down)
+- **Zero line** — Average participation level
+
+This is fundamentally different from raw volume — a high-volume market may still show low participation if that volume is normal for the asset. Participation Ratio contextualizes activity against what is typical.
+
+## Interpretation
+
+| Reading | Market State | Typical Action |
+|---------|-------------|----------------|
+| Strong positive | High activity — breakout or event | Trend moves tend to follow through |
+| Mild positive | Above average — growing interest | Monitor for directional commitment |
+| Near zero | Average conditions | No edge from participation alone |
+| Mild negative | Below average — fading interest | Range-bound conditions likely |
+| Strong negative | Very low activity — dead market | Avoid trend strategies |
+
+<Tip>
+Spikes in participation often precede significant price moves. A sudden jump from negative to strong positive territory can signal the start of a new trend or a volatility expansion event.
+</Tip>
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `positiveColor` | Color for above-average participation | `#3b82f6` |
+| `negativeColor` | Color for below-average participation | `#f97316` |
+| `displayMode` | Visualization style: `line`, `columns`, or `candles` | `columns` |
+| `highlightAnomalies` | Highlight extreme participation spikes | `true` |
+| `anomalyThreshold` | Standard deviations for anomaly detection | `2.5` |
+| `anomalyPeriod` | Lookback period for average calculation | `30` |
+| `gradientIntensity` | Scale bar opacity by magnitude | `true` |
+
+## Display Modes
+
+- **Columns** — Default. Blue bars above zero, orange below. Height shows magnitude of deviation.
+- **Line** — Smooth line plot. Effective for identifying participation trends over longer periods.
+- **Candles** — OHLC rendering of participation values per bar.
+
+## Anomaly Detection
+
+With `highlightAnomalies` enabled, bars exceeding `anomalyThreshold` standard deviations from the mean are visually marked. Participation anomalies are particularly significant because they indicate:
+
+- Major news events or announcements
+- Exchange listing or delisting activity
+- Start of liquidation cascades
+- Large fund entries or exits
+
+## Gradient Intensity
+
+When enabled, bars closer to zero become more transparent, making extreme readings visually prominent. This helps you quickly scan for periods of exceptional activity.
+
+<Note>
+Participation Ratio is timeframe-dependent. A 1-minute chart will show micro-bursts of activity, while a 4-hour chart reveals broader shifts in market engagement. Choose a timeframe that matches your trading horizon.
+</Note>
+
+## Practical Examples
+
+**Pre-Breakout Detection**: Price consolidates in a tight range. Participation Ratio starts climbing from negative to positive territory even before the breakout — early participants are positioning.
+
+**Ranging Market Confirmation**: Participation Ratio stays persistently negative — confirms the market is in a low-interest, ranging state. Avoid trend-following strategies.
+
+**Volume Spike Validation**: A large green candle appears. Check Participation Ratio — if it spikes to anomaly levels, the move has broad market engagement and is more likely to follow through. If participation is low, the move may be a single large order and could reverse.
+
+## Related Indicators
+
+- [Volume Ratio](/en/indicators/metrics/volume-ratio) — Directional volume imbalance
+- [Trade Count Ratio](/en/indicators/metrics/trade-count-ratio) — Trade frequency imbalance
+- [Average Order Size](/en/indicators/metrics/avg-order-size) — Per-trade size analysis

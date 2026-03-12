@@ -1,0 +1,180 @@
+---
+title: "MACD"
+description: "Moving Average Convergence Divergence — trend following momentum indicator."
+icon: "chart-mixed"
+---
+
+# MACD (Moving Average Convergence Divergence)
+
+MACD is a **trend-following momentum indicator** that shows the relationship between two Exponential Moving Averages of price. It combines trend identification with momentum measurement, making it one of the most versatile indicators available. MACD reveals changes in the strength, direction, momentum, and duration of a trend.
+
+{/* screenshot: MACD subchart on BTC/USDT 4h chart showing MACD line, signal line, and histogram */}
+
+## How It Works
+
+MACD consists of three components, all derived from EMAs of closing prices:
+
+### MACD Line
+
+```
+MACD Line = EMA(Close, fastPeriod) - EMA(Close, slowPeriod)
+```
+
+The MACD line is the difference between a fast EMA and a slow EMA. When the fast EMA is above the slow EMA, the MACD line is positive (bullish momentum). When below, it is negative (bearish momentum).
+
+### Signal Line
+
+```
+Signal Line = EMA(MACD Line, signalPeriod)
+```
+
+The signal line is an EMA of the MACD line itself. It acts as a trigger: crossovers between the MACD line and the signal line generate trade signals.
+
+### Histogram
+
+```
+Histogram = MACD Line - Signal Line
+```
+
+The histogram visualizes the difference between the MACD and signal lines as vertical bars. It makes it easy to see at a glance:
+- **Positive histogram (above zero)**: MACD line is above signal line — bullish momentum.
+- **Negative histogram (below zero)**: MACD line is below signal line — bearish momentum.
+- **Histogram growing**: Momentum is accelerating in that direction.
+- **Histogram shrinking**: Momentum is decelerating — potential signal change coming.
+
+### Indicator Type
+
+**Subchart** — MACD is rendered in a separate panel below the main chart with its own Y-axis.
+
+## Settings
+
+### Core Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `fastPeriod` | number | 12 | Period for the fast EMA. |
+| `slowPeriod` | number | 26 | Period for the slow EMA. |
+| `signalPeriod` | number | 9 | Period for the signal line EMA. |
+| `lineWidth` | number | 1.5 | Thickness of the MACD and signal lines in pixels. |
+
+### Color Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `macdColor` | color | `#60a5fa` | Color of the MACD line. |
+| `signalColor` | color | `#f59e0b` | Color of the signal line. |
+| `histogramPositiveColor` | color | `#22c55e` | Color for positive histogram bars. |
+| `histogramNegativeColor` | color | `#ef4444` | Color for negative histogram bars. |
+
+### Display Settings
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `displayMode` | select | `line` | Rendering mode for the MACD/signal lines: `line`, `columns`, `candles`. The histogram always renders as columns. |
+| `highlightAnomalies` | boolean | `false` | Highlight histogram bars that are statistical anomalies. |
+| `gradientIntensity` | boolean | `false` | Scale histogram bar opacity by value magnitude. |
+
+### Alternative Period Configurations
+
+| Fast | Slow | Signal | Character | Use Case |
+|------|------|--------|-----------|----------|
+| 12 | 26 | 9 | Standard (Appel's original) | General purpose, all timeframes |
+| 8 | 17 | 9 | Fast | Intraday trading, quicker signals |
+| 5 | 35 | 5 | Wide spread | Capturing larger momentum swings |
+| 3 | 10 | 16 | Impulse system | Very fast signals, scalping |
+
+<Tip>
+The default 12/26/9 configuration was designed by Gerald Appel for weekly stock charts, but it works remarkably well on all timeframes. Only change these values if you understand the trade-off: faster settings produce earlier signals but more whipsaws; slower settings reduce noise but increase lag.
+</Tip>
+
+## Interpretation
+
+### Signal Line Crossovers
+
+The primary MACD signal:
+
+| Signal | Condition | Interpretation |
+|--------|-----------|----------------|
+| **Bullish crossover** | MACD line crosses above signal line | Momentum shifting to buyers. Histogram turns positive. |
+| **Bearish crossover** | MACD line crosses below signal line | Momentum shifting to sellers. Histogram turns negative. |
+
+Crossovers above zero are stronger bullish signals (already in bullish territory). Crossovers below zero are stronger bearish signals (already in bearish territory).
+
+{/* screenshot: MACD bullish crossover with histogram turning from negative to positive */}
+
+### Zero Line Crossovers
+
+| Signal | Condition | Interpretation |
+|--------|-----------|----------------|
+| **Bullish zero cross** | MACD line crosses above zero | Fast EMA crosses above slow EMA — trend turning bullish. |
+| **Bearish zero cross** | MACD line crosses below zero | Fast EMA crosses below slow EMA — trend turning bearish. |
+
+Zero line crossovers are lagging but high-conviction signals. They confirm what signal line crossovers suggested earlier.
+
+### Histogram Analysis
+
+The histogram is often the most actionable part of MACD:
+
+- **Histogram growing (positive bars getting taller)**: Bullish momentum accelerating.
+- **Histogram shrinking (positive bars getting shorter)**: Bullish momentum decelerating. Signal line crossover may be imminent.
+- **Histogram growing (negative bars getting deeper)**: Bearish momentum accelerating.
+- **Histogram shrinking (negative bars getting shallower)**: Bearish momentum decelerating. Potential bottoming.
+
+The moment the histogram starts shrinking is the earliest MACD-based warning of a potential direction change — earlier than the signal line crossover and much earlier than the zero line crossover.
+
+<Tip>
+The histogram shrinking (bars getting shorter) is the earliest MACD signal of momentum weakening. A zero-line crossover on the histogram is equivalent to a signal-line crossover on the MACD — use whichever is visually easier for you to read.
+</Tip>
+
+### MACD Divergence
+
+Like RSI, MACD can form divergences with price:
+
+- **Bearish divergence**: Price makes a higher high, MACD histogram makes a lower high. Uptrend momentum is weakening.
+- **Bullish divergence**: Price makes a lower low, MACD histogram makes a higher low. Downtrend momentum is weakening.
+
+MACD divergences are generally considered more reliable than RSI divergences because the MACD incorporates trend information (via the EMA spread), not just momentum.
+
+## Alerts
+
+MACD supports the following **alert rules**:
+
+| Alert Event | Description |
+|-------------|-------------|
+| `signal_cross_up` | MACD line crosses above the signal line (bullish crossover) |
+| `signal_cross_down` | MACD line crosses below the signal line (bearish crossover) |
+
+Set a cooldown period to avoid rapid-fire alerts during choppy crossover zones.
+
+## Combining with Other Indicators
+
+| Companion | Strategy |
+|-----------|----------|
+| **RSI** | MACD bullish crossover + RSI exiting oversold = double momentum confirmation |
+| **Bollinger Bands** | MACD histogram growing + Bollinger squeeze breakout = explosive move confirmation |
+| **Volume Bars** | MACD crossover + volume spike = genuine momentum shift (not a fake-out) |
+| **VWAP** | MACD bullish + price reclaiming VWAP = institutional alignment |
+| **EMA** | MACD zero cross confirms EMA crossover, providing a second filter |
+
+## Common Mistakes
+
+1. **Trading every crossover** — In ranging markets, MACD produces many whipsaw crossovers. Filter by requiring the crossover to occur above/below zero, or by confirming with volume.
+
+2. **Ignoring the histogram** — Many traders only watch the line crossover. The histogram shrinking gives an earlier signal and helps you anticipate crossovers before they happen.
+
+3. **Using MACD alone for entries** — MACD is inherently lagging (it is built on moving averages). By the time a crossover occurs, a significant portion of the move may have already happened. Use MACD for confirmation, not as a sole entry trigger.
+
+4. **Not adjusting for timeframe** — The default 12/26/9 on a 1-minute chart covers only 26 minutes of data. On such low timeframes, the indicator may be too noisy. Consider slightly wider parameters (e.g., 8/21/5 inverted or standard) on very low timeframes, or simply trade MACD signals on 15-minute and higher charts.
+
+## Practical Considerations
+
+- **Lag is inherent**: MACD is built on EMAs, which lag price by definition. Accept this and use MACD for confirmation rather than prediction.
+- **Crypto trends**: Crypto markets can trend aggressively. During strong trends, the MACD histogram can stay positive (or negative) for dozens of bars. Do not try to counter-trade based on "overbought" histogram readings alone.
+- **Multi-timeframe**: A bullish MACD crossover on the daily chart provides a strong directional bias. You can then use the hourly MACD for timing entries in that direction.
+- **Histogram anomalies**: Enabling `highlightAnomalies` on the histogram helps identify bars with exceptional momentum — these often mark climactic moves (blowoff tops or capitulation bottoms).
+
+## Related Indicators
+
+- [EMA](/en/indicators/classic/ema) — The building block of MACD; MACD is literally the difference between two EMAs
+- [RSI](/en/indicators/classic/rsi) — Complementary momentum oscillator for confirmation
+- [RSI Divergence](/en/indicators/classic/rsi-divergence) — Automated divergence detection on a different oscillator

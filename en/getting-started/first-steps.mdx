@@ -1,0 +1,356 @@
+---
+title: "First Steps"
+description: "Create your first workspace, connect to market data, and start analyzing."
+icon: "rocket"
+---
+
+This guide walks you through the Cluster Terminal interface, from creating
+your first workspace to placing indicators and drawing tools on a chart. By
+the end, you will have a fully configured analysis setup ready for live
+trading research.
+
+## Understanding the Interface
+
+Cluster Terminal follows a workspace-based layout. Each workspace contains
+one or more **panes**, and each pane displays a chart, indicator panel, or
+widget. The main areas of the interface are:
+
+{/* screenshot: Full application window with labeled areas — toolbar, tab bar, chart area, status bar */}
+
+| Area | Location | Purpose |
+|------|----------|---------|
+| **Toolbar** | Top of each pane | Symbol selector, timeframe picker, chart type toggle, indicator and drawing menus |
+| **Tab Bar** | Top of the workspace | Switch between open tabs; click **+** to add a new tab |
+| **Chart Area** | Center | The main rendering surface for candles, clusters, heatmaps, or TPO profiles |
+| **Status Bar** | Bottom of the window | Connection status, server latency, and current data state |
+| **Panels** | Side or overlay | Indicators list, drawing tools panel, DOM widget, settings |
+
+<Tip>
+  Every element in the toolbar is contextual to the active pane. If you have
+  multiple panes open in a split layout, clicking on a pane focuses it and
+  updates the toolbar accordingly.
+</Tip>
+
+## Creating Your First Workspace
+
+A workspace is a named container that saves your entire analysis setup:
+open charts, selected symbols, timeframes, indicators, drawings, and
+pane layout. You can create as many workspaces as you need — one for
+scalping, another for swing analysis, a third for monitoring altcoins.
+
+<Steps>
+  <Step title="Open the workspace dialog">
+    On first launch (or from the menu), the **Workspace Dialog** appears.
+    This shows a list of existing workspaces and a button to create a new one.
+
+    {/* screenshot: Workspace dialog with "Create new workspace" button highlighted */}
+  </Step>
+
+  <Step title="Name your workspace">
+    Click **Create new workspace**. Enter a descriptive name — for example,
+    "BTC Scalping 5m" or "Altcoin Swing." The name helps you identify the
+    workspace later when switching between setups.
+  </Step>
+
+  <Step title="Confirm creation">
+    Click **Create**. The new workspace opens with a single empty tab,
+    ready for you to configure.
+  </Step>
+</Steps>
+
+<Note>
+  Workspaces are saved locally on your device. If your license includes the
+  **Cloud Sync** feature, workspaces are also synchronized across your
+  devices automatically. See [Cloud Sync](/en/workspace/cloud-sync) for details.
+</Note>
+
+## Selecting an Exchange
+
+Cluster Terminal connects to centralized exchange data through its back-end
+server. The primary supported exchange is **Binance Futures** (USDT-M
+perpetual contracts), which provides the deepest liquidity and the most
+comprehensive cluster data.
+
+When adding a chart or changing symbols, you will see the exchange selector
+in the toolbar. Select **Binance Futures** to access all available perpetual
+trading pairs.
+
+<Note>
+  Additional exchange support (such as Bybit) is planned for future releases.
+  The exchange selector is designed to accommodate multiple sources as they
+  become available.
+</Note>
+
+## Choosing a Symbol and Timeframe
+
+<Steps>
+  <Step title="Open the symbol selector">
+    Click the **symbol name** in the toolbar (or the magnifying glass icon)
+    to open the symbol search panel. You will see a list of available trading
+    pairs sorted by volume.
+
+    {/* screenshot: Symbol selector dropdown showing BTCUSDT, ETHUSDT, SOLUSDT, etc. */}
+  </Step>
+
+  <Step title="Search or browse">
+    Type a symbol name (for example, "BTC" or "ETH") to filter the list.
+    Click the desired pair to load it. Common starting choices:
+
+    | Symbol | Description |
+    |--------|-------------|
+    | **BTCUSDT** | Bitcoin perpetual — highest liquidity, best cluster data |
+    | **ETHUSDT** | Ethereum perpetual — second-most liquid |
+    | **SOLUSDT** | Solana perpetual — high volatility, active order flow |
+
+  </Step>
+
+  <Step title="Select a timeframe">
+    Use the **timeframe selector** in the toolbar to choose your analysis
+    interval. Available timeframes include:
+
+    `1m` · `3m` · `5m` · `15m` · `30m` · `1h` · `2h` · `4h` · `6h` · `12h` · `1D`
+
+    Shorter timeframes (1m–5m) provide granular cluster data ideal for
+    scalping. Longer timeframes (1h–1D) aggregate volume for swing and
+    position analysis.
+
+    {/* screenshot: Timeframe selector buttons in the toolbar */}
+  </Step>
+</Steps>
+
+<Tip>
+  A good starting point is **BTCUSDT on the 5-minute timeframe** in Cluster
+  mode. This combination gives you enough detail to see individual volume
+  levels while keeping the chart readable.
+</Tip>
+
+## Understanding Chart Types
+
+Cluster Terminal offers four distinct chart visualization modes. You can
+switch between them using the chart type toggle in the toolbar.
+
+### Candles (Candlestick)
+
+The classic OHLCV candlestick chart. Each candle shows the open, high, low,
+and close prices for the selected timeframe. Volume is displayed as a
+histogram below the chart.
+
+{/* screenshot: Standard candlestick chart with volume histogram */}
+
+**Best for:** General market overview, trend identification, support and
+resistance levels.
+
+### Clusters (Volume Profile per Candle)
+
+The signature view of Cluster Terminal. Each candle is expanded into a
+vertical volume profile showing the **buy and sell volume at every price
+level** within that candle's range. Color intensity indicates volume
+concentration.
+
+{/* screenshot: Cluster chart showing per-level buy/sell volume with color gradient */}
+
+**Best for:** Identifying absorption, initiative buying/selling, volume
+imbalances, and precise entry/exit levels.
+
+### Heatmap
+
+A continuous color-mapped visualization of volume across time and price.
+Dense areas appear as bright spots, making it easy to spot high-activity
+zones at a glance without the discrete candle boundaries.
+
+{/* screenshot: Heatmap view with bright volume concentration zones */}
+
+**Best for:** Visualizing volume density over longer periods, spotting
+recurring support/resistance zones, and identifying institutional activity
+patterns.
+
+### TPO (Time Price Opportunity)
+
+A market profile chart that shows how much **time** price spent at each
+level, displayed as stacked letters (TPO blocks). This reveals the
+value area, point of control, and distribution shape of the session.
+
+{/* screenshot: TPO profile chart with value area highlighted */}
+
+**Best for:** Identifying value areas, initial balance, and single prints.
+Useful for understanding market structure and auction theory.
+
+<Note>
+  All four chart types share the same underlying data and can be switched
+  instantly without reloading. Indicators and drawings are preserved when
+  toggling between modes, though some visual elements may render
+  differently depending on the chart type.
+</Note>
+
+## Adding Your First Indicator
+
+Indicators provide additional analytical layers on top of the raw price and
+volume data. Cluster Terminal includes a library of classic, order flow,
+and smart money concept (SMC) indicators.
+
+<Steps>
+  <Step title="Open the indicators panel">
+    Click the **Indicators** button (chart icon) in the toolbar to open the
+    indicator selection panel.
+
+    {/* screenshot: Indicators button in toolbar highlighted */}
+  </Step>
+
+  <Step title="Browse categories">
+    Indicators are organized into categories:
+
+    | Category | Examples |
+    |----------|---------|
+    | **Classic** | EMA, SMA, Bollinger Bands, RSI, MACD |
+    | **Order Flow** | CVD (Cumulative Volume Delta), OI Delta, Volume Delta |
+    | **Metrics** | Funding Rate, Liquidations, Long/Short Ratio |
+    | **Profiles** | Volume Profile, VWAP, Session VWAP |
+    | **SMC** | Order Blocks, Fair Value Gaps, Break of Structure |
+
+  </Step>
+
+  <Step title="Add an indicator">
+    Click on an indicator name to add it to the active chart. Some indicators
+    appear as overlays on the price chart (such as EMA or VWAP), while others
+    render in a separate sub-panel below the chart (such as RSI or CVD).
+  </Step>
+
+  <Step title="Configure parameters">
+    After adding, click the **gear icon** next to the indicator name to open
+    its settings. Adjust parameters like period length, colors, line style,
+    and visibility. Changes apply immediately.
+
+    {/* screenshot: Indicator settings popover with period, color, and style options */}
+  </Step>
+</Steps>
+
+<Tip>
+  For a first setup, try adding **EMA 21** and **EMA 50** as overlays, plus
+  **CVD** (Cumulative Volume Delta) as a sub-panel. This gives you trend
+  context and order flow divergence detection right away.
+</Tip>
+
+## Using Drawing Tools
+
+Drawing tools let you annotate charts with trend lines, horizontal levels,
+rectangles, Fibonacci retracements, and more.
+
+<Steps>
+  <Step title="Open the drawing tools panel">
+    Click the **Drawing Tools** button (pencil icon) in the toolbar. A panel
+    appears listing all available tools.
+
+    {/* screenshot: Drawing tools panel with categories: lines, shapes, Fibonacci, text */}
+  </Step>
+
+  <Step title="Select a tool">
+    Click the tool you want to use — for example, **Trend Line** or
+    **Horizontal Ray**. Your cursor changes to a crosshair, indicating
+    that drawing mode is active.
+  </Step>
+
+  <Step title="Draw on the chart">
+    Click on the chart to set the starting point, then click again to set
+    the end point (for two-point tools like trend lines). For single-point
+    tools like horizontal levels, one click places the drawing.
+  </Step>
+
+  <Step title="Adjust and style">
+    Click on any existing drawing to select it. Drag the control points to
+    reposition. Right-click for options such as color, line width, extend
+    to infinity, and delete.
+  </Step>
+</Steps>
+
+<Note>
+  Drawings are saved with your workspace. They persist across sessions and
+  are synchronized if Cloud Sync is enabled.
+</Note>
+
+## Saving Your Workspace
+
+Cluster Terminal saves workspace state automatically as you work. However,
+it is good practice to understand what is saved and when:
+
+- **Auto-save** — Changes to layout, indicators, and drawings are saved
+  continuously to local storage.
+- **Manual save** — You can trigger a manual save from the workspace
+  dialog or by using the keyboard shortcut.
+- **Cloud sync** — If enabled, your workspace is uploaded to the server
+  periodically (every 5 minutes) and on application close.
+
+{/* screenshot: Workspace dialog showing saved workspaces with cloud sync badges */}
+
+<Tip>
+  Use the **Workspace Dialog** (accessible from the menu or toolbar) to
+  rename, duplicate, or delete workspaces. The dialog also shows a cloud
+  sync badge indicating whether each workspace is synchronized.
+</Tip>
+
+## Tabs and Split Layouts
+
+You can open multiple charts within a single workspace using tabs and split
+panes. This is useful for monitoring several symbols or timeframes at once.
+
+### Working with Tabs
+
+- **Add a tab** — Click the **+** button at the end of the tab bar. Each
+  new tab starts as an empty chart that you can configure independently.
+- **Switch tabs** — Click any tab to bring it to the foreground.
+- **Close a tab** — Click the **x** icon on a tab to remove it from the
+  workspace. This does not delete any data.
+- **Reorder tabs** — Drag and drop tabs to rearrange them in the tab bar.
+
+### Splitting Panes
+
+You can split the chart area horizontally or vertically to view multiple
+charts side by side within the same tab:
+
+- **Drag a tab** to the edge of the chart area (top, bottom, left, or
+  right) to create a split pane. A blue highlight indicates where the new
+  pane will appear.
+- **Resize panes** by dragging the divider between them.
+- Each pane has its own independent toolbar, symbol, timeframe, and
+  indicator configuration.
+
+{/* screenshot: Two-pane split layout showing BTCUSDT cluster chart and ETHUSDT candle chart */}
+
+<Tip>
+  A common multi-pane setup: a cluster chart on 5m in the main pane, with a
+  1h candle chart in a smaller side pane for higher-timeframe context, and
+  a DOM widget in a narrow column on the right.
+</Tip>
+
+## Keyboard Shortcuts
+
+Cluster Terminal supports keyboard shortcuts for common actions. Here are
+the essentials to get you started:
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl + N` | New tab |
+| `Ctrl + W` | Close current tab |
+| `Ctrl + S` | Save workspace |
+| `Ctrl + Z` | Undo last drawing action |
+| `Ctrl + Shift + Z` | Redo last drawing action |
+| `Escape` | Cancel current drawing tool / deselect |
+| `Delete` | Remove selected drawing |
+| Mouse wheel | Zoom in/out on the time axis |
+| Middle-click drag | Pan the chart |
+
+For the complete list of shortcuts and customization options, see
+[Hotkeys](/en/advanced/hotkeys).
+
+## Next Steps
+
+Now that you have a workspace set up with a chart, indicators, and
+drawings, you are ready to explore the deeper features of Cluster Terminal:
+
+- **[Chart Display Modes](/en/chart/display-modes)** — Learn the details of
+  each chart type and when to use them.
+- **[Cluster Analysis](/en/chart/clusters)** — Understand how to read
+  cluster volume data for trading decisions.
+- **[Indicators](/en/indicators/order-flow)** — Explore the full indicator
+  library with configuration guides.
+- **[Licensing](/en/getting-started/licensing)** — Activate your license and
+  unlock features like Cloud Sync.

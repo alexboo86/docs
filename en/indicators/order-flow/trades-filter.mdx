@@ -1,0 +1,156 @@
+---
+title: "Trades Filter"
+description: "Identifies price levels with exceptionally high trade activity — key support/resistance zones."
+icon: "filter"
+---
+
+# Trades Filter
+
+Trades Filter scans cluster (footprint) data to find **price levels where the number of individual trade executions exceeds a configurable threshold**. These high-activity levels represent zones where significant market participation occurred, and they frequently act as future support or resistance.
+
+When a qualifying level is found, a horizontal line extends from that price into the future until price crosses through it — at which point the level is invalidated.
+
+{/* screenshot: Trades Filter showing horizontal lines extending from high-trade-activity levels, some with glow effects */}
+
+## How It Works
+
+The indicator processes each candle's cluster data and examines every price level within it:
+
+1. **Count trades** at each price level within the candle.
+2. **Apply the minimum filter**: if the trade count at a level meets or exceeds `minTradesFilter`, the level is a candidate.
+3. **Apply optional imbalance filter**: if `useVolumeImbalance` is enabled, only levels where buy/sell volume imbalance exceeds `imbalancePercent` qualify.
+4. **Rank and select**: from all qualifying levels, keep the top `priceLevelsCount` levels (sorted by trade count, highest first).
+5. **Draw lines**: horizontal lines extend rightward from each qualifying level. Lines persist until price trades through the level, which invalidates and removes them.
+
+The result is a dynamic set of horizontal levels that highlight where the market concentrated its execution activity, updated in real time as new candles form.
+
+## Indicator Type
+
+**Overlay** — horizontal lines drawn directly on the price chart.
+
+## Settings
+
+### Core Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `priceLevelsCount` | number | `3` | Maximum number of concurrent levels to display |
+| `minTradesFilter` | number | `10000` | Minimum trade count at a price level for detection |
+| `lookbackDays` | number | `0` | History range to scan (0 = all loaded data) |
+| `tradesStep` | number | `100` | Step for grouping trade counts (higher = coarser filtering) |
+
+### Volume Imbalance Filter
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `useVolumeImbalance` | boolean | `false` | Enable directional filtering based on volume imbalance |
+| `imbalancePercent` | number | `50` | Required imbalance percentage when filter is enabled |
+
+When enabled, only levels where the buy/sell volume imbalance exceeds the specified percentage qualify. This transforms Trades Filter from a neutral high-activity detector into a directional tool:
+
+- A level with 70% buy volume and 30% sell volume has a 40% imbalance toward buys.
+- With `imbalancePercent` set to 50, only levels with 75%+ on one side would qualify.
+
+This filter is useful for finding levels where aggressive directional participation occurred, rather than just high two-sided activity.
+
+### Line Appearance
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `buyColor` | color | `#22c55e` | Color for levels with buy-dominant imbalance |
+| `sellColor` | color | `#ef4444` | Color for levels with sell-dominant imbalance |
+| `neutralColor` | color | `#eab308` | Color for levels without imbalance filtering |
+| `lineStyle` | select | `solid` | Line rendering: `solid`, `dash`, or `dot` |
+| `showTradesLabel` | boolean | `false` | Show the trade count value as a label on the line |
+
+### Glow Effect
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `enableGlow` | boolean | `true` | Enable glow effect around lines |
+| `glowIntensity` | number | `50` | Glow brightness (0–100) |
+| `glowLayers` | number | `2` | Number of stacked glow layers |
+
+The glow effect makes high-activity levels visually prominent against the price chart. Enabled by default to distinguish Trades Filter lines from other horizontal overlays.
+
+## Configuring the Threshold
+
+The `minTradesFilter` value is the most important setting and varies significantly by symbol and timeframe:
+
+| Symbol Liquidity | Timeframe | Suggested Starting Value |
+|-----------------|-----------|--------------------------|
+| High (BTCUSDT) | 1m | 10,000–50,000 |
+| High (BTCUSDT) | 5m | 50,000–200,000 |
+| Medium (ETHUSDT) | 1m | 5,000–20,000 |
+| Low (altcoins) | 1m | 500–5,000 |
+
+<Tip>
+Start with a high `minTradesFilter` and gradually lower it. Too many lines create visual noise and reduce the signal quality. Aim for 2–4 active levels on screen at any time.
+</Tip>
+
+{/* screenshot: Comparison — too many levels (noisy) vs. well-calibrated threshold (clean, actionable) */}
+
+## Level Lifecycle
+
+Each detected level goes through a predictable lifecycle:
+
+1. **Formation**: a candle with trade activity exceeding the threshold creates a new level. The line begins at the right edge of that candle.
+2. **Active**: the line extends into the future as price trades around it. Price may approach and bounce from the level multiple times.
+3. **Invalidation**: when price closes through the level (not just a wick touch — a full candle body cross), the line is removed.
+
+This invalidation logic is important: a level that price has decisively broken through is no longer considered meaningful support or resistance.
+
+## Practical Usage
+
+### Finding Hidden Support/Resistance
+
+Traditional support and resistance relies on price pivots. Trades Filter reveals levels that are invisible on a standard candlestick chart — zones where thousands of trades occurred within a single price tick, indicating a concentration of resting orders or algorithmic execution.
+
+### Confluence with Other Levels
+
+Trades Filter levels become most powerful when they align with other indicators:
+
+- A Trades Filter level at the same price as a **Volume Profile POC** (Point of Control) is very strong.
+- Alignment with **VWAP** or **session high/low** adds further significance.
+- When a **Cloud** marker appears at a Trades Filter level, the probability of a reaction increases.
+
+### Directional Bias with Imbalance
+
+Enable `useVolumeImbalance` to see whether high-activity levels were dominated by buyers or sellers:
+
+- **Buy-dominant levels** (green) below the current price = strong support candidates. Buyers were the aggressors at that level.
+- **Sell-dominant levels** (red) above the current price = strong resistance candidates. Sellers were the aggressors.
+- **Neutral levels** (yellow) = high activity without clear directional bias. These may act as magnets that attract price but do not have a directional lean.
+
+{/* screenshot: Trades Filter with imbalance enabled — green buy level below price, red sell level above */}
+
+### Invalidation as a Signal
+
+When a level is invalidated (price breaks through), it can itself be a trading signal:
+
+- A buy-dominant support level that gets broken suggests the buyers at that level have been overwhelmed — potential for acceleration to the downside.
+- A sell-dominant resistance level that gets broken suggests sellers have capitulated — potential for a squeeze higher.
+
+## Combining with Other Indicators
+
+| Indicator | Synergy |
+|-----------|---------|
+| **Volume Profile** | Trades Filter levels at the POC or HVN edges confirm their significance |
+| **Clouds** | Clouds can detect the same high-activity zones with different criteria — agreement strengthens the signal |
+| **OB Imbalance** | Check order book imbalance at a Trades Filter level to see if resting orders still defend it |
+| **Delta** | Positive delta as price approaches a buy-dominant Trades Filter level = confirmation of support |
+| **Session Levels** | Confluence of session open/high/low with Trades Filter levels = high-probability zones |
+
+## Performance Notes
+
+Trades Filter scans all cluster data within the `lookbackDays` range on each chart update. For large lookback windows (30+ days on 1m timeframe), the initial calculation may take a moment. Once computed, incremental updates for new candles are fast.
+
+Setting `priceLevelsCount` to a reasonable value (3–5) keeps both the visual output clean and the computation efficient.
+
+## Alerts
+
+Trades Filter does not support dedicated alerts. The indicator is designed for visual analysis — scanning the chart for key levels and monitoring their lifecycle. For automated notifications when price reaches specific levels, consider using the built-in price alert system.
+
+## Summary
+
+Trades Filter reveals the invisible architecture of the market — price levels where concentrated trade execution occurred. These levels, invisible on standard candlestick charts, frequently act as future support and resistance. By adjusting the threshold and enabling volume imbalance filtering, you can identify directional high-activity zones and trade their reaction or invalidation.

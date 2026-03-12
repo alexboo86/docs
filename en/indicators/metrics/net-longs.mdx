@@ -1,0 +1,81 @@
+---
+title: "Net Longs"
+description: "Net long positioning from order book depth data."
+icon: "arrow-trend-up"
+---
+
+## Overview
+
+**Net Longs** measures the net long bias extracted from order book depth data. It quantifies how much buying interest (bid-side depth) exists relative to a baseline, giving you a read on passive buyer positioning before trades actually execute.
+
+Unlike trade-based indicators (CVD, Delta), Net Longs shows *intent* — orders sitting in the book waiting to be filled.
+
+{/* screenshot: Net Longs subchart with green histogram bars showing varying levels of long positioning */}
+
+## How It Works
+
+The indicator analyzes order book snapshots at regular intervals and computes the net long bias at a configurable depth bucket. The `depthIndex` parameter selects which depth level to analyze — higher indices look deeper into the book, capturing larger passive orders that are further from the current price.
+
+## Chart Type
+
+| Property | Value |
+|----------|-------|
+| Type | Subchart |
+| Position | Below main chart |
+| Data source | Order book depth snapshots |
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| color | Bar/line color | `#22c55e` |
+| depthIndex | Depth bucket to analyze (0-9) | `3` |
+| displayMode | Rendering style | `columns` |
+| highlightAnomalies | Flag statistical outliers | `false` |
+| anomalyThreshold | Standard deviation multiplier | `2.5` |
+| anomalyPeriod | Lookback period for anomaly stats | `30` |
+| gradientIntensity | Fill gradient strength (0-1) | `0` |
+
+### Depth Index
+
+The `depthIndex` parameter controls how deep into the order book the indicator looks:
+
+| depthIndex | Typical Range | Use Case |
+|------------|---------------|----------|
+| 0-2 | Near best bid | Scalping, short-term positioning |
+| 3-5 | Mid-depth | Swing trading, general analysis |
+| 6-9 | Deep book | Institutional positioning, macro view |
+
+<Note>
+Lower depth indices show more volatile, frequently changing positioning. Higher indices capture larger passive orders that change less often and may reflect institutional intent.
+</Note>
+
+## Interpretation
+
+### Rising Net Longs
+
+Increasing long positioning in the order book suggests growing buying interest. When this precedes a price rally, it can indicate informed positioning.
+
+### Declining Net Longs
+
+Passive buyers pulling their orders is a sign of weakening conviction. If this happens while price is still elevated, it may foreshadow a pullback.
+
+### Divergence from Price
+
+Net Longs falling while price rises suggests that passive buyers are not supporting the move — the rally may be driven purely by aggressive market orders and could run out of fuel.
+
+<Tip>
+Compare Net Longs with Net Shorts for a complete view of market positioning. When both are elevated, expect volatility. When one dominates, the market has a directional bias.
+</Tip>
+
+## Practical Examples
+
+- **Bid stacking**: Net Longs rising sharply below a key support level — passive buyers defending the zone.
+- **Trap detection**: Net Longs high at resistance while price fails to break — buyers may be trapped if the level holds.
+- **Pre-move signal**: Net Longs building during consolidation — potential breakout to the upside.
+
+## Related Indicators
+
+- [Net Shorts](/en/indicators/metrics/net-shorts) — the sell-side counterpart
+- [Net Longs/Shorts](/en/indicators/metrics/net-longs-shorts) — combined overlay of both
+- [Open Interest](/en/indicators/metrics/open-interest) — total outstanding positions

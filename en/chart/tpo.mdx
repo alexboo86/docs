@@ -1,0 +1,305 @@
+---
+title: "TPO Chart (Market Profile)"
+description: "Time-Price-Opportunity charts with session analysis, Initial Balance, and profile structure."
+icon: "clock"
+---
+
+The TPO (Time-Price-Opportunity) chart, also known as Market Profile, was developed at the Chicago Board of Trade (CBOT) by J. Peter Steidlmayer in the 1980s. It organizes price data by the amount of **time** spent at each level rather than by volume or individual trades. In Cluster Terminal, the TPO chart is a dedicated tab type with full session analysis, Initial Balance detection, value area computation, POC tracking, single print identification, and poor high/low detection.
+
+## What TPO Charts Show
+
+A TPO chart divides a trading session into fixed time periods (default: 30 minutes each) and assigns a letter to each period. The first period is labeled **A**, the second **B**, the third **C**, and so on through the alphabet.
+
+For each time period, the chart prints the corresponding letter at every price level that was touched during that period. Over the course of a session, these letters accumulate horizontally at each price level, forming a **profile** -- a histogram of time spent at price.
+
+| Concept | Description |
+|---------|-------------|
+| **TPO** | A single letter printed at a price level during a time period |
+| **Profile** | The accumulation of all TPOs across a session |
+| **POC** | The price level with the most TPOs (most time spent) |
+| **Value Area** | The price range containing ~70% of all TPOs |
+
+The fundamental insight of Market Profile is that **time at price is a proxy for acceptance**. If the market spends a long time at a price level, participants are comfortable transacting there -- it is fair value. If the market moves quickly through a price level, it is rejected.
+
+<Note>
+Unlike cluster charts which measure **volume** at each price, TPO charts measure **time** at each price. Both approaches identify fair value and acceptance/rejection, but from different perspectives. Volume shows where the most *capital* was exchanged; time shows where the most *negotiation* occurred.
+</Note>
+
+{/* screenshot: TPO chart showing a full daily session with letters A through N, POC line, and value area shading */}
+
+## Session Configuration
+
+TPO analysis is inherently session-based. The profile resets at the start of each new session.
+
+### Session Period
+
+| Period | Description |
+|--------|-------------|
+| **Daily** | One profile per calendar day (default). The most common setting for futures analysis. |
+| **Weekly** | One profile per week. Useful for swing traders who want to see the weekly value area. |
+| **Custom** | Define a custom session start hour (UTC). Useful for aligning sessions with specific market opens. |
+
+### Session Start Hour
+
+When using **Custom** session period, set the start hour in UTC. For example, if you want sessions aligned to the US market open (9:30 AM EST = 14:30 UTC), set the start hour to **14**. The session will begin at 14:00 UTC each day.
+
+<Tip>
+For crypto futures, the default **daily** session starting at 00:00 UTC works well since crypto trades 24/7. If you trade during specific regional sessions (Asia, Europe, US), consider using custom session starts to align profiles with your active trading hours.
+</Tip>
+
+## Block Size (Minutes per Letter)
+
+The **block minutes** setting controls how many minutes each letter represents. The default is **30 minutes**, meaning each letter covers a 30-minute time period.
+
+| Block Size | Letters per 24h Session | Resolution |
+|-----------|------------------------|------------|
+| **15 min** | 96 letters | High time resolution, more granular profile |
+| **30 min** | 48 letters | Standard Market Profile resolution (default) |
+| **60 min** | 24 letters | Coarser profile, less noise |
+
+Smaller block sizes produce more letters and a wider profile, which can reveal intra-period rotations. Larger block sizes simplify the profile but may miss short-lived price excursions.
+
+## Ticks per Row
+
+The **ticks per row** setting controls the price grouping for TPO letters -- analogous to tick size in cluster charts. Each row covers a price range of `ticksPerRow * minPriceIncrement`.
+
+- Smaller values: more price levels, taller and more detailed profiles.
+- Larger values: fewer levels, more compact profiles. Useful for volatile instruments or higher timeframes.
+
+Cluster Terminal auto-detects an appropriate default based on the symbol.
+
+## Profile Visual Settings
+
+### Profile Color
+
+The base color used for TPO letters and the profile outline. The default is derived from the active chart theme.
+
+### Block Color Mode
+
+| Mode | Description |
+|------|-------------|
+| **Brightness** | Each time period uses a different brightness level, creating a gradient effect across the session. Earlier periods are darker; later periods are brighter (default). |
+| **Fixed** | All letters use the same color. Simpler appearance but loses time sequence information. |
+
+### Start/End Block Highlighting
+
+When enabled, the **first** and **last** time periods of the session are rendered in distinct colors (configurable). This helps identify where the session opened and where it closed relative to the developing profile.
+
+### Letter Display
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Show Letters** | Display the actual letter characters (A, B, C...) inside the blocks | On |
+| **Hide Text** | Render blocks as solid rectangles without letters | Off |
+| **Letter Font Size** | Override the font size for TPO letters | Auto |
+| **Letter Font Weight** | Override the font weight | Auto |
+| **Letter Color** | Override the letter text color | Auto |
+
+### Outside Value Area
+
+TPO blocks that fall **outside** the value area can be rendered with a different color and opacity to visually separate them from the core profile:
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Outside VA Color** | Color for blocks outside the value area | Derived from theme |
+| **Outside VA Opacity** | Opacity for outside blocks (0-1) | Reduced from default |
+
+### Profile Spacing
+
+Controls the horizontal gap between adjacent session profiles when multiple sessions are visible on screen. Increase for clearer session separation; decrease to fit more data.
+
+## POC (Point of Control)
+
+The POC in a TPO chart is the price level with the most TPOs -- the level where price spent the most time during the session. It represents the "fairest" price of the session.
+
+### POC Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Show** | Display the POC line | On |
+| **Thickness** | POC line thickness in px | 2 |
+| **Profile Color** | Color of the POC indicator within the profile | Theme-derived |
+| **Ray Color** | Color of the POC extension ray | Theme-derived |
+| **Line Style** | Solid, dashed, or dotted | Solid |
+| **Naked Extension** | Extend unfilled POC levels as rays to the right | Off |
+| **Show Label** | Display a price label at the POC line | Off |
+| **Label Color** | Color of the POC price label | Auto |
+| **Label Font Size** | Font size for the label | Auto |
+
+### Naked POC
+
+When **Naked Extension** is enabled, POC levels from previous sessions that have not yet been revisited by price are extended as horizontal rays across the chart. These **Naked POCs** serve as high-probability targets:
+
+- Price has a statistical tendency to return to untested POC levels.
+- Naked POCs from recent sessions are stronger than those from older sessions.
+- When price finally reaches a Naked POC, watch for a reaction (bounce or acceleration through).
+
+{/* screenshot: TPO chart with three Naked POC rays extending from previous sessions, one being tested by current price */}
+
+## Value Area
+
+The Value Area in a TPO chart works the same as in auction market theory: it is the price range containing approximately 70% of the session's total TPOs.
+
+### Value Area Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Show** | Enable value area display | On |
+| **Percent** | Percentage of TPOs within the value area | 70% |
+| **Profile Color** | Color of the VA boundaries within the profile | Theme-derived |
+| **Profile Opacity** | Opacity of the VA fill | Theme-derived |
+| **Line Color** | Color of VAH/VAL boundary lines | Theme-derived |
+| **Line Thickness** | VAH/VAL line thickness in px | 1 |
+| **Line Style** | Solid, dashed, or dotted | Solid |
+| **Show Rays** | Extend VAH/VAL lines to the right | Off |
+| **Naked Extension** | Extend unfilled VAH/VAL from previous sessions | Off |
+| **Fill** | Fill the value area with a semi-transparent color | On |
+| **Show Labels** | Display VAH/VAL price labels | Off |
+
+### Trading with the Value Area
+
+The Value Area defines the zone of **acceptance** -- where the market agreed on fair value during the session:
+
+- **Opening inside VA**: Expect rotational, range-bound behavior. The market is accepting yesterday's value.
+- **Opening above VAH**: Bullish. The market is exploring higher value. If price holds above VAH, expect continuation.
+- **Opening below VAL**: Bearish. The market is exploring lower value. If price holds below VAL, expect continuation.
+- **VA overlap**: When consecutive sessions have overlapping value areas, the market is in balance.
+- **VA migration**: When each session's value area shifts in one direction, the market is trending.
+
+## Initial Balance (IB)
+
+The Initial Balance is the price range established during the first hour of the trading session (the first two 30-minute periods: A and B). The IB is one of the most important concepts in Market Profile analysis.
+
+### IB Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Show** | Display the Initial Balance range | Off |
+| **Color** | Color of IB boundary lines | Gray (#9ca3af) |
+| **Candle Count** | Number of time blocks in the IB (default 2 = first hour with 30-min blocks) | 2 |
+| **Line Style** | Solid, dashed, or dotted | Solid |
+
+### IB Extensions
+
+The IB range serves as a benchmark for the rest of the session. Experienced Market Profile traders watch for IB extensions:
+
+| Extension | Description | Significance |
+|-----------|-------------|-------------|
+| **Within IB** | Price stays inside the initial range | Low-conviction, balanced day |
+| **1x IB extension** | Price breaks out by one IB width | Normal range expansion |
+| **1.5x IB extension** | Price extends 1.5x the IB width | Moderate directional move |
+| **2x IB extension** | Price extends 2x the IB width | Strong trend day, likely to continue |
+
+<Tip>
+Monitor the IB range in the first hour. A narrow IB (small range) often precedes a large directional move later in the session. A wide IB suggests that early participants have already established the day's range.
+</Tip>
+
+## Profile Shapes and Day Types
+
+Market Profile theory classifies session profiles by their shape, which reveals the balance of power between buyers and sellers.
+
+### Normal Day (D-Shape)
+
+A bell-curve or "D-shaped" profile where most time was spent in the middle of the range. This is a balanced, rotational day with no strong directional bias. The POC is near the center of the profile.
+
+### Trend Day (Elongated Profile)
+
+A tall, narrow profile where price moved steadily in one direction throughout the session. The profile has a long tail on one end and very little time at the extremes. This is the strongest directional signal.
+
+### P-Shape (Long Liquidation / Short Covering)
+
+A profile where most of the TPOs are concentrated in the upper portion with a thin "tail" extending downward. This often occurs when shorts cover (buy to close) and price rallies from the lows.
+
+### b-Shape (Long Liquidation from Above)
+
+The opposite of a P-shape: most TPOs are concentrated in the lower portion with a thin tail extending upward. This often occurs when longs liquidate and price sells off from the highs.
+
+### Double Distribution (Split Profile)
+
+A profile with two distinct clusters of TPOs separated by a thin "neck." This indicates a session where price found two separate areas of value, often resulting from a news event or a sudden shift in sentiment mid-session.
+
+## Single Prints
+
+Single prints are price levels where only one letter appears in the profile -- meaning price moved through that level in only a single time period without returning. They represent **fast price movement** and rejection.
+
+### Single Print Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Show** | Highlight single print zones | Off |
+| **Profile Color** | Outline color for single prints | Theme-derived |
+| **Fill Color** | Fill color for single print zones | Theme-derived |
+| **Fill Opacity** | Opacity of the fill | Theme-derived |
+| **Line Thickness** | Outline thickness | 1 |
+| **Line Style** | Solid, dashed, or dotted | Solid |
+| **Naked Extension** | Extend unfilled single prints as rays | Off |
+
+### Trading Significance
+
+- Single prints at the **bottom** of a profile indicate aggressive buying that drove price up quickly. The single-print zone often acts as future support.
+- Single prints at the **top** of a profile indicate aggressive selling that drove price down quickly. The zone often acts as future resistance.
+- Single prints in the **middle** of a profile (between two clusters) mark the "neck" of a double distribution and often act as a decision point on revisit.
+
+## Poor Highs and Lows
+
+A **poor high** occurs when the session high is a single TPO (or very few TPOs) that was not aggressively auctioned. It suggests that the high was established weakly and is vulnerable to being tested and exceeded.
+
+A **poor low** is the mirror image -- a session low with minimal TPO activity, suggesting weak selling at the extreme.
+
+### Poor High/Low Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Show** | Highlight poor highs and lows | Off |
+| **Color** | Color for poor high/low markers | Theme-derived |
+| **Line Style** | Solid, dashed, or dotted | Solid |
+| **Naked Extension** | Extend poor highs/lows as rays until tested | Off |
+
+### Trading Significance
+
+Poor highs and lows are **unfinished business**. The market is likely to return and either confirm or reject these levels:
+
+- A poor high is a target for future buying. If price returns to the level, watch for a breakout above.
+- A poor low is a target for future selling. If price returns, watch for a breakdown below.
+- When Naked Extension is enabled, these levels remain visible as rays until price returns to test them.
+
+## Multi-Session Analysis
+
+Cluster Terminal displays multiple sessions on a single TPO chart, allowing you to compare profiles across days or weeks.
+
+### Merge Groups
+
+You can merge adjacent sessions into a **composite profile** using merge groups. This combines the TPOs from multiple sessions into a single profile, which is useful for:
+
+- Weekly composite profiles (merge 5 daily sessions).
+- Multi-day analysis of a consolidation period.
+- Pre-event and post-event comparison.
+
+### Comparing Profiles
+
+When viewing multiple sessions, pay attention to:
+
+- **Value Area migration**: Are the value areas shifting up, down, or staying stable?
+- **POC alignment**: Do consecutive sessions have similar POCs (balance) or diverging POCs (trend)?
+- **Poor high/low resolution**: Has a previous session's poor high or low been tested and resolved?
+- **Naked levels**: How many Naked POCs, single prints, and poor highs/lows are still outstanding?
+
+<Tip>
+TPO analysis is excellent for identifying **value** and **balance vs. imbalance**. Use it to determine your directional bias for the session, then switch to cluster charts for precise entry timing based on order flow.
+</Tip>
+
+## Volume Profile Overlay
+
+The TPO tab optionally supports a **volume profile** overlay alongside the time-based profile. This provides a side-by-side comparison of time-at-price and volume-at-price within the same session.
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Show** | Enable volume profile alongside TPO | Off |
+| **Render Mode** | Visual style of the volume histogram | Default |
+| **Origin** | Alignment of the volume bars | Left |
+| **Width** | Width of the volume profile as a percentage | Auto |
+| **Show POC** | Highlight the volume-based POC | On |
+| **VA Rays** | Show value area rays based on volume | Off |
+| **VA Percent** | Value area percentage for the volume profile | 70% |
+
+{/* screenshot: TPO chart with volume profile overlay, showing both time-based and volume-based POC lines */}

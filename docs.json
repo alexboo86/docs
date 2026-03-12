@@ -1,122 +1,169 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Cluster Terminal",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#10b981",
+    "light": "#34d399",
+    "dark": "#059669"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "favicon.svg",
+  "appearance": "dark",
+  "navbar": {
+    "links": [
+      { "label": "Community", "href": "https://t.me/alexboo_chat" },
+      { "label": "Contact", "href": "https://t.me/alexboo86" }
+    ]
+  },
+  "languages": [
+    { "language": "en", "name": "English", "isDefault": true },
+    { "language": "ru", "name": "Русский" }
+  ],
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Getting Started",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "en/index",
+              "en/getting-started/installation",
+              "en/getting-started/first-steps",
+              "en/getting-started/licensing"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Chart",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "en/chart/candles",
+              "en/chart/clusters",
+              "en/chart/heatmap",
+              "en/chart/tpo",
+              "en/chart/drawing-tools"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Appearance",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "en/appearance"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "Indicators",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API reference",
-        "groups": [
-          {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
+              "en/indicators/overview",
+              {
+                "group": "Classic",
+                "pages": [
+                  "en/indicators/classic/sma",
+                  "en/indicators/classic/ema",
+                  "en/indicators/classic/vwap",
+                  "en/indicators/classic/bollinger-bands",
+                  "en/indicators/classic/rsi",
+                  "en/indicators/classic/rsi-divergence",
+                  "en/indicators/classic/macd",
+                  "en/indicators/classic/session-levels",
+                  "en/indicators/classic/volume-bars"
+                ]
+              },
+              {
+                "group": "Order Flow",
+                "pages": [
+                  "en/indicators/order-flow/absorption-alpha",
+                  "en/indicators/order-flow/delta-divergence",
+                  "en/indicators/order-flow/cvd-divergence",
+                  "en/indicators/order-flow/orderflows-divergence",
+                  "en/indicators/order-flow/stacked-imbalance",
+                  "en/indicators/order-flow/unfinished-business",
+                  "en/indicators/order-flow/bar-statistics",
+                  "en/indicators/order-flow/trade-counter",
+                  "en/indicators/order-flow/ob-imbalance",
+                  "en/indicators/order-flow/trades-filter",
+                  "en/indicators/order-flow/clouds",
+                  "en/indicators/order-flow/dom-on-chart"
+                ]
+              },
+              {
+                "group": "Metrics",
+                "pages": [
+                  "en/indicators/metrics/cvd",
+                  "en/indicators/metrics/delta-volume",
+                  "en/indicators/metrics/open-interest",
+                  "en/indicators/metrics/net-longs",
+                  "en/indicators/metrics/net-shorts",
+                  "en/indicators/metrics/net-longs-shorts",
+                  "en/indicators/metrics/funding-rate",
+                  "en/indicators/metrics/liquidations",
+                  "en/indicators/metrics/liquidation-map",
+                  "en/indicators/metrics/liquidation-levels",
+                  "en/indicators/metrics/active-buy-sell-volume",
+                  "en/indicators/metrics/volume-ratio",
+                  "en/indicators/metrics/trade-count-ratio",
+                  "en/indicators/metrics/participation-ratio",
+                  "en/indicators/metrics/transfer-of-contracts",
+                  "en/indicators/metrics/avg-order-size",
+                  "en/indicators/metrics/anchored-cvd",
+                  "en/indicators/metrics/anchored-oi",
+                  "en/indicators/metrics/long-short-ratio",
+                  "en/indicators/metrics/whale-vs-retail",
+                  "en/indicators/metrics/enhanced-liquidations"
+                ]
+              },
+              {
+                "group": "SMC",
+                "pages": [
+                  "en/indicators/smc/fvg",
+                  "en/indicators/smc/market-structure",
+                  "en/indicators/smc/order-blocks"
+                ]
+              },
+              {
+                "group": "Profiles",
+                "pages": [
+                  "en/indicators/profiles/volume-profile",
+                  "en/indicators/profiles/tpo-profile",
+                  "en/indicators/profiles/multiple-hvn"
+                ]
+              }
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Workspace",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "en/workspace/workspaces",
+              "en/workspace/tabs-layouts",
+              "en/workspace/cloud-sync",
+              "en/workspace/settings"
+            ]
+          },
+          {
+            "group": "Advanced",
+            "pages": [
+              "en/advanced/dom",
+              "en/advanced/hotkeys",
+              "en/advanced/auto-updates",
+              "en/advanced/alerts"
+            ]
+          },
+          {
+            "group": "Support",
+            "pages": [
+              "en/support/faq",
+              "en/support/troubleshooting",
+              "en/support/feedback"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+    ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "telegram": "https://t.me/alexboo_chat"
     }
+  },
+  "search": {
+    "prompt": "Search docs..."
   }
 }

@@ -1,0 +1,189 @@
+---
+title: "Session Levels"
+description: "Previous session high/low/open levels for daily, weekly, and monthly periods."
+icon: "arrows-up-down"
+---
+
+# Session Levels
+
+Session Levels draws **horizontal lines at the previous session's high, low, and open prices** for daily, weekly, and monthly periods. These levels are among the most universally watched reference points in trading — they represent concrete prices where the market previously found supply (highs) or demand (lows), and they often act as support, resistance, or breakout triggers in the current session.
+
+{/* screenshot: Session Levels on BTC/USDT 15m chart showing previous day H/L/O, previous week H/L, and previous month H/L */}
+
+## How It Works
+
+At the start of each session period (day, week, month), the indicator records the high, low, and open from the **previous** completed period and draws them as horizontal lines extending into the current session:
+
+- **Previous Day High (PDH)**: The highest price reached during the prior trading day.
+- **Previous Day Low (PDL)**: The lowest price reached during the prior trading day.
+- **Previous Day Open (PDO)**: The opening price of the prior trading day.
+- **Previous Week High (PWH)**: The highest price during the prior calendar week.
+- **Previous Week Low (PWL)**: The lowest price during the prior calendar week.
+- **Previous Month High (PMH)**: The highest price during the prior calendar month.
+- **Previous Month Low (PML)**: The lowest price during the prior calendar month.
+
+These levels remain static throughout the current period and update when a new period begins.
+
+### Indicator Type
+
+**Overlay** — Session levels are drawn as horizontal lines directly on the price chart.
+
+## Settings
+
+### Visibility Controls
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `showDayLevels` | boolean | `true` | Show previous day high, low, and (optionally) open. |
+| `showWeekLevels` | boolean | `true` | Show previous week high and low. |
+| `showMonthLevels` | boolean | `true` | Show previous month high and low. |
+| `showOpenLevels` | boolean | `true` | Show the open price for each enabled period. When `false`, only high/low are drawn. |
+
+### Daily Level Styling
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `dayHighColor` | color | `#22c55e` | Color for the previous day high line. |
+| `dayLowColor` | color | `#ef4444` | Color for the previous day low line. |
+| `dayOpenColor` | color | `#f59e0b` | Color for the previous day open line. |
+| `dayLineThickness` | number | 1.0 | Line thickness in pixels for daily levels. |
+| `dayLineStyle` | select | `dash` | Line style: `solid`, `dash`, `dot`. |
+
+### Weekly Level Styling
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `weekHighColor` | color | `#3b82f6` | Color for the previous week high line. |
+| `weekLowColor` | color | `#8b5cf6` | Color for the previous week low line. |
+| `weekOpenColor` | color | `#06b6d4` | Color for the previous week open line. |
+| `weekLineThickness` | number | 1.5 | Line thickness in pixels for weekly levels. Thicker than daily by default to indicate higher significance. |
+| `weekLineStyle` | select | `dash` | Line style: `solid`, `dash`, `dot`. |
+
+### Monthly Level Styling
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `monthHighColor` | color | `#ec4899` | Color for the previous month high line. |
+| `monthLowColor` | color | `#f97316` | Color for the previous month low line. |
+| `monthOpenColor` | color | `#14b8a6` | Color for the previous month open line. |
+| `monthLineThickness` | number | 2.0 | Line thickness in pixels for monthly levels. Thickest to indicate highest significance. |
+| `monthLineStyle` | select | `solid` | Line style: `solid`, `dash`, `dot`. |
+
+### Text Labels
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `textSizeDay` | number | 10 | Font size for daily level labels (PDH, PDL, PDO). |
+| `textSizeWeek` | number | 11 | Font size for weekly level labels (PWH, PWL). |
+| `textSizeMonth` | number | 12 | Font size for monthly level labels (PMH, PML). |
+
+<Tip>
+Use progressively thicker lines and larger text for higher-timeframe levels (daily → weekly → monthly). This creates a visual hierarchy where the most important levels stand out immediately.
+</Tip>
+
+## Interpretation
+
+### Previous Day High and Low
+
+The previous day high (PDH) and low (PDL) are the most frequently referenced session levels:
+
+**Breakout signals:**
+- Price breaking above PDH = daily range expansion to the upside. Buyers are willing to pay more than yesterday's maximum.
+- Price breaking below PDL = daily range expansion to the downside. Sellers are pushing below yesterday's minimum.
+
+**Reversal signals:**
+- Price approaching PDH and rejecting = supply zone. Yesterday's buyers at the high may be taking profits.
+- Price approaching PDL and bouncing = demand zone. Buyers are defending yesterday's low.
+
+**Range trading:**
+- When price trades between PDH and PDL, the market is in a "consolidation" or "inside day" relative to the prior session.
+- Breakout from this range often defines the direction for the rest of the session.
+
+{/* screenshot: Price breaking above PDH with volume spike, then retesting it as support */}
+
+### Previous Day Open
+
+The previous day open (PDO) is less commonly watched but valuable:
+
+- It represents the **neutral point** of the prior session — where price started before any directional bias was established.
+- Price above PDO and above PDH = strong bullish continuation.
+- Price below PDO but above PDL = neutral to mildly bearish.
+- Price below PDL = clearly bearish.
+
+### Weekly and Monthly Levels
+
+Higher-timeframe session levels carry more significance because they represent larger pools of accumulated supply and demand:
+
+- **Previous Week High/Low**: Key levels for swing traders. A break above PWH suggests a weekly timeframe breakout. These levels are often tested on Monday or Tuesday of the new week.
+- **Previous Month High/Low**: Institutional-grade levels. Many large fund managers track monthly ranges. A monthly level break is a significant event that can trigger multi-day follow-through.
+
+<Tip>
+Previous day high and low are the most important levels for intraday trading. A break of PDH with strong volume often sets the tone for the entire session. Monthly levels carry the most weight for position traders — when price reaches PMH or PML, expect increased institutional activity.
+</Tip>
+
+### Level Confluence
+
+Session levels become especially powerful when they **cluster** with other reference points:
+
+| Confluence Type | Example | Significance |
+|----------------|---------|--------------|
+| Session + Session | PDH lines up with PWL from two weeks ago | Double session-level support/resistance |
+| Session + VWAP | PDL is near the daily VWAP | Institutional buying benchmark meets structural support |
+| Session + Volume Profile | PDH aligns with a Volume Profile POC | Price, session structure, and volume all agree |
+| Session + Round number | PWH is at $50,000 exactly | Psychological + structural level |
+| Session + Fibonacci | PMH is at the 61.8% retracement | Technical + structural confluence |
+
+When two or more independent levels converge within a tight price range (less than 0.1% apart), that zone becomes a high-probability reaction point.
+
+## Alerts
+
+Session Levels support the following **alert rule**:
+
+| Alert Event | Description |
+|-------------|-------------|
+| `level_touched` | Price reaches within a configurable threshold of any displayed session level |
+
+The alert fires for all enabled level types (daily, weekly, monthly). Set appropriate cooldowns to avoid repeated alerts as price oscillates around a level.
+
+## Practical Considerations
+
+- **24/7 markets**: Crypto never closes, so "day" is defined by UTC midnight (or your configured session start). There is no official open/close as in equities. The levels are still valid because the majority of traders and algorithms use UTC midnight as the daily boundary.
+- **Session start hour**: If you trade aligned to a specific session (e.g., US equity hours), change `sessionStartHour` to match. For example, setting it to 13 (1 PM UTC = 8 AM EST) gives you levels based on the US trading session.
+- **First day of data**: When the chart first loads, the indicator needs at least one completed period to calculate levels. The very first day/week/month on the chart will not have previous session levels.
+- **Visual clutter**: Enabling all three periods (day, week, month) plus open levels creates up to 9 horizontal lines. Consider disabling less important levels (e.g., turn off `showOpenLevels` or `showMonthLevels` on intraday timeframes) to reduce visual noise.
+- **Line persistence**: Session levels remain visible for the entire current period. They do not fade or remove themselves intra-session.
+
+## Recommended Configurations
+
+### Intraday Scalping (1m–5m)
+
+| Setting | Value | Reason |
+|---------|-------|--------|
+| `showDayLevels` | `true` | Primary reference |
+| `showWeekLevels` | `false` | Too far away for scalp targets |
+| `showMonthLevels` | `false` | Too far away for scalp targets |
+| `showOpenLevels` | `true` | PDO provides midpoint reference |
+
+### Day Trading (5m–1h)
+
+| Setting | Value | Reason |
+|---------|-------|--------|
+| `showDayLevels` | `true` | Primary S/R levels |
+| `showWeekLevels` | `true` | Context for larger moves |
+| `showMonthLevels` | `false` | Rarely reached intraday |
+| `showOpenLevels` | `true` | All opens provide context |
+
+### Swing Trading (4h–Daily)
+
+| Setting | Value | Reason |
+|---------|-------|--------|
+| `showDayLevels` | `false` | Too granular for multi-day holds |
+| `showWeekLevels` | `true` | Primary reference |
+| `showMonthLevels` | `true` | Major targets and levels |
+| `showOpenLevels` | `false` | Less relevant at this timeframe |
+
+## Related Indicators
+
+- [VWAP](/en/indicators/classic/vwap) — Dynamic volume-weighted level that complements static session levels
+- [Bollinger Bands](/en/indicators/classic/bollinger-bands) — Dynamic volatility-based levels
+- [SMA](/en/indicators/classic/sma) — Dynamic trend-based levels

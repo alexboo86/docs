@@ -1,0 +1,212 @@
+---
+title: "Volume Profile"
+description: "Session-based volume distribution showing POC, Value Area, patterns, and optional delta mode."
+icon: "chart-bar"
+---
+
+Volume Profile displays the distribution of traded volume at each price level over a configurable session period. Unlike traditional volume bars that show volume over time, Volume Profile shows volume over price — revealing where the market considers value to be. It is one of the most important tools for understanding market auction theory and identifying high-probability support and resistance levels.
+
+## Key Concepts
+
+### Point of Control (POC)
+
+The POC is the price level with the highest traded volume within the profile period. It represents the "fairest" price where the most agreement between buyers and sellers occurred. Price tends to gravitate toward the POC, making it a powerful magnet and reference level.
+
+### Value Area (VA)
+
+The Value Area encompasses the price range where a specified percentage (default 70%) of the total volume was traded. The boundaries are:
+
+- **VAH (Value Area High)**: Upper boundary of the value area.
+- **VAL (Value Area Low)**: Lower boundary of the value area.
+
+Price trading within the value area is in "balance." A breakout above VAH or below VAL suggests a directional move.
+
+### Naked POC
+
+A Naked POC is the POC from a previous session that price has not yet revisited. Naked POCs act as strong magnets — price often travels to fill them days or even weeks later.
+
+{/* screenshot: volume profile showing POC, VAH, VAL, and a naked POC extended from a previous session */}
+
+<Tip>
+Naked POCs from previous sessions are among the most reliable support/resistance levels available. Enable `extendNakedPOC` to automatically project unvisited POCs forward until price fills them.
+</Tip>
+
+## Period Settings
+
+These parameters define what time range each profile covers.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **periodType** | The aggregation period for each profile. Options: `M1`, `M5`, `M15`, `M30`, `H1`, `H4`, `D1`, `W1`, `MN`, `CustomBars`. | D1 |
+| **sessionStartUtcHour** | Hour (0–23, UTC) at which each session starts. Only applies to period types that use sessions (D1, W1). | 0 |
+| **customBarsCount** | Number of bars per profile when `periodType` is set to `CustomBars`. | 50 |
+| **maxPeriodsBack** | Maximum number of past profiles to display on the chart. Higher values show more history but increase rendering load. | 20 |
+
+### Period Type Guide
+
+| Period | Use Case |
+|--------|----------|
+| **M1–M30** | Micro profiles for scalping. See volume distribution within short windows. |
+| **H1** | Intraday profiles. Identify hourly rotation levels. |
+| **H4** | Intraday swing profiles. Good for 4-hour session analysis. |
+| **D1** | Daily profiles — the most commonly used. Each trading day gets its own profile. |
+| **W1** | Weekly profiles for swing trading context. |
+| **MN** | Monthly profiles for position trading and macro context. |
+| **CustomBars** | Fixed bar count per profile. Useful for non-time-based analysis. |
+
+<Note>
+The `sessionStartUtcHour` parameter lets you align daily profiles with your preferred session boundary. For crypto markets (24/7), the default of 0 (midnight UTC) works well. For futures, set it to your exchange's session open time.
+</Note>
+
+## Value Area Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **valueAreaPct** | Percentage of total volume that defines the value area. The standard value in market profile theory is 70%. | 70 |
+| **showValueArea** | Display the value area boundaries (VAH and VAL) as shaded zones or lines on the profile. | true |
+
+## POC Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showPOC** | Display the Point of Control line on each profile. | true |
+| **onlyPOC** | Hide the volume histogram bars and show only the POC line. Useful for a clean chart that still shows the most important level. | false |
+| **pocLineColor** | Color of the POC line. | #ef4444 |
+| **pocLineWidth** | Thickness of the POC line in pixels. | 1 |
+| **pocLineStyle** | Line style: `solid`, `dashed`, `dotted`. | solid |
+| **pocLineTransparency** | Opacity of the POC line from 0 (fully opaque) to 100 (invisible). | 0 |
+| **showPOCLabel** | Display a text label next to the POC line. | true |
+| **showPOCPrice** | Include the price value in the POC label. | true |
+| **pocLabelPosition** | Horizontal position of the POC label: `left`, `right`, or `center`. | left |
+| **pocLabelVerticalPosition** | Vertical position of the label relative to the line: `above` or `below`. | above |
+| **extendNakedPOC** | Extend POC lines from previous sessions forward until price touches them. Naked POCs are powerful support/resistance magnets. | false |
+
+{/* screenshot: chart with onlyPOC mode showing clean POC lines across multiple sessions */}
+
+## VAH / VAL Line Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showVAHLines** | Display VAH and VAL as horizontal lines. | true |
+| **vahValLineColor** | Color for VAH and VAL lines. | #ffffff |
+| **vahValLineWidth** | Thickness of VAH/VAL lines. | 1 |
+| **vahValLineStyle** | Line style for VAH/VAL: `solid`, `dashed`, `dot`. | dot |
+| **showVAHVALLabels** | Display text labels on VAH/VAL lines. | true |
+| **showVAHPrice** | Include price value in the VAH label. | true |
+| **showVALPrice** | Include price value in the VAL label. | true |
+
+## Profile Appearance
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **colorScheme** | Color theme for the volume histogram bars. Options: `solid`, `blue`, `green`, `orange`, `red`, `purple`, `cyan`, `yellow`, `heatmap`, `heatmapFire`, `heatmapPlasma`. | solid |
+| **profileColor** | Base color when using the `solid` color scheme. | #9ca3af |
+| **profileOpacity** | Overall opacity of the profile bars from 0 to 100. | 50 |
+| **barCornerRadius** | Corner radius for profile bars in pixels. Higher values create rounded bars. | 8 |
+| **showBarBorder** | Draw a border around each profile bar. | false |
+| **profileWidthPixels** | Maximum width of the profile histogram in pixels. | 300 |
+| **autoWidth** | Automatically size profile width as a percentage of the available period width. When enabled, defaults to 15% of the period width. | true |
+| **showValues** | Display volume numbers on each profile bar. Useful for exact volume analysis. | false |
+
+### Color Schemes
+
+| Scheme | Description |
+|--------|-------------|
+| **solid** | Single color (uses `profileColor`). Clean and minimal. |
+| **blue / green / orange / red / purple / cyan / yellow** | Monochrome gradient from light to dark based on volume intensity. |
+| **heatmap** | Multi-color gradient from cool (low volume) to hot (high volume). |
+| **heatmapFire** | Fire-themed gradient: yellow → orange → red → dark red. |
+| **heatmapPlasma** | Scientific plasma palette: purple → pink → orange → yellow. |
+
+<Tip>
+Heatmap color schemes make it immediately obvious where the highest volume concentration is. Use `heatmapFire` for quick visual identification of high-volume nodes.
+</Tip>
+
+{/* screenshot: side-by-side comparison of solid, heatmap, and heatmapFire color schemes */}
+
+## Pattern Detection
+
+Volume Profile can automatically detect classic profile shapes that carry specific market implications.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showPattern** | Enable automatic pattern detection and labeling. | false |
+| **patternLabelColor** | Color for pattern labels. | #eab308 |
+| **patternLabelFontSize** | Font size for pattern labels. | 12 |
+
+### Detected Patterns
+
+| Pattern | Shape | Interpretation |
+|---------|-------|----------------|
+| **P** | Volume concentrated in the upper portion | Auction completed to the upside. Long-term buying occurred. Often seen in accumulation. |
+| **b** | Volume concentrated in the lower portion | Auction completed to the downside. Long-term selling occurred. Often seen in distribution. |
+| **D** | Volume concentrated in the middle (bell curve) | Balanced, normal distribution. Market found fair value. |
+
+## Volume Filters
+
+Volume filters highlight specific price levels where volume exceeds a threshold. Up to four independent filters can be configured, each with its own threshold and color.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **enableFilters** | Master toggle for volume filters. | false |
+| **filter1** / **filter2** / **filter3** / **filter4** | Volume threshold for each filter level. Bars exceeding this volume get highlighted. | 0 |
+| **filter1Color** / **filter2Color** / **filter3Color** / **filter4Color** | Color for each filter level. | per-filter |
+| **filterLineStyle** | Line style for filter highlight lines. | solid |
+| **extendFilterLines** | Extend filter lines forward beyond the profile period. | false |
+
+Use filters to find exceptionally high-volume levels that stand out from the rest of the profile.
+
+## Delta Profile Mode
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **deltaProfileMode** | Split the profile into bid and ask sides. The histogram shows buy volume on one side and sell volume on the other, revealing directional bias at each price level. | false |
+
+When enabled, the profile displays two histograms side by side:
+- **Bid (sell) volume** on the left.
+- **Ask (buy) volume** on the right.
+
+This reveals whether a high-volume node was driven by aggressive buying or selling — information that a standard volume profile hides.
+
+{/* screenshot: delta profile mode showing buy/sell split at each price level */}
+
+## Practical Usage
+
+### Daily Profile Workflow
+
+For intraday trading with D1 profiles:
+
+1. Before the session opens, review yesterday's profile: note the POC, VAH, and VAL.
+2. Mark any Naked POCs from previous sessions.
+3. As price opens, determine whether it is inside or outside yesterday's value area.
+4. **Open inside VA**: Expect range-bound action. Trade between VAH and VAL.
+5. **Open outside VA**: Expect directional action. If above VAH, bias is bullish. If below VAL, bias is bearish.
+
+### Key Levels Hierarchy
+
+| Level | Significance |
+|-------|-------------|
+| **Naked POC** | Strongest magnet — price tends to fill these eventually. |
+| **Current session POC** | Intraday fair value — price rotates around this level. |
+| **VAH / VAL** | Session boundaries — breakout or rejection signals. |
+| **High Volume Node (HVN)** | Strong S/R — lots of agreement at this price. |
+| **Low Volume Node (LVN)** | Rejection area — price moves quickly through these. |
+
+### Confluence with Other Indicators
+
+- **Order Blocks**: An order block at a Volume Profile POC is a high-confluence zone.
+- **FVG**: An FVG that overlaps with a low-volume node suggests price will move quickly through this area.
+- **TPO Profile**: Volume Profile shows where volume occurred; TPO shows where time was spent. Together they provide a complete auction picture.
+- **Multiple HVN**: Cross-reference Volume Profile HVNs with the Multiple HVN indicator for levels confirmed across multiple bars.
+
+### Common Pitfalls
+
+- **Ignoring context**: A POC in a trending market behaves differently than in a range. In trends, price often leaves the POC behind.
+- **Too many profiles**: Displaying 20 profiles simultaneously creates visual clutter. Use 3–5 profiles for context and focus on the current and previous sessions.
+- **Static analysis**: Profiles are dynamic during the session. A POC can shift as new volume prints. Re-evaluate levels periodically.
+
+<Warning>
+Volume Profile shows where volume was traded, not direction. A high-volume node could be accumulation (bullish) or distribution (bearish). Use delta mode or order flow tools to determine directional intent.
+</Warning>
+
+{/* screenshot: complete volume profile setup with POC, VA, naked POC extension, and pattern labels */}

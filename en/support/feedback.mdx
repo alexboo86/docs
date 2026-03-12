@@ -1,0 +1,126 @@
+---
+title: "Feedback"
+description: "Report bugs or suggest improvements."
+icon: "comments"
+---
+
+# Feedback
+
+Your feedback helps improve Cluster Terminal. Whether you have found a bug, want to request a feature, or have a suggestion for improvement, here is how to reach us.
+
+## Reporting a Bug
+
+A good bug report helps us reproduce and fix the issue quickly. Please include as much detail as possible.
+
+### What to Include
+
+<Steps>
+  <Step title="Describe the issue">
+    Explain what happened. Be specific: "Chart crashes when adding RSI to a 1m BTCUSDT cluster chart" is much more useful than "chart broken."
+  </Step>
+  <Step title="Steps to reproduce">
+    List the exact steps needed to trigger the issue:
+    1. Open workspace X
+    2. Switch to ETHUSDT 5m
+    3. Add Absorption Alpha indicator
+    4. Scroll back to January 15
+    5. Observe: chart freezes for 10 seconds
+  </Step>
+  <Step title="Expected vs. actual behavior">
+    - **Expected**: Chart scrolls smoothly with the indicator loaded.
+    - **Actual**: Chart freezes for 10 seconds and then recovers.
+  </Step>
+  <Step title="Include a screenshot or screen recording">
+    A screenshot showing the problem is worth a thousand words. If the issue is intermittent or involves animation/behavior, a short screen recording is even better.
+  </Step>
+  <Step title="Note your version and environment">
+    Include:
+    - Cluster Terminal version (visible in Settings or the title bar)
+    - Windows version (e.g., Windows 11 23H2)
+    - GPU model if the issue is visual
+  </Step>
+</Steps>
+
+### Bug Report Template
+
+Use this template when reporting a bug:
+
+```
+**Description**: [One-line summary of the issue]
+
+**Steps to reproduce**:
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+**Expected**: [What should happen]
+**Actual**: [What actually happens]
+
+**Version**: [e.g., v1.2.0]
+**OS**: [e.g., Windows 11]
+**GPU**: [e.g., NVIDIA RTX 3060]
+
+**Screenshot/Recording**: [Attach or link]
+```
+
+<Tip>
+  The more detail you provide, the faster we can reproduce and fix the issue. Vague reports like "it does not work" often require multiple rounds of back-and-forth to diagnose.
+</Tip>
+
+## Requesting a Feature
+
+Feature requests help us prioritize what to build next. When suggesting a feature:
+
+1. **Describe the problem** you are trying to solve, not just the solution. "I want to compare two symbols side by side on the same price scale" is more useful than "add overlay mode."
+2. **Explain your use case** -- how would this feature fit into your trading workflow?
+3. **Provide examples** if possible -- screenshots from other platforms, sketches, or detailed descriptions of the desired behavior.
+4. **Mention priority** -- is this a nice-to-have or a blocker for your workflow?
+
+<Note>
+  We read every feature request. Popular requests that align with the product roadmap get prioritized. Even if a request is not implemented immediately, it informs future design decisions.
+</Note>
+
+## Contact Channels
+
+### Telegram (Primary)
+
+The fastest way to reach us is via Telegram:
+
+| Channel | Link | Purpose |
+|---------|------|---------|
+| **Developer** | [@alexboo86](https://t.me/alexboo86) | Direct messages for bugs, feature requests, support |
+| **Community Chat** | [@alexboo_chat](https://t.me/alexboo_chat) | General discussion, tips, community support |
+
+<Tip>
+  For urgent issues (application crash, data corruption), message the developer directly on Telegram for the fastest response.
+</Tip>
+
+### In-App Feedback
+
+An in-app feedback button is planned for a future release. Until then, use Telegram or the methods described above.
+
+## What Happens After You Report
+
+1. **Acknowledgment**: We confirm receipt of your report (typically within 24 hours on Telegram).
+2. **Triage**: The issue is categorized by severity and type (bug, feature, improvement).
+3. **Investigation**: For bugs, we attempt to reproduce the issue.
+4. **Resolution**: Once fixed or implemented, the change ships in the next update. We will notify you if you reported via Telegram.
+
+## Known Issues
+
+Before reporting, check if your issue is already known:
+
+| Issue | Status | Workaround |
+|-------|--------|------------|
+| CVD Divergence slow on large datasets | Known, optimization planned | Use on 5m+ timeframes |
+| Order Blocks depends on Market Structure indicator | By design | Enable Market Structure first |
+| VWAP does not reset on session boundaries | Known, fix planned | Manually restart chart at session open |
+| Drawings not synced to all chart types | Known, planned | Drawings currently work on candlestick/cluster charts |
+
+<Note>
+  This list is updated periodically. For the latest known issues and their status, check the Telegram community chat.
+</Note>
+
+## Thank You
+
+Every bug report and feature suggestion makes Cluster Terminal better for the entire community. We appreciate the time you take to share your feedback.

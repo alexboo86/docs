@@ -1,0 +1,184 @@
+---
+title: "TPO Profile"
+description: "Time Price Opportunity profile with letters, Initial Balance, and session analysis."
+icon: "clock"
+---
+
+TPO (Time Price Opportunity) Profile shows the distribution of **time** at each price level rather than volume. Each time block is represented by a letter — A for the first block of the session, B for the second, and so on. TPO reveals where price spent the most time, which in auction market theory represents areas of value acceptance. Where Volume Profile answers "how much was traded," TPO Profile answers "how long did price stay."
+
+## Core Concepts
+
+### TPO Letters
+
+Each session is divided into equal time blocks (default 30 minutes). The first block is labeled A, the second B, and so on. Each letter is placed at every price level that traded during its time block. The resulting profile shows a horizontal stack of letters at each price level.
+
+- Price levels with many letters = price spent a long time there = **value acceptance**.
+- Price levels with few letters = price moved through quickly = **value rejection**.
+
+### Point of Control (POC)
+
+The TPO POC is the price level with the most letters (most time spent). Unlike Volume Profile's POC, which can be skewed by a few large trades, TPO POC is purely time-based and reflects genuine acceptance.
+
+### Value Area
+
+The TPO Value Area encompasses the price range where 68% (default) of the time blocks printed. This percentage comes from one standard deviation in a normal distribution.
+
+- **VAH**: Upper boundary of the time-based value area.
+- **VAL**: Lower boundary of the time-based value area.
+
+{/* screenshot: TPO profile showing letter blocks with POC, VAH, and VAL labeled */}
+
+## Session Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **sessionStartUtc** | Hour (0–23, UTC) at which each session begins. Each session generates its own TPO profile. | 0 |
+| **blockMinutes** | Duration of each time block in minutes. Each block gets one letter. Common values: 30 (standard), 15 (granular), 60 (coarse). | 30 |
+| **valueAreaPct** | Percentage of total time blocks that defines the value area. The market profile standard is 68% (one standard deviation). | 68 |
+
+<Note>
+A 30-minute block size with a 24-hour session (crypto) produces 48 letters (A through AV). For traditional markets with a 6.5-hour session, you get 13 letters (A through M). Adjust `blockMinutes` based on your market and desired granularity.
+</Note>
+
+## POC Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showPOC** | Display the Point of Control line on each TPO profile. | true |
+| **pocNakedExtension** | Extend POC lines from previous sessions forward until price touches them. Naked TPO POCs, like naked Volume POCs, are strong magnets. | true |
+
+## Value Area Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showValueArea** | Display VAH and VAL boundary lines on the profile. | true |
+
+## Special Features
+
+### Single Prints
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showSinglePrints** | Highlight price levels where only one time block traded. | true |
+
+Single prints are areas where only one letter appears at a price level. They represent fast, directional moves where the market accepted very little time at those prices. Single prints often act as:
+
+- **Support/resistance levels**: Price tends to revisit and "fill" single print areas.
+- **Breakout zones**: A cluster of single prints indicates strong directional conviction.
+
+{/* screenshot: TPO profile with single print areas highlighted in contrasting color */}
+
+<Tip>
+Single print areas below the value area in an uptrend often act as support on pullbacks. They represent the "footprint" of an aggressive move that the market may revisit to establish fair value.
+</Tip>
+
+### Initial Balance
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showInitialBalance** | Display the Initial Balance (IB) range on the profile. | false |
+| **initialBalanceCandleCount** | Number of time blocks that define the Initial Balance. Default is 2 (first hour with 30-min blocks). | 2 |
+
+The Initial Balance (IB) is the range established during the first N time blocks of the session. In market profile theory, the IB sets expectations for the session:
+
+- **Wide IB**: Large early range suggests a range-bound day. Price is less likely to break out.
+- **Narrow IB**: Small early range suggests a directional day. Expect a breakout.
+- **IB extension**: When price breaks above or below the IB, it often travels 1x or 2x the IB range in that direction.
+
+### Poor Highs and Lows
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showPoorHighLow** | Detect and label poor highs and lows at the profile extremes. | false |
+
+A "poor high" or "poor low" occurs when the profile extreme has multiple letters at the same price — indicating that the auction stopped short of finding the true extreme. This suggests an **incomplete auction**: the market did not fully reject the extreme, so price is likely to return and attempt to extend beyond it.
+
+In contrast, a "strong high/low" has a single letter point (single print) at the extreme, indicating clean rejection.
+
+## Visual Settings
+
+### Block Appearance
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showLetters** | Display letter labels inside each TPO block. When disabled, blocks appear as colored rectangles without text. | false |
+| **blockColorMode** | Coloring mode: `brightness` (earlier blocks darker, later blocks lighter, showing time progression) or `fixed` (uniform color). | brightness |
+
+### Start/End Block Highlighting
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **highlightStartEnd** | Apply distinct colors to the first and last time blocks of each session. The first block (open) and last block (close) are key reference points. | true |
+| **startBlockColor** | Color for the first block (session open). | #a3e635 |
+| **endBlockColor** | Color for the last block (session close). | #f472b6 |
+
+When `highlightStartEnd` is enabled:
+- The opening block shows where the session started — useful for open-drive or open-test-drive analysis.
+- The closing block shows where the session ended — close relative to the value area indicates directional bias for the next session.
+
+{/* screenshot: TPO profile with start (green) and end (pink) blocks highlighted */}
+
+## Profile Shape Analysis
+
+TPO profiles form characteristic shapes that carry specific market implications:
+
+| Shape | Description | Interpretation |
+|-------|-------------|----------------|
+| **P shape** | Volume (letters) concentrated in the upper half | Long-term buying. Accumulation occurred. Bullish for next session. |
+| **b shape** | Volume concentrated in the lower half | Long-term selling. Distribution occurred. Bearish for next session. |
+| **D shape** | Symmetric bell curve, volume in the middle | Balanced market. Fair value established. Likely range continuation. |
+| **B shape** | Bi-modal: two humps of high activity | Two-timeframe market. Larger players active. Expect directional resolution. |
+| **Elongated** | Thin, tall profile with few letters at each level | Trend day. One-directional move with little rotation. |
+
+<Note>
+Profile shape is best analyzed after the session closes. During the session, the shape evolves as new blocks print. Wait for at least 60–70% of the session to pass before drawing conclusions about the profile shape.
+</Note>
+
+## Practical Usage
+
+### Session Analysis Workflow
+
+1. **Before open**: Review yesterday's profile shape, POC, VA, and any naked POCs.
+2. **Opening rotation (blocks A–B)**: Determine the Initial Balance. Is it wide or narrow?
+3. **Mid-session (blocks C–H)**: Watch for IB extension, value area migration, single prints forming.
+4. **Late session (final blocks)**: Evaluate where the close will be relative to the value area.
+5. **Post-session**: Classify the profile shape and set bias for the next session.
+
+### Opening Types
+
+The relationship between the open and the previous session's value area provides immediate context:
+
+| Opening Type | Description | Expected Behavior |
+|-------------|-------------|-------------------|
+| **Open inside VA** | Price opens within yesterday's value area | Range day likely. Trade rotations. |
+| **Open above VA** | Price opens above yesterday's VAH | Bullish bias. Previous session's VAH becomes support. |
+| **Open below VA** | Price opens below yesterday's VAL | Bearish bias. Previous session's VAL becomes resistance. |
+| **Open drive** | Price opens and moves directionally with no rotation back | Strong trend day. Follow the direction. |
+
+### TPO vs Volume Profile
+
+| Aspect | TPO Profile | Volume Profile |
+|--------|-------------|----------------|
+| **Measures** | Time at price | Volume at price |
+| **POC meaning** | Most accepted price (time-based) | Most traded price (volume-based) |
+| **Skew** | Not affected by large single trades | Can be skewed by whale orders |
+| **Best for** | Identifying value acceptance/rejection | Identifying liquidity pools |
+| **Combination** | Use together for complete auction picture | Use together for complete auction picture |
+
+### Confluence with Other Indicators
+
+- **Volume Profile**: When both TPO and Volume POCs align at the same price, it is an exceptionally strong level.
+- **Market Structure**: A CHoCH at a TPO single print area confirms that the fast move has been revisited and potentially reversed.
+- **Order Blocks**: An order block at the edge of a TPO value area suggests institutional activity at the value boundary.
+
+### Common Pitfalls
+
+- **Using TPO on low timeframes**: TPO is designed for session-level analysis. Using it on 1m charts produces meaningless single-letter profiles.
+- **Ignoring the close**: Where the session closes relative to the value area is one of the strongest signals for next-session bias. A close above VAH is bullish; below VAL is bearish.
+- **Treating all single prints equally**: Single prints in the direction of the trend are more likely to hold. Counter-trend single prints get filled more easily.
+
+<Warning>
+TPO Profile is an auction theory framework, not a standalone trading system. It provides context and bias — combine it with order flow tools for precise entry timing.
+</Warning>
+
+{/* screenshot: full TPO session with Initial Balance, single prints, poor high, and P-shape pattern */}

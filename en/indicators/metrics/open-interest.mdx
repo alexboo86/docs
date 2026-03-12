@@ -1,0 +1,100 @@
+---
+title: "Open Interest"
+description: "Total number of outstanding futures contracts — measures market participation."
+icon: "chart-area"
+---
+
+## Overview
+
+**Open Interest (OI)** represents the total number of outstanding futures contracts that have not been settled. It is a measure of market participation and capital commitment — not volume, but the number of positions currently open.
+
+- **Rising OI** = new money entering the market (new positions being opened).
+- **Falling OI** = positions being closed (traders exiting).
+
+OI is unique to derivatives markets and provides information that volume alone cannot: whether new capital is backing the current price move.
+
+{/* screenshot: Open Interest line chart rising in an uptrend, then declining as price reverses */}
+
+## How It Works
+
+Open Interest increases when a new buyer and a new seller both open fresh positions. It decreases when an existing long and existing short close their positions against each other. OI remains unchanged when an existing position is transferred from one participant to another.
+
+| Buyer | Seller | OI Change |
+|-------|--------|-----------|
+| New long | New short | +1 |
+| Close long | Close short | -1 |
+| New long | Close long (transfer) | 0 |
+
+## Chart Type
+
+| Property | Value |
+|----------|-------|
+| Type | Subchart |
+| Position | Below main chart |
+| Data source | Exchange-reported open interest |
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| lineColor | Line color | `#38bdf8` |
+| lineWidth | Line thickness | `1.5` |
+| displayMode | Rendering style | `line` |
+| highlightAnomalies | Flag statistical outliers | `false` |
+| anomalyThreshold | Standard deviation multiplier | `2.5` |
+| anomalyPeriod | Lookback period for anomaly stats | `50` |
+| gradientIntensity | Fill gradient strength (0-1) | `0` |
+
+### Display Modes
+
+| Mode | Description |
+|------|-------------|
+| `line` | Continuous line (default). Best for tracking the OI trend. |
+| `columns` | Bar chart showing OI value per period. |
+| `candles` | OHLC of OI changes — useful for spotting OI reversals. |
+
+## Interpretation
+
+### OI + Price Matrix
+
+The classic framework for reading OI alongside price:
+
+| Price | OI | Interpretation |
+|-------|-----|----------------|
+| Rising | Rising | Strong trend — new money backing the rally |
+| Rising | Falling | Short squeeze — shorts closing, not new buying |
+| Falling | Rising | Strong downtrend — new shorts entering |
+| Falling | Falling | Long capitulation — longs closing, selling pressure fading |
+
+<Tip>
+Rising price with rising OI signals a strong trend backed by new capital. Rising price with falling OI suggests a short squeeze — the rally may lack staying power.
+</Tip>
+
+### OI Spikes
+
+Sudden large increases in OI indicate heavy new positioning. These often appear before major moves as participants commit capital ahead of anticipated volatility (e.g., before news events, at key technical levels).
+
+### OI Decline
+
+A sustained decline in OI during a trend suggests the trend is losing participation and may be nearing exhaustion. Traders are taking profits rather than adding positions.
+
+<Warning>
+OI data is exchange-specific. Cluster Terminal shows OI for the selected exchange. Total market OI across all exchanges may differ.
+</Warning>
+
+## Anomaly Detection
+
+When `highlightAnomalies` is enabled, bars where the OI change exceeds the rolling average by more than the configured threshold are flagged. Large OI anomalies often precede significant price moves.
+
+## Practical Examples
+
+- **Trend strength check**: Uptrend with steadily rising OI — the move has conviction, hold.
+- **Squeeze detection**: Price rallies sharply but OI drops — likely a short squeeze, be cautious of longs.
+- **Pre-event positioning**: OI spikes before a scheduled event — traders are placing bets on the outcome.
+- **Capitulation**: Rapid OI decline after a drop — forced closures are clearing out, potential bottom.
+
+## Related Indicators
+
+- [Funding Rate](/en/indicators/metrics/funding-rate) — shows which side is paying premium
+- [Liquidations](/en/indicators/metrics/liquidations) — forced closures that reduce OI
+- [Net Longs/Shorts](/en/indicators/metrics/net-longs-shorts) — order book depth positioning

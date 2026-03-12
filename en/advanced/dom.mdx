@@ -1,0 +1,148 @@
+---
+title: "Depth of Market (DOM)"
+description: "Real-time order book with iceberg detection and gradient mode."
+icon: "table-list"
+---
+
+# Depth of Market (DOM)
+
+The DOM widget displays the real-time order book as a price ladder with bid and ask volumes at each price level. It provides direct visibility into market liquidity, large resting orders, and potential iceberg activity.
+
+{/* screenshot: DOM widget showing price ladder with bids and asks */}
+
+## Overview
+
+The DOM shows:
+
+- **Price column** -- center column with price levels
+- **Bid volume** -- left side, showing buy orders at each price
+- **Ask volume** -- right side, showing sell orders at each price
+- **Spread** -- highlighted gap between best bid and best ask
+- **Last trade** -- indicated on the price ladder with a marker
+
+All data streams in real-time via WebSocket, updating multiple times per second.
+
+## Opening the DOM
+
+<Steps>
+  <Step title="Add a DOM pane">
+    Right-click on a tab header and select **Add DOM** from the context menu, or use the chart type selector to switch a pane to DOM view.
+  </Step>
+  <Step title="Select symbol">
+    The DOM uses the same symbol as the active chart tab. Change the symbol in the toolbar to update the DOM.
+  </Step>
+</Steps>
+
+{/* screenshot: DOM pane alongside a cluster chart */}
+
+## Display Modes
+
+### Standard Mode
+
+The default view shows raw order book depth with volume numbers at each price level. Bars extend horizontally proportional to the volume size relative to the visible range.
+
+### Gradient Mode
+
+Gradient mode replaces numeric volume bars with a smooth color gradient, making it easier to spot large concentrations of liquidity at a glance.
+
+| Visual | Meaning |
+|--------|---------|
+| **Intense color** | High volume at that price level |
+| **Faint color** | Low volume |
+| **Green gradient** | Bid side |
+| **Red gradient** | Ask side |
+
+<Tip>
+  Gradient mode is especially useful on high-resolution displays where it turns the entire DOM into a heatmap-like visualization of liquidity structure.
+</Tip>
+
+## Iceberg Detection
+
+The DOM includes an iceberg order detection algorithm. Iceberg orders are large orders split into smaller visible portions -- when one portion fills, another appears at the same price.
+
+### How Icebergs Are Detected
+
+The system monitors for repeated refills at the same price level:
+
+1. A visible order at a price level gets filled (partially or fully).
+2. Within a short time window, a new order appears at the same price.
+3. If this pattern repeats beyond a configurable threshold, the level is flagged as an iceberg.
+
+Detected icebergs are marked with a distinct visual indicator on the price ladder.
+
+{/* screenshot: DOM with iceberg detection highlight */}
+
+<Note>
+  Iceberg detection works on live data only. It does not reconstruct historical icebergs from past order book snapshots.
+</Note>
+
+## Volume Filters
+
+Volume filters let you highlight or hide price levels based on their order size. This helps you focus on significant liquidity levels while ignoring noise.
+
+### Size Tiers
+
+Configure size thresholds to categorize orders:
+
+| Tier | Description | Visual |
+|------|-------------|--------|
+| **Small** | Below the first threshold | Normal display |
+| **Medium** | Between first and second threshold | Slightly highlighted |
+| **Large** | Between second and third threshold | Prominently highlighted |
+| **Whale** | Above the third threshold | Bold highlight with distinct color |
+
+### Filter Configuration
+
+<Steps>
+  <Step title="Open filter settings">
+    Click the filter icon in the DOM toolbar to open the volume filter panel.
+  </Step>
+  <Step title="Set thresholds">
+    Enter volume thresholds for each size tier. Values are in the quote currency (USDT for USDT-M futures).
+  </Step>
+  <Step title="Choose display mode">
+    Select whether to **highlight** large orders (default) or **hide** small orders below a minimum threshold.
+  </Step>
+</Steps>
+
+### Named Presets
+
+Save your filter configurations as named presets for quick switching between different market conditions.
+
+- **Scalping** -- lower thresholds to see smaller significant orders on 1m charts
+- **Swing** -- higher thresholds to focus only on major liquidity levels
+- **Whale Watch** -- very high thresholds to show only the largest resting orders
+
+<Tip>
+  Create different filter presets for different symbols. A "large" order on BTCUSDT is very different from a "large" order on a low-cap altcoin.
+</Tip>
+
+## DOM on Chart Overlay
+
+In addition to the standalone DOM widget, you can overlay order book levels directly on the main chart using the **DOM on Chart** indicator. This displays real-time bid/ask depth as horizontal bands on the candlestick or cluster chart.
+
+Enable it from the indicator panel under the **Order Flow** category.
+
+{/* screenshot: DOM on chart overlay showing bid/ask levels on candlestick chart */}
+
+## Performance Notes
+
+The DOM processes a high volume of WebSocket messages. On slower connections or hardware:
+
+- Reduce the number of visible price levels (zoom into a tighter range)
+- Disable gradient mode if rendering is slow
+- Close unused DOM panes -- each one maintains its own WebSocket subscription
+
+<Warning>
+  Running multiple DOM panes for different symbols simultaneously increases network traffic and CPU usage significantly. Use one DOM pane at a time for best performance.
+</Warning>
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Scroll wheel` | Move price ladder up/down |
+| `Ctrl + Scroll` | Zoom price levels in/out |
+| `Click on price` | Center the ladder on that price |
+
+See [Keyboard Shortcuts](/en/advanced/hotkeys) for more.

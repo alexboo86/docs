@@ -1,0 +1,94 @@
+---
+title: "Delta Volume"
+description: "Per-bar difference between buy and sell volume."
+icon: "chart-column"
+---
+
+## Overview
+
+**Delta Volume** measures the difference between buy volume and sell volume for each individual candle. Unlike CVD, which accumulates over time, Delta Volume resets every bar, giving you a clean read on who dominated that specific period.
+
+- **Positive delta** = more aggressive buying (volume executed at the ask).
+- **Negative delta** = more aggressive selling (volume executed at the bid).
+
+{/* screenshot: Delta Volume histogram with green positive bars and red negative bars below a candlestick chart */}
+
+## How It Works
+
+For each bar:
+
+```
+Delta[n] = buyVolume[n] - sellVolume[n]
+```
+
+The result is displayed as a histogram in a subchart. The height of each bar represents the magnitude of the imbalance, and the color indicates direction.
+
+## Chart Type
+
+| Property | Value |
+|----------|-------|
+| Type | Subchart |
+| Position | Below main chart |
+| Data source | Trade-level buy/sell classification |
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| positiveColor | Color for bars where buyers dominate | `#22c55e` |
+| negativeColor | Color for bars where sellers dominate | `#ef4444` |
+| displayMode | Rendering style | `columns` |
+| highlightAnomalies | Flag statistical outliers | `false` |
+| anomalyThreshold | Standard deviation multiplier | `2.5` |
+| anomalyPeriod | Lookback period for anomaly stats | `30` |
+| gradientIntensity | Fill gradient strength (0-1) | `0` |
+
+### Display Modes
+
+| Mode | Description |
+|------|-------------|
+| `columns` | Histogram bars (default). Best for quick visual scanning. |
+| `line` | Continuous line connecting delta values. |
+| `candles` | OHLC-style representation of delta. |
+
+## Interpretation
+
+### Spike Analysis
+
+Large delta spikes indicate a sudden imbalance between buyers and sellers. These often appear at:
+
+- **Support/resistance levels** — absorption or breakout
+- **News events** — rapid positioning
+- **Exhaustion points** — final push before reversal
+
+<Tip>
+Large delta spikes often mark exhaustion points, especially at support and resistance levels. A massive positive delta bar at resistance that fails to push price higher suggests buyers are being absorbed.
+</Tip>
+
+### Delta vs. Price Movement
+
+| Delta | Price | Interpretation |
+|-------|-------|----------------|
+| Large positive | Price rises | Confirmed buying pressure |
+| Large positive | Price flat/drops | Buying absorbed by passive sellers |
+| Large negative | Price drops | Confirmed selling pressure |
+| Large negative | Price flat/rises | Selling absorbed by passive buyers |
+
+### Anomaly Detection
+
+When enabled, anomaly highlighting marks bars where delta exceeds the rolling average by more than `anomalyThreshold` standard deviations. These bars are rendered with distinct styling to draw attention.
+
+<Note>
+Delta Volume shows the per-bar picture. For the cumulative trend, use CVD. The two are complementary — Delta for timing, CVD for trend.
+</Note>
+
+## Practical Examples
+
+- **Breakout confirmation**: Price breaks resistance with a large positive delta bar — real demand behind the move.
+- **Absorption**: Repeatedly large negative delta bars at support, but price holds — passive buyers absorbing the selling.
+- **Climactic volume**: Extreme delta spike after an extended trend often signals exhaustion and potential reversal.
+
+## Related Indicators
+
+- [CVD](/en/indicators/metrics/cvd) — cumulative version for trend analysis
+- [Active Buy/Sell Volume](/en/indicators/metrics/active-buy-sell-volume) — buy and sell volume shown separately

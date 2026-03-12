@@ -1,0 +1,120 @@
+---
+title: "Enhanced Liquidations"
+description: "Detailed liquidation data with size bucket filtering — filter by position size."
+icon: "bolt-lightning"
+---
+
+## Overview
+
+Enhanced Liquidations is an extended version of the basic Liquidations indicator. It adds **bucket filtering by position size**, allowing you to focus on the liquidations that actually move the market.
+
+- **Long liquidations** — Forced closure of long positions (shown in one color)
+- **Short liquidations** — Forced closure of short positions (shown in another color)
+- **Size filtering** — Show only liquidations above a configurable position size threshold
+
+{/* screenshot: Enhanced Liquidations subchart with green/red bars and highlighted large liquidations */}
+
+## How It Works
+
+When a trader's margin falls below the maintenance requirement, the exchange forcefully closes their position — this is a liquidation. Enhanced Liquidations captures these events and categorizes them by:
+
+1. **Direction** — Was a long or short position liquidated?
+2. **Size** — How large was the liquidated position?
+
+The size bucketing system lets you filter out the noise of small liquidations and focus on the significant forced closures that create cascading price impact.
+
+### Size Buckets
+
+| Bucket | Minimum Position Size | Use Case |
+|--------|----------------------|----------|
+| `0` | All liquidations | Full picture, including noise |
+| `1` | 1,000 USD+ | Filter out micro-positions |
+| `2` | 10,000 USD+ | Medium-sized liquidations |
+| `3` | 100,000 USD+ | Large liquidations only |
+| `4` | 1,000,000 USD+ | Whale liquidations only |
+
+<Tip>
+Filter to the 10K+ bucket (minBucket: 2) to see only significant liquidations. Large liquidation cascades often mark local price extremes — when big positions get wiped out, the forced selling/buying pressure exhausts itself and price reverses.
+</Tip>
+
+## Interpretation
+
+### Long Liquidations (displayed above zero line)
+
+Long positions being forced closed. The exchange sells their position on the market, adding sell pressure. Clusters of long liquidations during a downmove indicate a **long squeeze cascade** — each liquidation pushes price lower, triggering more liquidations.
+
+### Short Liquidations (displayed below zero line)
+
+Short positions being forced closed. The exchange buys back their position, adding buy pressure. Clusters of short liquidations during an upmove indicate a **short squeeze** — each liquidation pushes price higher, triggering more.
+
+### Cascade Detection
+
+The most powerful signal from Enhanced Liquidations is the **cascade** — a self-reinforcing loop where liquidations cause more liquidations:
+
+1. Price moves against overleveraged positions
+2. First wave of liquidations hits
+3. Liquidation orders push price further
+4. Second wave triggers
+5. Repeat until leverage is flushed
+
+These cascades often end at extremes that mark significant turning points.
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `longColor` | Color for long liquidations | `#22c55e` |
+| `shortColor` | Color for short liquidations | `#ef4444` |
+| `mode` | Display liquidation volume or count | `volume` |
+| `minBucket` | Minimum position size bucket (0–4) | `0` |
+| `displayMode` | Visualization style: `line`, `columns`, or `candles` | `columns` |
+| `highlightAnomalies` | Highlight extreme liquidation events | `true` |
+| `anomalyThreshold` | Standard deviations for anomaly detection | `2.5` |
+| `anomalyPeriod` | Lookback period for anomaly calculation | `30` |
+| `gradientIntensity` | Scale bar opacity by magnitude | `true` |
+| `minOpacity` | Minimum opacity for gradient scaling | `0.3` |
+| `barWidth` | Column width ratio (0.0–1.0) | `0.6` |
+
+## Mode: Volume vs Count
+
+- **Volume** (default) — Shows the total dollar value of liquidated positions. Better for assessing market impact since a single large liquidation matters more than many small ones.
+- **Count** — Shows the number of liquidation events. Better for gauging how many traders are being affected, regardless of position size.
+
+## Display Modes
+
+- **Columns** — Default histogram. Long liquidations in one color, short in another. Height shows magnitude.
+- **Line** — Continuous plot of liquidation activity. Useful for spotting trends in liquidation frequency.
+- **Candles** — OHLC rendering of liquidation values per bar.
+
+## Anomaly Detection
+
+When `highlightAnomalies` is enabled, liquidation bars exceeding `anomalyThreshold` standard deviations from the rolling mean are visually marked. Liquidation anomalies are among the most significant events in futures markets:
+
+- Major cascade events that flush leveraged positions
+- Exchange-wide liquidation waves during flash crashes
+- Single whale liquidations that move the market
+
+## Gradient Intensity
+
+With `gradientIntensity` enabled, bars are shaded by liquidation magnitude. Small liquidations appear faded (down to `minOpacity`), while large cascades appear at full opacity. This naturally highlights the events that matter most.
+
+<Note>
+Enhanced Liquidations is a futures-only indicator. Liquidation data is sourced from the exchange's reported liquidation events. Some exchanges may have slight delays in reporting, so liquidation bars may appear 1-2 seconds after the corresponding price move.
+</Note>
+
+## Practical Examples
+
+**Cascade Reversal**: Price drops sharply. Long liquidations spike to anomaly levels in the 10K+ bucket. As the cascade exhausts, liquidation volume drops off — this is often the point of maximum pain and a potential reversal zone.
+
+**Leverage Flush**: After a period of rising open interest and calm markets, a sudden move triggers a wave of liquidations. The sharp spike in Enhanced Liquidations confirms that overleveraged positions have been flushed — the market is healthier for the next move.
+
+**Squeeze Confirmation**: Price breaks above resistance. Short liquidations spike in the 100K+ bucket — large shorts are being squeezed. The forced buying from these liquidations adds fuel to the breakout.
+
+**Bucket Analysis**: Compare all-bucket view (minBucket: 0) with 10K+ view (minBucket: 2). If small liquidations are high but large liquidations are absent, the move lacks the force to trigger a cascade — likely a minor shakeout.
+
+## Related Indicators
+
+- [Transfer of Contracts](/en/indicators/metrics/transfer-of-contracts) — Net contract flow between participants
+- [Anchored OI](/en/indicators/metrics/anchored-oi) — Position changes from session start
+- [Whale vs Retail](/en/indicators/metrics/whale-vs-retail) — Large vs small player activity
+- [Long/Short Ratio](/en/indicators/metrics/long-short-ratio) — Aggregate positioning data

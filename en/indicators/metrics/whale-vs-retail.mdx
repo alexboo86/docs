@@ -1,0 +1,99 @@
+---
+title: "Whale vs Retail"
+description: "Tracks the delta between large (whale) and small (retail) order activity."
+icon: "fish"
+---
+
+## Overview
+
+Whale vs Retail separates trading activity by order size to show whether large players (whales) and small players (retail) are aligned or diverging.
+
+- **Positive values** — Whale activity dominates (large orders outpace small orders)
+- **Negative values** — Retail activity dominates (small orders outpace large orders)
+
+This indicator provides direct insight into the **power balance** between institutional and retail market participants.
+
+{/* screenshot: Whale vs Retail subchart with green (whale) and red (retail) histogram bars */}
+
+## How It Works
+
+The indicator classifies each trade by its size into whale or retail buckets, then computes the net delta between the two groups. The classification threshold is dynamically determined based on the asset's typical trade size distribution.
+
+The core insight: whales and retail traders often act differently at key market moments. When their behavior diverges, it creates actionable trading signals.
+
+### Accumulation
+
+Whales buying while retail sells = **accumulation**. Large players are quietly building positions while small traders panic or take profits. This is a classic bullish setup.
+
+### Distribution
+
+Whales selling while retail buys = **distribution**. Large players are offloading positions to eager retail buyers. This is a classic bearish setup.
+
+<Tip>
+Follow the whales. When whale activity dominates in one direction while retail goes the opposite way, the whales are almost always right. They have more information, better tools, and more capital.
+</Tip>
+
+## Interpretation
+
+| Pattern | Whale | Retail | Signal |
+|---------|-------|--------|--------|
+| Accumulation | Buying | Selling | Bullish — whales building longs |
+| Distribution | Selling | Buying | Bearish — whales offloading to retail |
+| Aligned buying | Buying | Buying | Strong bullish — broad consensus |
+| Aligned selling | Selling | Selling | Strong bearish — capitulation phase |
+| Low delta | Neutral | Neutral | No clear edge — wait for divergence |
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `period` | Data period: `5m`, `15m`, `30m`, `1h`, `2h`, `4h`, `6h`, `12h`, `1d` | `5m` |
+| `positiveColor` | Color for whale-dominant bars | `#22c55e` |
+| `negativeColor` | Color for retail-dominant bars | `#ef4444` |
+| `lineWidth` | Line thickness (for line mode) | `1.5` |
+| `displayMode` | Visualization style: `line` or `columns` | `columns` |
+| `highlightAnomalies` | Highlight extreme divergences | `true` |
+| `anomalyThreshold` | Standard deviations for anomaly detection | `2.5` |
+| `anomalyPeriod` | Lookback period for anomaly calculation | `30` |
+| `gradientIntensity` | Scale bar opacity by magnitude | `true` |
+| `minOpacity` | Minimum opacity for gradient scaling | `0.3` |
+| `barWidth` | Column width ratio (0.0–1.0) | `0.6` |
+
+## Display Modes
+
+- **Columns** — Default histogram. Green bars when whales dominate, red bars when retail dominates. Height shows the magnitude of divergence.
+- **Line** — Continuous line plot. Useful for spotting trends in the whale/retail balance over time.
+
+## Anomaly Detection
+
+With `highlightAnomalies` enabled, extreme whale/retail divergences are highlighted. These often indicate:
+
+- Large fund position changes
+- Retail panic (extreme retail dominance during sell-offs)
+- Institutional accumulation phases
+- Pre-announcement positioning by informed participants
+
+## Gradient Intensity
+
+When `gradientIntensity` is enabled, bars are shaded based on the divergence magnitude. Stronger divergences appear more vivid, with `minOpacity` controlling the minimum opacity for the weakest readings.
+
+<Note>
+Whale vs Retail classification uses order size thresholds that may vary by symbol. What constitutes a "whale" trade on BTCUSDT is different from a small-cap altcoin. The thresholds are calibrated per asset.
+</Note>
+
+## Practical Examples
+
+**Bottom Fishing**: Price drops sharply. Retail activity spikes negative (retail panic selling). Whale activity turns positive (whales buying the dip). This divergence at a support level is a strong accumulation signal.
+
+**Top Detection**: Price reaches new highs. Retail activity is strongly positive (retail FOMO buying). Whale activity turns negative (whales selling into retail enthusiasm). Classic distribution — the smart money is exiting.
+
+**Trend Confirmation**: Both whales and retail are positive during a rally — aligned buying. When both groups agree, the trend has stronger momentum and is more likely to continue.
+
+**Fakeout Filter**: Price breaks above resistance. If whale activity is negative while retail is positive, the breakout is likely retail-driven and may fail. A genuine breakout should show whale participation.
+
+## Related Indicators
+
+- [Average Order Size](/en/indicators/metrics/avg-order-size) — Per-trade size without segmentation
+- [Long/Short Ratio](/en/indicators/metrics/long-short-ratio) — Positioning by trader category
+- [Trade Count Ratio](/en/indicators/metrics/trade-count-ratio) — Trade frequency directional analysis
+- [Volume Ratio](/en/indicators/metrics/volume-ratio) — Overall buy/sell volume balance

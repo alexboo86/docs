@@ -1,0 +1,154 @@
+---
+title: "OB Imbalance"
+description: "Order Book Imbalance — shows bid/ask pressure from the order book at multiple depth levels."
+icon: "scale-unbalanced"
+---
+
+# OB Imbalance
+
+OB Imbalance (Order Book Imbalance) measures the **ratio of bid volume to ask volume in the order book** at configurable depth levels. It provides a real-time view of resting order pressure — before those orders are actually executed — giving you a forward-looking signal that complements trade-based indicators like Delta and CVD.
+
+{/* screenshot: OB Imbalance subchart with multiple depth panels showing bid/ask pressure over time */}
+
+## How It Works
+
+At each candle, the indicator samples the order book and calculates the imbalance at several depth levels (measured as a percentage distance from the best bid/ask):
+
+```
+Imbalance = (Bid Volume − Ask Volume) / (Bid Volume + Ask Volume)
+```
+
+The result is a normalized value between **-1.0** and **+1.0**:
+
+| Value | Meaning |
+|-------|---------|
+| **+1.0** | All resting volume is on the bid side (maximum buy pressure) |
+| **0.0** | Bids and asks are perfectly balanced |
+| **-1.0** | All resting volume is on the ask side (maximum sell pressure) |
+
+Each configured depth level produces its own series, rendered in a separate lane within the subchart. This multi-depth approach reveals whether the imbalance is consistent throughout the book or concentrated at specific levels.
+
+## Indicator Type
+
+**Subchart** — renders one lane per depth level in a panel below the price chart. Each lane has its own zero line.
+
+## Settings
+
+### Depth Levels
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `depths` | array | `[1, 2.5, 5, 10]` | Depth levels as percentage distance from best bid/ask |
+
+Each entry defines a depth level. For example, `1` means all resting orders within 1% of the best price; `10` means within 10% of the best price.
+
+- **Shallow depths (0.5–2%)** reflect immediate liquidity and are sensitive to spoofing and short-term positioning.
+- **Deep depths (5–10%)** reflect broader conviction and are more stable, but slower to react.
+
+You can add, remove, or reorder depth levels. Each level appears as a separate lane in the subchart.
+
+### Colors
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `upColor` | color | `#22c55e` | Color for positive imbalance (bid-heavy / buy pressure) |
+| `downColor` | color | `#ef4444` | Color for negative imbalance (ask-heavy / sell pressure) |
+
+### Display Mode
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `displayMode` | select | `columns` | Rendering style: `line`, `columns`, or `candles` |
+
+- **`columns`** (default): colored bars above/below the zero line. Clear visualization of direction and magnitude.
+- **`line`**: continuous line. Better for observing the trend of imbalance over time.
+- **`candles`**: OHLC representation. Useful on higher timeframes to see intra-period imbalance fluctuation.
+
+### Anomaly Highlighting
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `highlightAnomalies` | boolean | `false` | Enable statistical anomaly detection |
+| `anomalyThreshold` | number | `2.5` | Standard deviations above mean for anomaly |
+| `anomalyPeriod` | number | `40` | Lookback window (bars) for calculation |
+
+Anomaly highlighting flags bars where the absolute imbalance value is statistically extreme compared to recent history. A threshold of 2.5 is slightly more sensitive than the default on most indicators because order book imbalance tends to be noisier.
+
+### Gradient Intensity
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `gradientIntensity` | boolean | `false` | Scale bar opacity with imbalance magnitude |
+| `minOpacity` | number | `0.25` | Minimum opacity for near-zero imbalance bars |
+
+## Reading Multi-Depth Imbalance
+
+The power of OB Imbalance comes from comparing across depth levels simultaneously.
+
+### All Depths Aligned
+
+When all depth levels (e.g., 1%, 2.5%, 5%, 10%) show the same direction, it indicates a **consistent order book tilt**. The resting order pressure is uniform from the top of the book to the deep levels. This is the strongest signal:
+
+- All positive: broad bid support below — potential floor / reversal zone
+- All negative: broad ask resistance above — potential ceiling / rejection zone
+
+{/* screenshot: OB Imbalance with all four depth lanes showing strong positive (green) alignment */}
+
+### Shallow vs. Deep Divergence
+
+When shallow levels (1–2%) diverge from deep levels (5–10%), it often signals:
+
+- **Shallow positive, deep negative**: bids are stacked near the best price (possibly spoofing or short-term support), but deeper conviction is bearish.
+- **Shallow negative, deep positive**: asks are concentrated near the top of book (possibly to cap price in the short term), but the broader book is bid-heavy.
+
+This divergence is particularly useful for detecting spoofing — where a large number of orders are placed near the best price with the intent to cancel them before execution.
+
+<Tip>
+When all depth levels show the same direction, it is a strong order book signal. Divergence between close (1%) and deep (10%) depths often indicates spoofing or short-term manipulation versus genuine conviction.
+</Tip>
+
+### Imbalance Flips
+
+A sudden flip from positive to negative (or vice versa) across all depths often precedes or accompanies a directional move. These flips are especially significant at key price levels (session highs/lows, VWAP, round numbers).
+
+## Practical Strategies
+
+### Support/Resistance Confirmation
+
+Before entering a trade at a support level, check OB Imbalance:
+
+1. If imbalance is positive across multiple depths at support, the level is well-defended.
+2. If imbalance is negative or mixed, the support may be weak and vulnerable to a break.
+
+### Breakout Validation
+
+During a breakout:
+
+1. **Genuine breakout**: imbalance shifts in the breakout direction across all depths. Resting orders are being pulled (resistance removed) or stacked (support added in the direction of the move).
+2. **False breakout**: imbalance remains contrary to the breakout direction. The book still has heavy resistance in the breakout path.
+
+### Scalping with Shallow Depth
+
+For very short-term trading, use a single shallow depth (0.5–1%) and switch to `line` display mode. The continuous line shows rapid shifts in immediate book pressure that can precede 1–3 tick moves.
+
+## Combining with Other Indicators
+
+OB Imbalance pairs well with:
+
+- **Delta / CVD** — OB Imbalance shows resting (passive) order pressure; Delta shows executed (aggressive) order flow. When both align, the signal is reinforced.
+- **DOM on Chart** — DOM shows the current snapshot of the book; OB Imbalance shows how that snapshot has changed over time.
+- **Trades Filter** — high-activity price levels from Trades Filter combined with order book imbalance at those levels give a fuller picture of support/resistance strength.
+
+## Limitations
+
+- **Order book data is snapshots**: imbalance values reflect the state of the book at the time each candle was sampled. Orders can be placed and cancelled between snapshots.
+- **Spoofing**: large resting orders may be placed to manipulate the imbalance and then cancelled before execution. Multi-depth analysis helps detect this, but it is not foolproof.
+- **Thin markets**: on illiquid symbols or during off-hours, small orders can produce extreme imbalance readings that are not meaningful.
+
+## Alerts
+
+OB Imbalance does not currently support dedicated alerts. Use anomaly highlighting to visually flag extreme readings, and combine with alertable indicators (such as Delta) for automated notifications.
+
+## Summary
+
+OB Imbalance transforms the order book into a time-series indicator, measuring the balance of resting bid and ask volume at multiple depth levels. By comparing shallow and deep imbalance, you can distinguish genuine conviction from spoofing, validate support and resistance levels, and confirm breakout quality — all before trades are actually executed.

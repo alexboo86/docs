@@ -1,0 +1,155 @@
+---
+title: "Bollinger Bands"
+description: "Volatility bands around a moving average showing overbought/oversold conditions."
+icon: "chart-area"
+---
+
+# Bollinger Bands
+
+Bollinger Bands are a volatility indicator consisting of a **middle band** (Simple Moving Average) and two **outer bands** placed at a specified number of standard deviations above and below the middle. The bands dynamically widen when volatility increases and narrow when volatility decreases, providing a visual envelope of "normal" price behavior.
+
+{/* screenshot: Bollinger Bands on BTC/USDT 1h chart showing squeeze followed by expansion */}
+
+## How It Works
+
+The three components are calculated as follows:
+
+```
+Middle Band = SMA(Close, period)
+Upper Band  = Middle Band + (stdDev × σ)
+Lower Band  = Middle Band - (stdDev × σ)
+
+where σ = standard deviation of Close over the last `period` bars
+```
+
+The standard deviation measures how much closing prices have varied from the mean over the lookback window. When prices are stable, σ is small and the bands are tight. When prices swing wildly, σ is large and the bands expand.
+
+### Statistical Foundation
+
+With `stdDev: 2` (the default), approximately **95%** of closing prices should fall within the bands under a normal distribution assumption. In practice, financial data is not perfectly normal (fat tails are common in crypto), so prices exit the bands more frequently than 5% — but each exit still represents a statistically significant deviation.
+
+### Indicator Type
+
+**Overlay** — Bollinger Bands are drawn directly on the price chart, wrapping around candlesticks.
+
+## Settings
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `period` | number | 20 | Lookback period for the SMA and standard deviation calculation. |
+| `stdDev` | number | 2 | Number of standard deviations for the upper and lower bands. |
+| `color` | color | `#3b82f6` | Color of the middle band (SMA line). |
+| `upperColor` | color | `#60a5fa` | Color of the upper band line. |
+| `lowerColor` | color | `#1d4ed8` | Color of the lower band line. |
+| `lineWidth` | number | 1.2 | Thickness of all three band lines in pixels. |
+
+### Parameter Combinations
+
+| Period | StdDev | Character | Use Case |
+|--------|--------|-----------|----------|
+| 10 | 1.5 | Tight, reactive | Scalping, quick mean-reversion entries |
+| 20 | 2.0 | Standard (default) | General-purpose swing and day trading |
+| 20 | 2.5 | Wider | Reducing false signals on volatile pairs |
+| 50 | 2.0 | Smooth, slow | Position trading, identifying major expansions |
+| 50 | 3.0 | Very wide | Only flagging extreme moves on higher TFs |
+
+<Tip>
+The default 20/2.0 combination works well for most situations. Only change these values if you have a specific reason — for example, widening `stdDev` to 2.5 on a highly volatile altcoin to avoid excessive band touches.
+</Tip>
+
+## Interpretation
+
+### The Bollinger Squeeze
+
+The most powerful Bollinger Bands signal is the **squeeze** — when bands narrow to their tightest point in recent history:
+
+1. **Bands contract**: Volatility has dropped to a low. Price is consolidating in a tight range.
+2. **Breakout**: Price breaks out of the squeeze, usually accompanied by a volume spike.
+3. **Bands expand**: Volatility returns. The direction of the breakout indicates the new trend.
+
+A squeeze often precedes the most explosive moves. The longer the squeeze persists, the more powerful the subsequent breakout tends to be.
+
+{/* screenshot: Bollinger squeeze on 4h chart — bands narrowing for 2 days, then explosive breakout */}
+
+### Band Walks
+
+In a strong trend, price can "walk" along one of the outer bands:
+
+- **Upper band walk**: Price consistently touches or exceeds the upper band. This is a sign of strong bullish momentum, **not** an automatic sell signal.
+- **Lower band walk**: Price consistently touches or hugs the lower band. Strong bearish momentum, **not** an automatic buy signal.
+
+Band walks typically end when price closes back inside the bands and the middle band begins to flatten.
+
+### Mean Reversion Signals
+
+In ranging (non-trending) markets, Bollinger Bands excel as mean-reversion indicators:
+
+- **Price touches upper band** in a range → potential short entry, targeting the middle band.
+- **Price touches lower band** in a range → potential long entry, targeting the middle band.
+- The **middle band (SMA)** acts as the natural mean-reversion target.
+
+The critical distinction is context: band touches in a trend are continuation signals (band walk), while band touches in a range are reversal signals (mean reversion). Determine the market context before acting on band touches.
+
+### Bandwidth and %B
+
+Two derived metrics help quantify Bollinger Band signals:
+
+**Bandwidth** measures how wide the bands are relative to the middle:
+```
+Bandwidth = (Upper - Lower) / Middle × 100
+```
+Low Bandwidth values indicate squeezes. Monitoring Bandwidth over time helps identify when a squeeze is forming before it becomes visually obvious.
+
+**%B** measures where price sits within the bands:
+```
+%B = (Close - Lower) / (Upper - Lower)
+```
+- `%B > 1.0`: Price is above the upper band.
+- `%B = 0.5`: Price is exactly at the middle band.
+- `%B < 0.0`: Price is below the lower band.
+
+## Alerts
+
+Bollinger Bands support the following **alert rules**:
+
+| Alert Event | Description |
+|-------------|-------------|
+| `upper_touch` | Price closes above or touches the upper band |
+| `lower_touch` | Price closes below or touches the lower band |
+
+Enable alerts in the indicator settings dialog under the **Alert** section. Set a cooldown to avoid repeated alerts during band walks.
+
+<Tip>
+Price touching the bands is not an automatic buy or sell signal. In strong trends, price will walk along a band for extended periods. Always assess whether the market is trending or ranging before interpreting band touches as reversal signals.
+</Tip>
+
+## Combining with Other Indicators
+
+| Companion | Strategy |
+|-----------|----------|
+| **RSI** | Band touch + RSI divergence = high-probability reversal |
+| **Volume Bars** | Squeeze breakout + volume spike = confirmed expansion |
+| **VWAP** | Band touch near VWAP = strong confluence for mean reversion |
+| **MACD** | Squeeze + MACD histogram growing = building breakout momentum |
+| **Delta** | Lower band touch + positive delta = aggressive buying at oversold levels |
+
+## Practical Considerations
+
+- **Not a standalone system**: Bollinger Bands describe volatility, not direction. They tell you when the market is stretched, not which way it will go. Always combine with directional indicators or price action.
+- **Crypto volatility**: Crypto markets are inherently more volatile than equities. The default 2.0 standard deviations may produce frequent band touches on lower timeframes. Consider 2.5 for altcoins.
+- **Multi-timeframe**: A squeeze on the daily chart is more significant than one on the 5-minute chart. Check higher timeframes to calibrate expectations.
+- **False squeezes**: Not every squeeze leads to a trend move. Some squeezes resolve with a brief spike followed by more ranging. Volume confirmation (a meaningful increase on the breakout bar) helps distinguish real breakouts from false ones.
+- **Lookback startup**: The indicator needs at least `period` bars to calculate the first valid value. The standard deviation stabilizes after approximately `2 × period` bars.
+
+## Common Mistakes
+
+1. **Shorting upper band touches in uptrends** — band walks can persist for days. Wait for price to close back below the upper band and the middle band to flatten.
+2. **Using in isolation** — Bollinger Bands do not predict direction. A squeeze tells you "something is about to happen," not "which way."
+3. **Ignoring the middle band** — The SMA (middle) is often the strongest support/resistance on the chart and the primary mean-reversion target.
+
+## Related Indicators
+
+- [SMA](/en/indicators/classic/sma) — The middle band is an SMA; understanding SMA behavior helps interpret Bollinger Bands
+- [RSI](/en/indicators/classic/rsi) — Momentum oscillator that pairs well with band touch signals
+- [VWAP](/en/indicators/classic/vwap) — Volume-weighted mean for intraday confluence
+- [MACD](/en/indicators/classic/macd) — Momentum confirmation for squeeze breakouts

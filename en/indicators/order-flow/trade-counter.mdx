@@ -1,0 +1,124 @@
+---
+title: "Trade Counter"
+description: "Counts the number of individual trades per candle — useful for detecting algorithmic activity."
+icon: "hashtag"
+---
+
+# Trade Counter
+
+Trade Counter displays the **number of individual trade executions per candle**, split into buy and sell counts. While most indicators focus on volume (the total size of trades), Trade Counter focuses on the frequency of trades — how many times the market transacted, regardless of the size of each transaction.
+
+This distinction is critical: a single 100 BTC market order looks very different from 10,000 orders of 0.01 BTC each, even though the total volume is identical. Trade Counter reveals this difference.
+
+{/* screenshot: Trade Counter subchart below the price chart showing buy (green) and sell (red) trade count columns */}
+
+## How It Works
+
+For each candle, Trade Counter reads the underlying cluster data and counts:
+
+- **Buy trades**: the number of individual executions that occurred at the ask price (aggressive buys)
+- **Sell trades**: the number of individual executions that occurred at the bid price (aggressive sells)
+
+These counts are rendered as a subchart, with buy and sell values shown as separate series. The indicator does not aggregate or smooth the data — each bar represents the raw count for that candle's time period.
+
+## Indicator Type
+
+**Subchart** — renders in a separate panel below the main price chart with its own Y-axis.
+
+## Settings
+
+### Colors
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `buyColor` | color | `#22c55e` | Color for buy trade count |
+| `sellColor` | color | `#ef4444` | Color for sell trade count |
+
+### Display Mode
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `displayMode` | select | `columns` | Rendering style: `line`, `columns`, or `candles` |
+
+- **`columns`** (default): vertical bars anchored to zero. Buy and sell counts rendered side by side. The most common choice for comparing participation.
+- **`line`**: continuous line connecting trade count values. Useful when you want to see the trend of trading frequency over time.
+- **`candles`**: OHLC representation of trade count. Less common, but useful for spotting intra-bar trade count patterns on higher timeframes.
+
+### Anomaly Highlighting
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `highlightAnomalies` | boolean | `false` | Enable statistical anomaly detection |
+| `anomalyThreshold` | number | `3.0` | Standard deviations above mean to qualify as anomaly |
+| `anomalyPeriod` | number | `50` | Lookback window (bars) for mean/stddev calculation |
+
+When enabled, bars where the trade count exceeds `mean + (threshold x stddev)` are highlighted with a distinct visual marker. A threshold of 3.0 flags only extreme spikes — roughly the top 0.1% of bars.
+
+{/* screenshot: Trade Counter with anomaly highlighting — a few bars glow brightly due to extreme trade counts */}
+
+### Gradient Intensity
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `gradientIntensity` | boolean | `false` | Scale bar opacity with value magnitude |
+| `minOpacity` | number | `0.25` | Minimum opacity for lowest-value bars |
+
+When enabled, higher trade count bars appear more opaque, while quiet bars fade toward the minimum opacity. This creates a heat-map effect that makes spikes immediately visible without enabling full anomaly detection.
+
+### Bar Width
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `barWidth` | number | `0.7` | Column width relative to candle spacing (0.0–1.0) |
+
+## Interpreting Trade Counter
+
+### Volume vs. Trade Count Matrix
+
+The most powerful use of Trade Counter is comparing it against total volume. This produces four scenarios:
+
+| Volume | Trade Count | Interpretation |
+|--------|-------------|---------------|
+| High | High | Broad market participation — news events, liquidation cascades |
+| High | Low | Few large orders — institutional / whale activity |
+| Low | High | Many small orders — retail noise, algorithmic market making |
+| Low | Low | Quiet market — low interest, consolidation |
+
+The "High Volume + Low Trade Count" combination is the signature of institutional activity and is the primary reason to use this indicator.
+
+<Tip>
+Compare Trade Counter with volume — divergence between trade count and volume reveals institutional activity. When volume spikes but trade count stays flat, a large player is likely executing block orders.
+</Tip>
+
+### Algorithmic Detection
+
+High-frequency trading algorithms generate a distinctive pattern: extremely high trade counts with individually small sizes. If Trade Counter shows a sudden spike in frequency that is not accompanied by a proportional volume spike, algorithmic activity is likely.
+
+### Climactic Exhaustion
+
+At market tops and bottoms, you often see a climactic spike in both volume and trade count, followed by a sharp decline in trade count on the next few bars. This "exhaustion" pattern suggests the move has run out of participants willing to continue in that direction.
+
+{/* screenshot: Climactic spike in trade count at a market reversal point */}
+
+## Combining with Other Indicators
+
+Trade Counter works best alongside:
+
+- **Bar Statistics** — provides the complementary volume breakdown. Trade Counter gives you frequency; Bar Statistics gives you magnitude.
+- **Delta** — when delta is near zero but trade count is high, both sides are actively fighting for control.
+- **Absorption** — absorption events (price stays flat despite heavy volume) become more significant when trade count is also elevated.
+- **CVD** — cumulative delta divergence combined with trade count anomalies can signal exhaustion before price reverses.
+
+## Alerts
+
+Trade Counter does not support dedicated alerts. To receive notifications on trade count spikes, enable `highlightAnomalies` and use a visual workflow — the highlighted bars will stand out on the chart.
+
+For automated alerting on volume-related extremes, consider using the Delta or Volume indicators which have built-in alert rules.
+
+## Performance Notes
+
+Trade Counter is a lightweight indicator. It reads trade count data directly from the precomputed cluster blobs with no additional aggregation or transformation. Enabling anomaly highlighting adds a small per-bar calculation (rolling mean and standard deviation) that is negligible even on charts with 10,000+ bars.
+
+## Summary
+
+Trade Counter answers a question that volume alone cannot: how many individual participants contributed to the activity on each bar. By comparing trade frequency against volume, you can distinguish institutional block orders from retail noise, detect algorithmic activity, and identify climactic exhaustion at turning points.

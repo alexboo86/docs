@@ -1,0 +1,138 @@
+---
+title: "Fair Value Gap (FVG)"
+description: "Identifies price gaps between candle bodies — potential re-entry zones based on Smart Money Concepts."
+icon: "square-dashed"
+---
+
+Fair Value Gap (FVG) detects areas where price moved so quickly that a gap was left between the wicks of surrounding candles. In Smart Money Concepts theory, these gaps act as magnets — institutional participants expect price to return and fill them before continuing. Cluster Terminal displays FVGs on the current timeframe and optionally on higher timeframes (15M, 1H, 4H, Daily, Weekly), giving you a multi-layered view of unfilled inefficiencies.
+
+## How FVGs Form
+
+A Fair Value Gap is created by a three-candle pattern:
+
+1. **Candle 1** establishes a reference high or low.
+2. **Candle 2** is a large-bodied impulse candle that creates the gap.
+3. **Candle 3** opens and trades in a way that leaves a gap between Candle 1's wick and Candle 3's wick.
+
+The gap represents a price range where only one side of the market participated. The expectation is that price will revisit this zone to establish "fair value" — allowing the other side to trade.
+
+- **Bullish FVG**: Forms when price drops sharply. The gap is between Candle 1's low and Candle 3's high. Price is expected to retrace upward into the gap.
+- **Bearish FVG**: Forms when price rallies sharply. The gap is between Candle 1's high and Candle 3's low. Price is expected to retrace downward into the gap.
+
+{/* screenshot: annotated three-candle FVG formation showing bullish and bearish examples */}
+
+<Tip>
+Higher timeframe FVGs (4H, Daily, Weekly) carry significantly more weight than lower timeframe ones. An unfilled Daily FVG near a key support or resistance level provides a high-probability entry zone.
+</Tip>
+
+## Detection Settings
+
+These parameters control how FVGs are identified.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **lookbackPeriod** | Number of bars to scan backward for FVG detection. Larger values find older gaps but increase computation. | 120 |
+| **minGapTicks** | Minimum gap size in ticks to qualify as an FVG. Set to 0 to detect all gaps regardless of size. Increase on volatile instruments to filter noise. | 0 |
+| **showInvalidatedFVG** | Continue displaying FVGs after price has filled (revisited) the zone. Filled zones are rendered with reduced opacity. | true |
+
+## Higher Timeframe Settings
+
+FVGs from higher timeframes are projected onto your current chart, providing context from larger market participants.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showHigherTimeframes** | Master toggle for all higher timeframe FVG display. | true |
+| **show15M** | Show 15-minute FVGs. | true |
+| **show1H** | Show 1-hour FVGs. | true |
+| **show4H** | Show 4-hour FVGs. | true |
+| **showDaily** | Show daily FVGs. | true |
+| **showWeekly** | Show weekly FVGs. | true |
+
+<Note>
+Higher timeframe FVGs are calculated by the indicator internally — you do not need to switch chart timeframes. The indicator aggregates candle data to construct HTF candles and detect their gaps.
+</Note>
+
+## Visual Settings
+
+Control the appearance of FVG zones on the chart.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **bullishColor** | Fill color for bullish FVG zones. | #22c55e55 |
+| **bearishColor** | Fill color for bearish FVG zones. | #ef444455 |
+| **borderColor** | Border color for all FVG zones. | #9ca3af |
+| **borderWidth** | Border thickness in pixels. | 1 |
+| **showLabels** | Display text labels on FVG zones indicating direction and timeframe. | true |
+| **labelColor** | Color for label text. | #000000 |
+| **labelFontSize** | Font size for labels in pixels. | 10 |
+| **showMidline** | Draw a horizontal center line at the 50% level of each FVG zone. The midline often acts as a precise reaction point. | false |
+| **unifiedStyle** | Use the same bullish/bearish colors for all timeframes instead of per-timeframe colors. | false |
+
+## Per-Timeframe Colors
+
+When `unifiedStyle` is disabled, each higher timeframe can have its own color scheme. This makes it easy to visually distinguish which timeframe an FVG belongs to.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **bullish15MColor** / **bearish15MColor** | 15-minute FVG colors | per-theme |
+| **bullish1HColor** / **bearish1HColor** | 1-hour FVG colors | per-theme |
+| **bullish4HColor** / **bearish4HColor** | 4-hour FVG colors | per-theme |
+| **bullishDailyColor** / **bearishDailyColor** | Daily FVG colors | per-theme |
+| **bullishWeeklyColor** / **bearishWeeklyColor** | Weekly FVG colors | per-theme |
+
+{/* screenshot: chart with multi-timeframe FVGs showing different colors per timeframe */}
+
+## Alert Settings
+
+FVG alerts fire when price approaches an unfilled gap, giving you advance notice before a potential reaction.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **alertDistance** | Distance in ticks from the FVG boundary at which the alert triggers. | 5 |
+| **alert15M** | Enable alerts for 15-minute FVGs. | true |
+| **alert1H** | Enable alerts for 1-hour FVGs. | true |
+| **alert4H** | Enable alerts for 4-hour FVGs. | true |
+| **alertDaily** | Enable alerts for daily FVGs. | true |
+| **alertWeekly** | Enable alerts for weekly FVGs. | true |
+
+### Alert Events
+
+| Event | Fires When |
+|-------|-----------|
+| **zone_approached** | Price moves within `alertDistance` ticks of an unfilled FVG boundary. |
+
+Configure alert sounds and notifications in the global Alerts settings panel.
+
+## Practical Usage
+
+### FVG Quality Hierarchy
+
+Not all FVGs are equal. Quality depends on several factors:
+
+| Factor | Higher Quality | Lower Quality |
+|--------|---------------|---------------|
+| **Timeframe** | Daily, Weekly | 1M, 5M |
+| **Gap size** | Large relative to ATR | Tiny gaps |
+| **Context** | At key S/R levels | In the middle of a range |
+| **Fill status** | Unfilled (fresh) | Partially filled |
+| **Impulse strength** | Strong displacement candle | Weak move |
+
+### Confluence Setups
+
+FVGs are most effective when combined with other tools:
+
+- **Order Blocks + FVG**: An FVG that overlaps with an order block creates a high-confluence zone where both price inefficiency and institutional positioning align.
+- **Volume Profile POC**: An FVG near a Volume Profile POC suggests the market considers this level important from both time and structural perspectives.
+- **Market Structure (BOS/CHoCH)**: FVGs formed during a structural break tend to be more significant as they represent the inefficiency created by the break itself.
+
+### Common Pitfalls
+
+- **Trading every FVG**: Lower timeframe FVGs fill constantly. Focus on HTF gaps or those near structural levels.
+- **Expecting exact fills**: Price does not always fill an FVG completely. The midline (50%) is often enough to satisfy the inefficiency.
+- **Ignoring trend context**: FVGs in the direction of the trend are more likely to hold. Counter-trend FVGs fill more easily.
+
+<Warning>
+FVGs are structural zones, not trade signals by themselves. Always confirm with order flow data (delta, absorption, imbalance) before entering a position at an FVG level.
+</Warning>
+
+{/* screenshot: FVG with midline enabled showing price reacting at the 50% level */}

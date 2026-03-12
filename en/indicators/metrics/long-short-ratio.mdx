@@ -1,0 +1,100 @@
+---
+title: "Long/Short Ratio"
+description: "Binance long/short ratio data — shows positioning of different trader categories."
+icon: "scale-balanced"
+---
+
+## Overview
+
+Long/Short Ratio displays the ratio of long to short positions from Binance exchange data. It is available for three trader categories:
+
+- **Global** — All traders on the exchange
+- **Top Position** — Top traders ranked by total position size
+- **Top Account** — Top traders ranked by account value
+
+When the ratio is above 1.0, there are more longs than shorts. Below 1.0, shorts dominate.
+
+{/* screenshot: Long/Short Ratio subchart showing three colored lines — global, top position, top account */}
+
+## How It Works
+
+Binance publishes aggregate long/short ratio data at regular intervals for futures markets. This indicator fetches and displays that data directly, segmented by trader category.
+
+The three categories reveal different aspects of market positioning:
+
+- **Global ratio** reflects the entire market's positioning. Extreme readings often serve as contrarian signals — when everyone is long, the market may be overleveraged for a long squeeze.
+- **Top Position ratio** shows how the largest position holders are positioned. These are often more informed participants.
+- **Top Account ratio** shows positioning by account value. High-net-worth traders may have different views than the crowd.
+
+<Tip>
+When all three ratios diverge from price direction, it creates a strong contrarian signal. For example, if all three ratios show extreme long positioning while price stalls, a long squeeze becomes likely.
+</Tip>
+
+## Interpretation
+
+| Pattern | Meaning |
+|---------|---------|
+| All ratios > 1.5 | Heavily long market — squeeze risk |
+| All ratios < 0.7 | Heavily short market — short squeeze risk |
+| Global long + Top short | Retail bullish, smart money bearish — bearish signal |
+| Global short + Top long | Retail bearish, smart money bullish — bullish signal |
+| All ratios converging to 1.0 | Balanced positioning — no directional edge |
+
+### Contrarian Signals
+
+Long/Short Ratio is most useful as a **contrarian indicator**. Extreme crowded positions tend to unwind violently:
+
+- Extreme longs + price near resistance = high probability short setup
+- Extreme shorts + price near support = high probability long setup
+
+### Smart Money Divergence
+
+When Global ratio diverges from Top Position and Top Account ratios, it reveals a disconnect between retail and institutional positioning. Follow the "top" categories for directional bias.
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `period` | Data period: `5m`, `15m`, `30m`, `1h`, `2h`, `4h`, `6h`, `12h`, `1d` | `5m` |
+| `showGlobal` | Display the global L/S ratio line | `true` |
+| `showTopPosition` | Display the top-position L/S ratio line | `true` |
+| `showTopAccount` | Display the top-account L/S ratio line | `true` |
+| `globalColor` | Color for the global ratio line | `#3b82f6` |
+| `topPositionColor` | Color for the top-position ratio line | `#f59e0b` |
+| `topAccountColor` | Color for the top-account ratio line | `#a855f7` |
+| `lineWidth` | Thickness of ratio lines | `1.5` |
+| `displayMode` | Visualization style: `line` or `columns` | `line` |
+
+## Data Period
+
+The `period` setting controls the granularity of the L/S ratio data from Binance:
+
+| Period | Use Case |
+|--------|----------|
+| `5m` | Scalping — rapid positioning changes |
+| `15m`–`30m` | Intraday trading |
+| `1h`–`4h` | Swing trading |
+| `12h`–`1d` | Positional trading — broader sentiment |
+
+<Note>
+Long/Short Ratio data comes directly from Binance. It is only available for Binance Futures symbols. The data may have a slight delay (typically 1-2 minutes) compared to real-time price data.
+</Note>
+
+## Display Modes
+
+- **Line** — Default. Three separate colored lines plotted against a 1.0 baseline. Best for comparing the three categories.
+- **Columns** — Histogram view. Less common but useful when focusing on a single category.
+
+## Practical Examples
+
+**Long Squeeze Setup**: All three L/S ratios are above 2.0 (extreme long positioning). Price approaches a major resistance level and stalls. A small sell-off triggers liquidations, and the crowded long side rapidly unwinds — price drops sharply.
+
+**Smart Money Fade**: Global ratio shows 1.8 (retail heavily long). Top Position ratio is at 0.8 (institutional traders are short). This divergence suggests the "smart money" expects a decline. Fade the retail crowd.
+
+**Confirmation Signal**: Price breaks above a key level. Global L/S ratio starts rising from 1.0 toward 1.3 — participants are adding longs after the breakout, confirming the move has participation rather than just stop runs.
+
+## Related Indicators
+
+- [Whale vs Retail](/en/indicators/metrics/whale-vs-retail) — Size-based participant segmentation
+- [Volume Ratio](/en/indicators/metrics/volume-ratio) — Real-time buy/sell volume imbalance
+- [Anchored OI](/en/indicators/metrics/anchored-oi) — Net position changes from session start

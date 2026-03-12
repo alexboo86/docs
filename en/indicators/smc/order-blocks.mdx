@@ -1,0 +1,144 @@
+---
+title: "Order Blocks"
+description: "Identifies institutional order block zones — the last opposing candle before a strong move."
+icon: "cube"
+---
+
+Order Blocks identifies the last opposing candle before a significant price move — zones where institutional participants are believed to have placed large orders. These zones frequently act as future support and resistance because institutions often defend their entry levels. When price returns to an order block, it provides a potential entry opportunity aligned with the "smart money" direction.
+
+## How Order Blocks Form
+
+An Order Block is defined by a specific candle pattern:
+
+- **Bullish Order Block**: The last **bearish** candle before a strong bullish move. Institutions were accumulating buy orders during this candle, absorbing selling pressure before launching price higher.
+- **Bearish Order Block**: The last **bullish** candle before a strong bearish move. Institutions were distributing sell orders during this candle, absorbing buying pressure before pushing price lower.
+
+The zone spans from the candle's low to its high (the full range of the order block candle).
+
+{/* screenshot: bullish and bearish order block formations with the impulse move labeled */}
+
+<Tip>
+Order Blocks with a Break of Structure (BOS) confirmation are the highest quality. When `requireBos` is enabled, the indicator only marks OBs that led to an actual structural break, filtering out false patterns.
+</Tip>
+
+## Detection Settings
+
+These parameters control how Order Blocks are identified.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **lookbackPeriod** | Number of bars to scan backward for order block detection. | 100 |
+| **minDisplacement** | Minimum price move in ticks after the order block candle for it to qualify. Set to 0 to detect all OBs regardless of displacement strength. Higher values ensure only OBs with strong follow-through are shown. | 0 |
+| **requireBos** | Require a Break of Structure (BOS) to occur after the OB for it to be confirmed. This is the strongest quality filter — it ensures the OB actually led to a structural change. | true |
+| **breakDetection** | How the structural break is confirmed: `close` (candle must close beyond level) or `wick` (any touch counts). Only applies when `requireBos` is enabled. | close |
+
+<Note>
+When `requireBos` is enabled, the Order Blocks indicator depends on internal swing detection logic similar to the Market Structure indicator. The `breakDetection` setting here works identically — `close` mode is more conservative and filters false breaks.
+</Note>
+
+## Display Settings
+
+### Zone Appearance
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **bullishColor** | Fill color for bullish order block zones. | #22c55e40 |
+| **bearishColor** | Fill color for bearish order block zones. | #ef444440 |
+| **bullishBorderColor** | Border color for bullish zones. | #22c55e |
+| **bearishBorderColor** | Border color for bearish zones. | #ef4444 |
+| **borderWidth** | Border thickness in pixels. | 1 |
+| **showLabels** | Display text labels on order block zones indicating direction. | true |
+
+### Invalidated Zones
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showInvalidated** | Continue displaying order blocks after price has broken through the zone. Invalidated zones appear with reduced opacity. | true |
+| **invalidatedAlpha** | Opacity multiplier for invalidated (broken) order blocks, from 0 (invisible) to 1 (full opacity). | 0.3 |
+
+When price breaks through an order block in the opposing direction, the zone is considered invalidated. It no longer represents a defended institutional level.
+
+### Midline
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showMidline** | Draw a horizontal line at the 50% level of each order block zone. The midline is often the optimal entry point within the zone. | true |
+| **midlineColor** | Color of the midline. | #ffffff55 |
+| **midlineStyle** | Line style for the midline: `solid`, `dashed`, or `dotted`. | dotted |
+
+{/* screenshot: order block zones with midline enabled, showing price reacting at the 50% level */}
+
+<Tip>
+The midline (50% of the order block) is considered the optimal entry point in SMC theory. Institutions often place the bulk of their orders at the center of the block, making the midline the most common reaction point.
+</Tip>
+
+## Alert Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **alertDistance** | Distance in ticks from the order block boundary at which the approach alert triggers. | 5 |
+
+### Alert Events
+
+| Event | Fires When |
+|-------|-----------|
+| **zone_approached** | Price moves within `alertDistance` ticks of an active (unfilled) order block. Gives advance notice of a potential reaction zone. |
+| **zone_broken** | Price closes through an order block, invalidating it. This may signal that the institutional level has been overwhelmed. |
+
+Configure alert sounds and notifications in the global Alerts settings panel.
+
+## Order Block Quality
+
+Not all order blocks are equal. Several factors determine the quality and reliability of an OB:
+
+### Quality Factors
+
+| Factor | Higher Quality | Lower Quality |
+|--------|---------------|---------------|
+| **BOS confirmation** | OB led to a structural break | No structural break followed |
+| **Displacement** | Strong impulse move after OB | Weak, grinding move |
+| **Freshness** | Unvisited (price has not returned) | Already tested once or more |
+| **Timeframe** | Higher TF (4H, Daily) | Lower TF (1m, 5m) |
+| **Context** | At key S/R, discount/premium zone | Random location in range |
+| **Candle structure** | Clean single-candle OB | Messy multi-candle area |
+
+### Discount and Premium Zones
+
+In SMC theory, the most effective order blocks are located in:
+
+- **Discount zone** (below 50% of the range): Bullish OBs in the discount zone offer the best risk-to-reward for longs.
+- **Premium zone** (above 50% of the range): Bearish OBs in the premium zone offer the best risk-to-reward for shorts.
+
+## Practical Usage
+
+### Classic SMC Entry Model
+
+The standard SMC entry using order blocks follows this sequence:
+
+1. Identify the trend using **Market Structure** (series of BOS in one direction).
+2. Wait for a pullback toward an order block.
+3. Confirm the OB is valid (BOS-confirmed, unfilled, in discount/premium zone).
+4. Enter at the midline of the OB with a stop-loss below/above the OB boundary.
+5. Target the next structural level or opposing OB.
+
+### Confluence Setups
+
+Order blocks are most powerful when they align with other tools:
+
+- **FVG + Order Block**: When an FVG overlaps with an OB, the zone has both price inefficiency and institutional positioning — a high-probability setup.
+- **Volume Profile**: An OB at a high-volume node (HVN) or POC confirms that significant volume was transacted at this level.
+- **Absorption Alpha**: Absorption signals at an order block on the retest confirm that institutions are still defending the level.
+- **Stacked Imbalance**: Imbalance patterns within the OB candle's footprint provide structural confirmation of one-sided institutional activity.
+
+### Common Pitfalls
+
+- **Trading every OB**: Without `requireBos`, the indicator will detect many marginal order blocks. Keep the BOS filter enabled for quality signals.
+- **Ignoring invalidation**: Once an OB is broken (invalidated), it becomes resistance if it was support and vice versa. Do not continue to trade it as the original direction.
+- **No stop-loss discipline**: The OB boundary is the natural stop-loss level. If price breaks through the entire zone, the thesis is invalidated.
+- **Using OBs against higher timeframe structure**: A bullish OB on the 5m chart has little value if the 1H trend is bearish. Always align OB trades with at least one higher timeframe's direction.
+
+<Warning>
+Order blocks are zones, not exact prices. Price may react anywhere within the zone — at the top, midline, or bottom. Use limit orders with a stop beyond the zone boundary rather than market orders at a single price.
+</Warning>
+
+{/* screenshot: order block with BOS confirmation, midline entry, and stop-loss placement */}

@@ -1,0 +1,169 @@
+---
+title: "RSI"
+description: "Relative Strength Index — momentum oscillator measuring speed of price changes."
+icon: "gauge"
+---
+
+# Relative Strength Index (RSI)
+
+The Relative Strength Index is a **momentum oscillator** that measures the speed and magnitude of recent price changes on a scale of 0 to 100. Developed by J. Welles Wilder, RSI identifies overbought and oversold conditions and is one of the most widely used indicators in technical analysis.
+
+{/* screenshot: RSI(14) subchart below a BTC/USDT 4h chart with overbought/oversold zones highlighted */}
+
+## How It Works
+
+RSI is calculated in two steps:
+
+**Step 1 — Relative Strength:**
+```
+RS = Average Gain over N periods / Average Loss over N periods
+```
+
+**Step 2 — Normalize to 0–100:**
+```
+RSI = 100 - (100 / (1 + RS))
+```
+
+The "average gain" and "average loss" use a smoothed (Wilder's) moving average: the first value is a simple average, and subsequent values use:
+
+```
+Avg Gain = ((Previous Avg Gain × (N-1)) + Current Gain) / N
+Avg Loss = ((Previous Avg Loss × (N-1)) + Current Loss) / N
+```
+
+This smoothing means the RSI is influenced by all prior data, not just the most recent N bars — though the influence of older bars decays exponentially.
+
+### Indicator Type
+
+**Subchart** — RSI is rendered in a separate panel below the main price chart with its own 0–100 Y-axis.
+
+## Settings
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `period` | number | 14 | Lookback period for the RS calculation. |
+| `overbought` | number | 70 | Upper threshold. RSI above this level is considered overbought. |
+| `oversold` | number | 30 | Lower threshold. RSI below this level is considered oversold. |
+| `color` | color | `#a78bfa` | Color of the RSI line. |
+| `lineWidth` | number | 1.5 | Thickness of the RSI line in pixels. |
+
+### Display Settings
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `displayMode` | select | `line` | Rendering mode: `line` (continuous), `columns` (histogram bars), `candles` (OHLC bodies). |
+| `highlightAnomalies` | boolean | `false` | Highlight bars where RSI value is statistically anomalous. |
+| `anomalyThreshold` | number | 2.0 | Standard deviations above mean for anomaly detection. |
+| `anomalyPeriod` | number | 50 | Lookback window for anomaly mean/stddev calculation. |
+
+### Period Tuning
+
+| Period | Character | Best For |
+|--------|-----------|----------|
+| 7 | Very fast, noisy | Scalping, 1m–5m charts |
+| 9 | Fast | Intraday trading, 5m–15m charts |
+| 14 | Standard (Wilder's original) | General purpose, all timeframes |
+| 21 | Slow, smooth | Swing trading, daily charts |
+| 25+ | Very slow | Position trading, filtering major moves only |
+
+<Tip>
+The standard 14-period RSI works well in most situations. Shortening the period makes RSI reach overbought/oversold more frequently (more signals, more noise). Lengthening it makes RSI smoother but slower to react.
+</Tip>
+
+## Interpretation
+
+### Overbought and Oversold
+
+The classic interpretation:
+
+- **RSI above 70**: Overbought — the asset has been rising aggressively and may be due for a pullback.
+- **RSI below 30**: Oversold — the asset has been falling aggressively and may be due for a bounce.
+
+However, these are **not** automatic reversal signals. In strong trends, RSI routinely stays in overbought or oversold territory for extended periods.
+
+### Adjusted Levels for Trending Markets
+
+In a strong uptrend, RSI rarely drops below 30. The effective range shifts upward:
+
+| Market State | Overbought Zone | Oversold Zone |
+|-------------|----------------|---------------|
+| Strong uptrend | 80+ | 40 |
+| Neutral/ranging | 70 | 30 |
+| Strong downtrend | 60 | 20 |
+
+Some traders adjust the `overbought` and `oversold` settings to match the prevailing trend. For example, in a confirmed bull market on the daily chart, setting overbought to 80 and oversold to 40 produces more useful signals.
+
+### Centerline Crossovers
+
+- **RSI crossing above 50**: Momentum shifting bullish. Average gains exceeding average losses.
+- **RSI crossing below 50**: Momentum shifting bearish. Average losses exceeding average gains.
+
+The 50 level acts as a trend filter: sustained RSI above 50 = bullish regime, sustained below 50 = bearish regime.
+
+### Failure Swings
+
+A failure swing is a specific RSI pattern that Wilder himself considered the strongest RSI signal:
+
+**Bullish failure swing:**
+1. RSI drops below 30 (oversold).
+2. RSI bounces above 30.
+3. RSI pulls back but **stays above 30** (does not make a new low).
+4. RSI breaks above the bounce high → buy signal.
+
+**Bearish failure swing:**
+1. RSI rises above 70 (overbought).
+2. RSI drops below 70.
+3. RSI rallies but **stays below 70** (does not make a new high).
+4. RSI breaks below the pullback low → sell signal.
+
+{/* screenshot: Bearish failure swing pattern on RSI with annotated steps */}
+
+### RSI Trend Lines
+
+You can draw trend lines on the RSI subchart itself:
+
+- A broken RSI uptrend line often precedes a price breakdown.
+- A broken RSI downtrend line often precedes a price breakout.
+- RSI trend line breaks typically lead price trend line breaks by 1–3 bars.
+
+## Alerts
+
+RSI supports the following **alert rules**:
+
+| Alert Event | Description |
+|-------------|-------------|
+| `overbought` | RSI crosses above the overbought threshold |
+| `oversold` | RSI crosses below the oversold threshold |
+
+<Tip>
+In strong trends, RSI can stay overbought or oversold for extended periods — an overbought reading alone is not a sell signal. Look for RSI divergences, failure swings, or combine with price action at key levels for higher-probability setups.
+</Tip>
+
+## Combining with Other Indicators
+
+| Companion | Strategy |
+|-----------|----------|
+| **Bollinger Bands** | RSI oversold + price at lower Bollinger Band = strong bounce zone |
+| **VWAP** | RSI oversold + price below VWAP returning to VWAP = mean reversion entry |
+| **Volume Bars** | RSI overbought + declining volume = weakening rally, potential reversal |
+| **MACD** | RSI divergence + MACD histogram declining = double momentum confirmation |
+| **Session Levels** | RSI oversold at previous day low = high-probability support bounce |
+
+## Common Pitfalls
+
+1. **Mechanical overbought = sell, oversold = buy** — This works in ranges but fails badly in trends. Always determine market context first.
+2. **Ignoring the 50 line** — The centerline is more useful as a trend filter than the 70/30 levels in many situations.
+3. **Too-short period on high timeframes** — RSI(7) on a daily chart produces many false signals. Use 14 or higher for daily+ charts.
+4. **Not confirming with price action** — RSI should confirm what price structure suggests, not override it. An oversold RSI does not help if price structure is clearly bearish (lower lows, lower highs, breaking support).
+
+## Practical Considerations
+
+- **Startup period**: RSI requires approximately `10 × period` bars to fully stabilize due to Wilder's smoothing method. The first few RSI values on a freshly loaded chart may differ slightly from stabilized values.
+- **All timeframes**: RSI works on any timeframe from 1-minute to monthly. Lower timeframes produce more noise; higher timeframes produce smoother, more reliable signals.
+- **Crypto-specific**: Crypto markets trend harder than equities. In a crypto bull run, RSI(14) on the daily chart can stay above 70 for weeks. Consider the adjusted levels table above.
+
+## Related Indicators
+
+- [RSI Divergence](/en/indicators/classic/rsi-divergence) — Automatically detects price-RSI divergences
+- [MACD](/en/indicators/classic/macd) — Complementary momentum indicator based on moving average convergence
+- [Bollinger Bands](/en/indicators/classic/bollinger-bands) — Volatility bands for overbought/oversold confluence

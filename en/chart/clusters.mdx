@@ -1,0 +1,350 @@
+---
+title: "Cluster Chart (Footprint)"
+description: "Volume clusters with bid/ask data, POC, Value Area, imbalance highlighting, and multiple display modes."
+icon: "chart-bar"
+---
+
+Cluster charts (also called footprint charts) are the primary analytical tool in Cluster Terminal. Instead of showing a single volume bar beneath each candle, clusters decompose the candle's range into individual price levels and display exactly how much volume was traded at each level, who initiated the trades, and where significant imbalances occurred. This is the highest-resolution view of market microstructure available.
+
+## How Clusters Work
+
+Every trade executed on Binance Futures is classified as either a **buy** (aggressor lifted the ask) or a **sell** (aggressor hit the bid). The server aggregates these trades by price level within each candle period and transmits them as cluster data.
+
+Each horizontal row in a cluster candle represents a single price level (or group of levels, depending on the tick size). The data available at each level includes:
+
+| Metric | Definition |
+|--------|-----------|
+| **Volume** | Total contracts traded at this level (buy + sell) |
+| **Bid Volume** | Contracts sold at the bid (sell aggressor) |
+| **Ask Volume** | Contracts bought at the ask (buy aggressor) |
+| **Delta** | Ask volume minus bid volume (positive = net buying) |
+| **Trades** | Number of individual trade executions at this level |
+
+<Note>
+Delta is calculated from aggressor-side classification. A trade that lifts the ask is counted as a buy; a trade that hits the bid is counted as a sell. This is the industry-standard method used by all professional footprint chart platforms.
+</Note>
+
+## Cluster Display Modes (Presets)
+
+Cluster Terminal provides **18 cluster presets** that control what data is shown in each cell and how cells are colored. These are grouped into several families:
+
+### Volume Presets
+
+| Preset | Cell Content | Cell Style | Color Logic |
+|--------|-------------|------------|-------------|
+| **Volume** | Total volume | Plain text | Gradation by volume magnitude |
+| **Volume Profile** | Total volume | Horizontal bar | Bar width proportional to volume |
+| **Delta Colored Volume** | Total volume | Plain text | Cell background colored by delta direction |
+| **Delta Colored Volume Profile** | Total volume | Horizontal bar | Bar colored by delta direction |
+
+**Volume** is the simplest cluster mode. Each cell shows the total number of contracts traded at that price level. Higher volumes receive more saturated background colors, making it easy to spot significant levels at a glance.
+
+**Volume Profile** renders cells as horizontal bars extending from the left edge, where bar length is proportional to volume relative to the candle's maximum. The POC (highest volume) level appears as the longest bar.
+
+{/* screenshot: Volume mode vs Volume Profile mode side by side */}
+
+### Delta Presets
+
+| Preset | Cell Content | Cell Style | Color Logic |
+|--------|-------------|------------|-------------|
+| **Delta** | Delta value | Plain text | Green for positive, red for negative |
+| **Delta Profile** | Delta value | Horizontal bar | Bar colored green/red by delta sign |
+
+Delta mode shows the net difference between buy and sell volume at each level. Positive delta (more buying) is colored green; negative delta (more selling) is colored red. The intensity of the color reflects the magnitude of the delta.
+
+This mode is essential for reading **absorption** (large volume at a level with minimal price movement) and **exhaustion** (delta shifting direction at price extremes).
+
+### Bid x Ask Presets
+
+| Preset | Cell Content | Cell Style | Color Logic |
+|--------|-------------|------------|-------------|
+| **Bid x Ask** | Bid left, Ask right | Plain text | Bid and ask in separate columns |
+| **Bid x Ask Profile** | Bid left, Ask right | Horizontal bars | Bars for each side |
+| **Bid x Ask Delta Profile** | Bid left, Ask right | Horizontal bars | Bars colored by delta |
+| **Bid x Ask Imbalance** | Bid left, Ask right | Plain text | Diagonal imbalance highlighting |
+
+**Bid x Ask** is the classic footprint view. Each cell is split into two columns: the left column shows the bid (sell) volume and the right column shows the ask (buy) volume. This provides the most granular view of the order flow.
+
+**Bid x Ask Imbalance** compares each bid level to the ask level one tick above it (diagonal comparison). When one side exceeds the other by the configured imbalance ratio, the dominant side is highlighted. This is the standard method used in professional order flow analysis.
+
+{/* screenshot: Bid x Ask Imbalance mode showing diagonal comparison with highlighted cells */}
+
+### Trades Presets
+
+| Preset | Cell Content | Cell Style | Color Logic |
+|--------|-------------|------------|-------------|
+| **Trades** | Trade count | Plain text | Gradation by trade count |
+| **Trades Profile** | Trade count | Horizontal bar | Bar width proportional to trades |
+| **Delta Colored Trades** | Trade count | Plain text | Background by delta direction |
+| **Delta Colored Trades Profile** | Trade count | Horizontal bar | Bar colored by delta |
+
+Trades mode shows the number of individual executions rather than the total volume. This is useful for detecting **algorithmic activity** -- an unusually high number of small trades at a level may indicate iceberg orders or algorithmic execution, while a small number of very large trades suggests institutional block orders.
+
+### Combined Presets
+
+| Preset | Left Column | Right Column | Cell Style |
+|--------|------------|-------------|------------|
+| **Volume Trades** | Volume | Trade count | Plain text |
+| **Volume Trades Profile** | Volume | Trade count | Horizontal bars |
+| **Volume Delta** | Volume | Delta | Plain text |
+| **Volume Delta Profile** | Volume | Delta | Horizontal bars |
+
+Combined presets show two metrics side by side in each cell. **Volume Trades** helps you quickly calculate the average trade size (volume / trades) at a glance. **Volume Delta** pairs total activity with directional bias.
+
+## Tick Size
+
+Tick size determines the price resolution of each cluster row. It controls how many price increments are grouped into a single horizontal band.
+
+### What It Means
+
+For example, if BTCUSDT has a minimum price increment of $0.10 and the tick size is set to **1**, each row covers $0.10. If the tick size is set to **10**, each row covers $1.00, aggregating all trades within that $1.00 range.
+
+### Auto-Detection
+
+Cluster Terminal automatically detects the appropriate tick size for each symbol based on the exchange API. For BTCUSDT on Binance Futures, the default is typically 1 tick ($0.10). For lower-priced altcoins, the default adjusts accordingly.
+
+### Manual Override
+
+You can manually set the tick size in the chart toolbar. This is useful in several scenarios:
+
+| Scenario | Recommended Tick Size |
+|----------|-----------------------|
+| Scalping on 1m charts | Default (smallest) for maximum precision |
+| Day trading on 5m -- 15m charts | 2x -- 5x default to reduce visual noise |
+| Swing analysis on 1h -- 4h charts | 10x -- 50x default for readable clusters |
+| High timeframes (1d+) | Large tick sizes, or switch to candlestick mode |
+
+<Warning>
+Very small tick sizes on lower timeframes create a large number of rows per candle, which increases memory usage and rendering load. If your chart becomes sluggish, increase the tick size or switch to a higher timeframe.
+</Warning>
+
+### Impact on Analysis
+
+Smaller tick sizes provide more granular data but can create visual noise. Larger tick sizes smooth out the data and make patterns more visible at the cost of precision. There is no universally correct tick size -- it depends on your timeframe, the instrument's volatility, and your trading style.
+
+<Tip>
+On higher timeframes (4H, 1D), increase the tick size to reduce visual noise. On lower timeframes (1m, 5m), the default tick size usually provides the best detail for order flow analysis.
+</Tip>
+
+## POC (Point of Control)
+
+The Point of Control is the price level with the highest traded volume inside a candle. It represents the "fairest" price of the period -- where the most trading activity occurred.
+
+### Enabling POC Display
+
+POC display is controlled by the **Show POC** toggle in cluster settings. When enabled, the POC level is highlighted with a distinct frame around the cell.
+
+### POC Frame Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **POC Basis** | What metric defines the POC: volume or trades | Volume |
+| **Frame Color** | The outline color of the POC cell | Amber (#f59e0b) |
+| **Frame Width** | Thickness of the POC highlight border in px | 2 |
+
+### Using POC in Trading
+
+The POC serves as a natural support/resistance reference:
+
+- **POC as support**: When price pulls back to a previous candle's POC from above, the high-volume level may attract buyers and provide support.
+- **POC as resistance**: When price rallies toward a previous candle's POC from below, sellers who previously established positions there may defend the level.
+- **POC migration**: When the POC shifts significantly from one candle to the next, it indicates that the "fair value" is moving, often confirming a trend.
+
+### Naked POC
+
+A **Naked POC** is a POC level from a previous candle that has not yet been revisited by price. Naked POCs often act as magnets -- price tends to return to these untested high-volume levels. In Cluster Terminal, Naked POC levels can be extended as horizontal rays via the TPO chart settings.
+
+{/* screenshot: cluster chart with POC levels highlighted and one Naked POC extended as a dashed ray */}
+
+## Value Area
+
+The Value Area defines the price range that contains a configurable percentage (default 70%) of the candle's total volume. It marks the zone where most trading occurred.
+
+### VAH and VAL
+
+- **VAH (Value Area High)** -- the upper boundary of the value area.
+- **VAL (Value Area Low)** -- the lower boundary of the value area.
+
+### Adjusting the Percentage
+
+The default Value Area is 70%, following the standard one standard deviation of a normal distribution. You can adjust this in the cluster settings under **Value Area Percent**. Common alternatives:
+
+| Percentage | Use Case |
+|-----------|----------|
+| **68%** | One standard deviation (statistically precise) |
+| **70%** | Industry standard for Market Profile and footprint analysis |
+| **80%** | Wider value zone for lower-volatility environments |
+
+### Visual Representation
+
+When **Show Value Area** is enabled, the value area range is drawn with a semi-transparent overlay on each candle. Levels outside the value area appear dimmer, making the value area boundaries easy to identify.
+
+### Trading with the Value Area
+
+The Value Area is a cornerstone of auction market theory:
+
+- **Value acceptance**: If price opens inside the previous candle's value area, the market is accepting the established value. Expect rotation and range-bound behavior.
+- **Value rejection**: If price breaks above VAH and holds, buyers are asserting new higher value. If price breaks below VAL and holds, sellers are pushing value lower.
+- **Value Area gap**: When consecutive candles have non-overlapping value areas, it signals strong directional conviction.
+- **80% Rule**: If price enters the previous value area and travels 80% through it, there is a high probability it will reach the other side.
+
+{/* screenshot: cluster chart showing value area overlay with VAH and VAL labels */}
+
+## Imbalance Highlighting
+
+Imbalance detection identifies price levels where one side of the market (buyers or sellers) dominated aggressively.
+
+### What Imbalance Means
+
+An imbalance occurs when the volume ratio between the buy and sell side at a price level exceeds a configurable threshold. For example, with an imbalance ratio of **3.0**, a level where ask volume is 300 and bid volume is 90 would be flagged as a buy imbalance (300 / 90 = 3.33).
+
+### Imbalance Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Imbalance Ratio** | Minimum ratio to trigger highlighting | 1.5 |
+| **Use Trade Imbalance** | Compare trade counts instead of volume | Off |
+
+### Diagonal Comparison (Bid x Ask Imbalance)
+
+The **Bid x Ask Imbalance** preset uses the standard diagonal comparison method: each bid level is compared to the ask level one tick above it. This reflects real market mechanics -- sellers hitting the bid at price N are "against" buyers lifting the ask at price N+1.
+
+### Stacked Imbalances
+
+When three or more consecutive price levels show imbalance in the same direction, this is called a **stacked imbalance**. Stacked imbalances are among the strongest signals in footprint analysis:
+
+- **Buy stacked imbalance** (ask dominating at 3+ consecutive levels): Strong aggressive buying. The levels where the imbalance begins often act as future support.
+- **Sell stacked imbalance** (bid dominating at 3+ consecutive levels): Strong aggressive selling. The top of the imbalance zone often acts as future resistance.
+
+<Warning>
+Imbalance detection with very low thresholds (below 2:1) can produce excessive highlights that reduce readability. A ratio between 3:1 and 4:1 works well for most instruments and timeframes. For high-volume symbols like BTCUSDT, even 1.5:1 can be meaningful due to the large absolute volumes involved.
+</Warning>
+
+{/* screenshot: stacked buy imbalance at the bottom of a bullish candle with 4 consecutive highlighted levels */}
+
+## Color Schemes and Gradation
+
+Cluster cells use color gradation to encode the magnitude of values. Higher values receive more intense colors, allowing you to spot significant levels without reading every number.
+
+### How Gradation Works
+
+The gradation system calculates a color intensity for each cell based on its value relative to the candle's maximum. The cell with the highest value (the POC) receives maximum intensity, and all other cells are scaled proportionally.
+
+### Gradation Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Cluster Gradient Enabled** | Enable/disable color gradation | On |
+| **Gradient Color 2** | Secondary gradient endpoint color | Theme default |
+| **Disable Opacity in Gradient** | Use only brightness changes, no transparency | Off |
+| **Min Color Value** | Minimum value to begin coloring cells | 0 |
+
+### Proportion Type
+
+The proportion type determines the reference point for the gradation scale:
+
+| Type | Reference | Effect |
+|------|-----------|--------|
+| **Candle** | Maximum within each candle | Each candle has its own color scale (default) |
+| **Own** | A fixed custom value | All candles share the same color scale |
+
+Using **Candle** proportion means each candle's gradation is independent -- the POC is always the brightest cell. Using **Own** proportion with a fixed reference value means cells across different candles are directly comparable, but some candles may appear entirely bright or entirely dim depending on their volume.
+
+### Delta Colors
+
+For presets that color by delta:
+
+| Override | Controls | Default |
+|----------|----------|---------|
+| `deltaPos` | Positive delta (net buying) | Theme green |
+| `deltaNeg` | Negative delta (net selling) | Theme red |
+| `bid` | Bid side color | Theme bid color |
+| `ask` | Ask side color | Theme ask color |
+| `strongBid` | Highlighted strong bid level | Theme strong bid |
+| `strongAsk` | Highlighted strong ask level | Theme strong ask |
+
+## Cluster Settings Panel
+
+Open the cluster settings panel by clicking the **gear icon** in the toolbar when any cluster preset is active.
+
+### Text and Readability
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Show Values** | Display numeric values in cells | On |
+| **Minimize Values** | Abbreviate large numbers (e.g., 1.2K, 5.3M) | Off |
+| **Round Values** | Decimal places for cell values | 0 |
+| **Font Size** | Override font size (0 = auto-detect based on zoom) | 0 (auto) |
+| **Font Weight** | Override font weight (0 = auto) | 0 (auto) |
+| **Text Align** | Horizontal alignment within cells | Center |
+| **Text Shadow** | Add shadow behind text for readability | Off |
+| **Text Stroke** | Add outline around text characters | Off |
+| **Volume Unit** | Display in base currency or quote currency | Base |
+
+### Cell Appearance
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Border Type** | Cell border style: box, top, none | Box |
+| **Border Width** | Cell border thickness in px | 1 |
+| **Corner Radius** | Cell corner rounding | 1 |
+| **Min Bar Width** | Minimum pixel width before cells collapse | 22 |
+| **Direction Marker** | Small colored bar at the cell edge indicating delta direction | Off |
+
+### Value Filters
+
+Value filters allow you to highlight or dim cells based on specific criteria. You can create multiple filters, each targeting a different data type:
+
+| Filter Data Type | What It Filters |
+|-----------------|-----------------|
+| **Volume** | Total volume at the level |
+| **Trades** | Number of individual trades |
+| **Bid** | Bid-side volume |
+| **Ask** | Ask-side volume |
+| **Delta+** | Positive delta values |
+| **Delta-** | Negative delta values |
+
+Each filter specifies a minimum and maximum value, a color, and where it applies (everywhere, body only, or shadows only). Filters are processed in order, and the last matching filter determines the cell's highlight color.
+
+<Tip>
+Use value filters to create a "significance threshold" -- for example, highlight any level with volume above 500 contracts in bright yellow. This immediately draws your eye to the levels that matter, even on a busy chart.
+</Tip>
+
+## Reading Cluster Charts Effectively
+
+A practical approach to cluster analysis:
+
+<Steps>
+  <Step title="Identify the POC">
+    The highest-volume level anchors your reading of the candle. This is where the market agreed on price most actively.
+  </Step>
+  <Step title="Check delta direction at the POC">
+    Does the delta at the POC agree with the candle direction? If a bullish candle has negative delta at the POC, it may signal exhaustion -- sellers are absorbing the buying pressure.
+  </Step>
+  <Step title="Scan for imbalance stacks">
+    Three or more consecutive imbalance levels in the same direction suggest strong institutional intent. Mark these zones on your chart as potential future support or resistance.
+  </Step>
+  <Step title="Compare value areas across candles">
+    Overlapping value areas indicate balance and range-bound conditions. Shifting value areas (each candle's value area higher or lower than the previous) confirm a trending market.
+  </Step>
+  <Step title="Check trade count vs volume">
+    If a level has high volume but low trade count, it means large orders are present (institutional). High trade count with low volume suggests many small participants (retail noise).
+  </Step>
+</Steps>
+
+## Performance Considerations
+
+Cluster charts are the most resource-intensive rendering mode. Each candle can contain dozens to hundreds of individual cells, each requiring text rendering and color calculation.
+
+| Factor | Impact | Recommendation |
+|--------|--------|----------------|
+| Tick size | Smaller = more rows per candle | Increase for higher TFs |
+| Timeframe | Lower TFs = more candles on screen | Use 5m+ for extended analysis |
+| Profile style | Profile bars are more expensive than plain text | Use plain for maximum performance |
+| Number of charts | Each cluster pane uses significant GPU | Limit to 1-2 cluster panes in multi-chart layouts |
+
+<Tip>
+If you need to monitor multiple symbols simultaneously, use **candlestick mode** for overview panes and reserve **cluster mode** for the one or two charts where you are actively analyzing order flow.
+</Tip>
+
+{/* screenshot: full cluster chart showing Volume Profile mode with POC highlighted, value area overlay, and imbalance cells marked */}

@@ -1,0 +1,216 @@
+---
+title: "Alerts"
+description: "Set up price alerts on drawing tools and indicator alerts with sound notifications."
+icon: "bell"
+---
+
+# Alerts
+
+Alerts notify you when specific market conditions are met, so you do not need to watch the chart continuously. Cluster Terminal supports two categories of alerts: **price alerts on drawing tools** and **indicator-based alerts**. Both produce audible sound notifications and visual indicators when triggered.
+
+{/* screenshot: alert configuration dialog showing condition and mode options */}
+
+## Overview
+
+| Alert Category | Source | Trigger |
+|---------------|--------|---------|
+| **Price alerts** | Drawing tools (lines, rays) | Price crosses, goes above, or goes below a drawn level |
+| **Indicator alerts** | Indicator alert rules | Indicator-specific events (signals, divergences, zone tests) |
+
+---
+
+## Price Alerts on Drawing Tools
+
+Three drawing tools support price alerts:
+
+| Drawing Tool | Alert Conditions |
+|-------------|-----------------|
+| **Horizontal Line** | Cross, Price Above, Price Below |
+| **Trend Line** | Cross, Price Above, Price Below |
+| **Ray** | Cross, Price Above, Price Below |
+
+### Setting Up a Price Alert
+
+<Steps>
+  <Step title="Draw the line">
+    Select the Horizontal Line (**H**), Trend Line (**T**), or Ray (**R**) tool and draw it on the chart at your target price level.
+  </Step>
+  <Step title="Enable the alert">
+    Right-click the drawing to open its context menu, then select **Enable Alert** (or click the bell icon in the drawing properties panel).
+  </Step>
+  <Step title="Configure conditions">
+    Choose the alert condition:
+    - **Cross** -- triggers when price crosses the line in either direction
+    - **Above** -- triggers when price moves above the line
+    - **Below** -- triggers when price moves below the line
+  </Step>
+  <Step title="Set alert mode">
+    - **Once** -- triggers one time, then disables itself automatically
+    - **Repeat** -- triggers every time the condition transitions from false to true
+  </Step>
+  <Step title="Choose sound">
+    Select an alert sound from the available synthesized tones. Different sounds help distinguish between alerts.
+  </Step>
+</Steps>
+
+{/* screenshot: right-click menu on horizontal line showing alert condition options */}
+
+### Alert Conditions Explained
+
+| Condition | Triggers When |
+|-----------|--------------|
+| **Cross** | The latest candle's close crosses from one side of the line to the other. Works for both upward and downward crosses. |
+| **Price Above** | The latest candle's close is above the line level. In "Once" mode, triggers on the first bar that closes above. |
+| **Price Below** | The latest candle's close is below the line level. In "Once" mode, triggers on the first bar that closes below. |
+
+For **Trend Lines** and **Rays**, the alert level changes over time as the line extends. Price is compared against the line's value at the current bar's time coordinate, not a fixed price.
+
+### Alert Modes
+
+| Mode | Behavior |
+|------|----------|
+| **Once** | Fires one time when the condition is first met, then auto-disables. The alert icon is removed from the drawing. Useful for one-time breakout notifications. |
+| **Repeat** | Fires every time the condition transitions from false to true. Requires a reset (condition becoming false) before it can trigger again. Useful for ranging markets where price repeatedly tests a level. |
+
+<Tip>
+Place horizontal lines at key support/resistance levels with "Cross" alerts to get notified when price reaches your levels of interest, even when you are away from the screen.
+</Tip>
+
+---
+
+## Indicator Alerts
+
+18 indicators support built-in alerts. Each indicator defines specific alert events relevant to the type of analysis it performs. Indicator alerts are configured through the indicator's settings panel.
+
+### Indicators with Alert Support
+
+| Indicator | Alert Events |
+|-----------|-------------|
+| **Bollinger Bands** | Price touches upper/lower band, band squeeze detected |
+| **RSI** | Enters overbought/oversold zone, exits zone |
+| **RSI Divergence** | New bullish/bearish divergence detected |
+| **MACD** | Signal line cross up/down, histogram reversal, zero line cross |
+| **Session Levels** | Price approaches session high/low/open, level tested |
+| **Absorption Alpha** | New absorption signal (large hidden buying/selling detected), line tested |
+| **Delta Divergence** | Price/delta divergence detected (price up, delta down or vice versa) |
+| **CVD Divergence** | Cumulative volume delta divergence with price |
+| **Orderflows Divergence** | Order flow divergence signal |
+| **Stacked Imbalance** | New stacked imbalance zone formed, line tested |
+| **Clouds** | Cloud zone formed, cloud zone approached, cloud breakout |
+| **DOM on Chart** | Large order level detected, level absorbed |
+| **Liquidation Levels** | Major liquidation cluster approached, liquidation cascade started |
+| **FVG** | New Fair Value Gap formed, FVG zone filled |
+| **Market Structure** | Break of structure (BOS) bullish/bearish, change of character (CHoCH) bullish/bearish |
+| **Order Blocks** | New order block formed, zone approached, zone broken |
+
+### Enabling Indicator Alerts
+
+<Steps>
+  <Step title="Open indicator settings">
+    Click the indicator name or gear icon in the indicator panel to open its configuration.
+  </Step>
+  <Step title="Navigate to Alert Rules">
+    Scroll to the **Alert Rules** section within the indicator settings. This section lists all available alert events for this indicator.
+  </Step>
+  <Step title="Enable desired events">
+    Toggle on the alert events you want to receive. Each event has its own enable/disable switch.
+  </Step>
+  <Step title="Choose alert sound (optional)">
+    Select a sound for this indicator's alerts. Using a different sound per indicator helps identify the source audibly.
+  </Step>
+  <Step title="Save settings">
+    Close the settings panel. Alerts are active immediately.
+  </Step>
+</Steps>
+
+{/* screenshot: indicator settings panel with Alert Rules section expanded showing event toggles */}
+
+<Note>
+Not all indicators support alerts. The table above lists all 18 indicators with alert capability. For indicators not listed, you can use price alerts on drawing tools as an alternative.
+</Note>
+
+### Alert Event Types
+
+Different indicators use different event types depending on what they measure:
+
+| Event Type | Description |
+|-----------|-------------|
+| `new_signal` | A new analytical signal was generated by the indicator |
+| `new_divergence` | A divergence between price and the indicator was detected |
+| `line_tested` | Price touched or approached a significant indicator level |
+| `zone_approached` | Price entered a zone defined by the indicator (e.g., order block zone) |
+| `zone_broken` | Price broke through a previously defined zone |
+| `level_absorbed` | A significant level was absorbed (orders filled rather than pulled) |
+
+---
+
+## Alert Behavior
+
+When an alert triggers, two things happen simultaneously:
+
+- **Sound**: A synthesized sound notification plays through your system audio
+- **Visual**: The triggering element is highlighted on the chart and/or a badge appears in the toolbar
+
+Alert sounds are generated internally using the Web Audio API -- no external sound files are required. Multiple sound types are available with different tonal characters (ping, chime, alarm, etc.).
+
+### Sound Configuration
+
+| Setting | Description |
+|---------|-------------|
+| **Sound type** | Choose from built-in synthesized tones (configured per alert) |
+| **Master volume** | Global volume control for all alerts (in Settings > Sound) |
+| **Enable/disable** | Global sound toggle (in Settings > Sound) |
+
+<Warning>
+Ensure your system audio is not muted if you rely on alert sounds. The terminal cannot override system-level mute. Test your alerts after configuring them to confirm you can hear the notifications.
+</Warning>
+
+### Alert History
+
+Triggered alerts are logged with an `alertTriggeredAt` timestamp. This lets you review when alerts fired, even if you were not watching the screen at the time.
+
+---
+
+## Combining Alerts for High-Probability Setups
+
+The real power of alerts emerges when you combine price alerts with indicator alerts:
+
+### Support Level + Absorption
+
+1. Draw a horizontal line at a key support level
+2. Set a "Price Below" alert (once) on the line
+3. Enable `new_signal` alerts on Absorption Alpha
+4. When both alerts fire near the same time, you have a support test with confirmed absorption -- a high-probability long setup
+
+### Trend Line Break + Market Structure
+
+1. Draw an ascending trend line under a bullish structure
+2. Set a "Cross" alert on the trend line
+3. Enable BOS/CHoCH alerts on Market Structure
+4. A simultaneous trend line break and BOS signal confirms the trend change
+
+### Bollinger Band + RSI Divergence
+
+1. Enable "price touches lower band" on Bollinger Bands
+2. Enable "new bullish divergence" on RSI Divergence
+3. Price touching the lower band while RSI shows bullish divergence signals a mean-reversion setup
+
+<Tip>
+Start with a small number of alerts and add more as you learn which signals are most relevant to your strategy. Too many simultaneous alerts create noise that is harder to act on than a few well-chosen ones.
+</Tip>
+
+---
+
+## Limitations
+
+| Limitation | Details |
+|-----------|---------|
+| **Requires terminal open** | Alerts only fire while the application is running |
+| **No push notifications** | Alerts are local to the terminal (sound + visual only) |
+| **No email or SMS** | External notification channels are not currently supported |
+| **Candle-close evaluation** | Price conditions are evaluated on each new candle close, not tick-by-tick |
+| **Per-workspace** | Alerts are workspace-specific -- they only trigger for the active workspace's symbols |
+
+<Note>
+Because alerts are evaluated on candle close (not every tick), very fast price spikes that cross and return within a single candle may or may not trigger depending on where the candle closes. For tick-level precision, monitor the DOM panel directly.
+</Note>

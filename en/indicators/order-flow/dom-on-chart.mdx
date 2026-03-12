@@ -1,0 +1,209 @@
+---
+title: "DOM on Chart"
+description: "Displays real-time Depth of Market (order book) visualization directly on the price chart."
+icon: "chart-waterfall"
+---
+
+# DOM on Chart
+
+DOM on Chart renders the **live order book (Depth of Market) as a visual overlay** directly on the price chart. Bid orders are shown on one side and ask orders on the other, updating in real-time via WebSocket. This gives you immediate visual context about resting order liquidity without switching to a separate DOM widget.
+
+{/* screenshot: DOM on Chart overlay showing bid (blue) histogram bars on the left and ask (red) bars on the right side of the price axis */}
+
+## How It Works
+
+The indicator subscribes to the order book feed via WebSocket and receives periodic snapshots of resting limit orders at every price level. For each level, it knows the total resting volume on the bid side (buyers waiting) and the ask side (sellers waiting).
+
+This data is rendered as a vertical overlay on the right portion of the chart, aligned with the price axis:
+
+- **Bid volume** (buy orders) is shown extending leftward from the price axis.
+- **Ask volume** (sell orders) is shown extending rightward from the price axis (or in the opposite visual direction, depending on display mode).
+
+The overlay updates at the configured polling interval, providing a near-real-time view of where liquidity is resting in the book.
+
+## Indicator Type
+
+**Overlay** — rendered on the price axis side of the chart. Does not occupy a separate subchart panel.
+
+## Settings
+
+### Visibility
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `showBids` | boolean | `true` | Show bid (buy order) side |
+| `showAsks` | boolean | `true` | Show ask (sell order) side |
+
+### Colors
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `bidColor` | color | `#3b82f6` | Color for bid orders |
+| `askColor` | color | `#ef4444` | Color for ask orders |
+
+### Depth and Sizing
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `depthLevels` | number | `5000` | Number of price levels to display from each side of the book |
+| `opacity` | number | `0.6` | Overall transparency of the overlay (0.0–1.0) |
+| `widthPercent` | number | `25` | Width of the overlay as a percentage of the chart width |
+
+The `depthLevels` parameter controls how deep into the order book the visualization extends. For most symbols, 5000 levels covers a significant price range. Reduce this value on very liquid symbols where thousands of levels exist near the spread, or increase it on illiquid symbols where you want to see the full book.
+
+`widthPercent` determines how much horizontal chart space the overlay occupies. At 25% (default), the DOM overlay takes up the right quarter of the chart area. Increase for better volume resolution; decrease to preserve more chart space for price action.
+
+### Display Mode
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `displayMode` | select | `histogram` | Visualization style: `histogram`, `cluster`, `area` |
+
+Each display mode offers a different visual representation of the same underlying order book data:
+
+| Mode | Description | Best For |
+|------|-------------|----------|
+| `histogram` | Horizontal bars at each price level, length proportional to volume | Precise level-by-level analysis, spotting individual large orders |
+| `cluster` | Levels grouped by price range into blocks | Higher-level view of liquidity zones, less visual noise |
+| `area` | Filled area chart showing cumulative or per-level depth | Smooth visualization of overall book shape |
+
+{/* screenshot: Side-by-side comparison of histogram, cluster, and area display modes */}
+
+### Cumulative Mode
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `cumulative` | boolean | `false` | Show cumulative depth instead of per-level volume |
+
+When enabled, each price level shows the **sum of all volume from the best price to that level**, rather than just the volume at that specific level. This produces a monotonically increasing curve that shows total available liquidity at each price point.
+
+- **Cumulative off** (default): each bar represents volume at exactly that price level. Large individual orders stand out clearly.
+- **Cumulative on**: each bar represents total volume available up to that price. Shows the overall depth profile and how quickly liquidity drops off.
+
+### Update Frequency
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `pollIntervalMs` | number | `500` | Milliseconds between order book updates |
+
+Lower values provide more real-time updates but increase network and rendering load. Higher values are smoother on performance but show a less current snapshot.
+
+| Trading Style | Suggested Interval |
+|---------------|-------------------|
+| Scalping | 250ms |
+| Day trading | 500ms (default) |
+| Swing trading | 1000–2000ms |
+| Position trading | 2000–5000ms |
+
+### Price Grouping
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `groupStep` | number | `0` | Price level grouping step (0 = automatic based on chart zoom) |
+
+When set to 0 (default), the indicator automatically groups price levels based on the current chart zoom level. Zoomed in shows individual tick levels; zoomed out groups levels to prevent visual clutter.
+
+Set a specific value to override the automatic behavior. For example, `groupStep: 10` on BTCUSDT groups every 10 price levels ($10 each) into a single bar.
+
+### Visual Enhancements
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `useGradient` | boolean | `true` | Apply gradient coloring by depth distance |
+| `showLabels` | boolean | `true` | Show volume labels on significant levels |
+
+When `useGradient` is enabled, levels closer to the best price are rendered in a more saturated color, while deeper levels fade. This creates an intuitive visual depth effect.
+
+When `showLabels` is enabled, volume values are displayed as text labels on levels that exceed a significance threshold. This avoids cluttering the chart with labels on every level while ensuring large resting orders are clearly labeled.
+
+### Volume Filters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `filterMinVolume` | number | `0` | Minimum volume to display a level (0 = show all) |
+| `filterHighlightVolume` | number | `0` | Highlight levels with volume above this threshold (0 = no highlight) |
+| `filterHighlightColor` | color | `#fbbf24` | Color for highlighted high-volume levels |
+
+The highlight filter is one of the most useful features for spotting large resting orders (walls):
+
+- Set `filterHighlightVolume` to a value that represents a significant order for the symbol (e.g., 100 BTC for BTCUSDT).
+- Levels exceeding this threshold are rendered in the highlight color, making walls immediately visible.
+
+{/* screenshot: DOM on Chart with a large bid wall highlighted in yellow at a key support level */}
+
+<Tip>
+Use `filterHighlightVolume` to spot large order walls. Lower `pollIntervalMs` for scalping (250ms), raise it for swing trading (2000ms+) to reduce rendering overhead.
+</Tip>
+
+### Currency Display
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `volumeCurrency` | select | `BASE` | Display volume in base asset (`BASE`) or quote asset (`USDT`) |
+
+- **BASE**: shows volume in the asset being traded (e.g., BTC). More intuitive for understanding order sizes.
+- **USDT**: shows volume in dollar terms. Better for comparing across different assets.
+
+## Reading the DOM Overlay
+
+### Identifying Walls
+
+A wall is a single price level (or narrow zone) with disproportionately large resting volume. Walls appear as a long bar that extends far beyond its neighbors. They represent:
+
+- **Bid walls**: large buy orders below the current price. Can act as support — price may bounce off the wall. However, walls can also be spoofed (placed and cancelled).
+- **Ask walls**: large sell orders above the current price. Can act as resistance — price may be rejected at the wall.
+
+### Book Shape Analysis
+
+The overall shape of the DOM overlay reveals the liquidity landscape:
+
+- **Symmetric book**: roughly equal bid and ask volume at comparable distances. Balanced market with no directional lean.
+- **Bid-heavy book**: significantly more volume on the bid side. Suggests support below, but could also indicate that large buyers are placing passive orders to accumulate.
+- **Ask-heavy book**: significantly more volume on the ask side. Suggests resistance above.
+- **Thin book**: very little volume on either side. Low liquidity environment where price can move quickly with small orders.
+
+### Dynamic Changes
+
+Watch for these real-time patterns:
+
+- **Wall removal**: a large wall that suddenly disappears was likely cancelled (spoofing) or filled. If filled, it is a significant event.
+- **Wall migration**: a wall that moves closer to the current price suggests the entity is adjusting their entry point — potentially more aggressive.
+- **Liquidity vacuum**: a gap in the book (no resting orders for several price levels) indicates a potential fast-move zone.
+
+## Combining with Other Indicators
+
+| Indicator | Synergy |
+|-----------|---------|
+| **OB Imbalance** | OB Imbalance shows the historical time-series of book imbalance; DOM on Chart shows the current live snapshot. Together they show trend + current state. |
+| **Trades Filter** | High-activity levels from Trades Filter that align with current DOM walls have stronger significance. |
+| **Volume Profile** | The POC (Point of Control) from Volume Profile combined with a DOM wall at the same level = high-conviction support/resistance. |
+| **Absorption** | If price approaches a DOM wall and the Absorption indicator lights up, the wall is actively absorbing aggressive orders — strong defense of that level. |
+
+## Alerts
+
+DOM on Chart supports the following alert event:
+
+| Event | Description |
+|-------|-------------|
+| `high_volume` | Fires when a resting order at a single level exceeds a configurable volume threshold |
+
+This alert can notify you when a significant wall appears in the book, even if you are not actively watching the chart.
+
+## Performance Notes
+
+DOM on Chart renders a potentially large number of elements (up to `depthLevels` bars per side) and updates them at `pollIntervalMs` frequency. For optimal performance:
+
+- Use `groupStep` > 0 to reduce the number of rendered elements on very liquid symbols.
+- Increase `pollIntervalMs` if you notice rendering lag.
+- Set `filterMinVolume` > 0 to skip rendering trivially small levels.
+- Use `histogram` mode for the lightest rendering cost. `area` mode with gradients is slightly more GPU-intensive.
+
+## Limitations
+
+- **Snapshots, not continuous**: the DOM overlay shows periodic snapshots, not a continuous feed. Fast-changing orders between snapshots may not be visible.
+- **Spoofing risk**: large visible walls may be spoofed orders that will be cancelled before execution. Do not rely on a single wall as a definitive signal.
+- **Top of book only**: the overlay shows resting limit orders. Iceberg (hidden) orders are not visible.
+
+## Summary
+
+DOM on Chart brings the order book directly onto your price chart, providing a live view of where resting buy and sell orders are concentrated. By configuring depth, display mode, volume filters, and highlight thresholds, you can quickly identify large walls, assess overall book shape, and spot liquidity vacuums — all without leaving the chart view.

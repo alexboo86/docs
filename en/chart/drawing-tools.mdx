@@ -1,0 +1,311 @@
+---
+title: "Drawing Tools"
+description: "62 drawing tools across 10 categories: trend lines, Fibonacci, Gann, Wyckoff patterns, and more."
+icon: "pen"
+---
+
+Cluster Terminal includes over 60 professional drawing and annotation tools for technical analysis, pattern recognition, trade planning, and chart annotation. All tools are organized into 10 categories accessible from the toolbar draw panel. Every drawing persists across sessions as part of your workspace and is included in cloud sync.
+
+## Global Drawing Settings
+
+Before diving into individual tools, configure the global settings that affect all drawing operations.
+
+### Magnet Mode
+
+When enabled, anchor points snap to the nearest OHLC value (open, high, low, or close) of the closest candle. This eliminates imprecise freehand placement.
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Magnet** | Enable/disable snap-to-price | Off |
+| **Magnet Radius** | Pixel distance for snap detection | 10px |
+
+Toggle magnet mode with the `M` key at any time. The magnet works with all point-based drawing tools -- trend lines, Fibonacci, Gann, shapes, and patterns.
+
+<Tip>
+Enable magnet mode when drawing support/resistance lines, Fibonacci retracements, and pattern overlays. Disable it when drawing freehand annotations, text labels, and approximate zones where exact price alignment is not important.
+</Tip>
+
+### Keep Drawing Mode
+
+When enabled, the selected tool remains active after completing a drawing, allowing you to place multiple instances without re-selecting the tool. When disabled, the cursor returns to the default pointer after each drawing is completed.
+
+### Lock / Hide All Objects
+
+| Action | Description |
+|--------|-------------|
+| **Lock Objects** | Prevents all drawings from being moved or resized. Click-through behavior is enabled. |
+| **Hide Objects** | Makes all drawings invisible without deleting them. Useful for taking clean screenshots. |
+
+### Favorites Panel
+
+Add frequently used tools to your favorites panel for one-click access. To add a tool to favorites:
+
+1. Select the tool from the draw panel.
+2. Click the **star icon** in the tool options bar.
+3. The tool appears in the favorites strip below the toolbar.
+
+To remove a tool from favorites, click the **X** button on its favorite entry, or click the star icon again while the tool is selected.
+
+### Default Styles
+
+Each drawing tool remembers the last style you applied. When you create a new drawing of the same type, it inherits the most recently used stroke color, fill color, line width, and other properties. This ensures visual consistency without manual reconfiguration.
+
+## Tool Categories
+
+### 1. Cursors (4 tools)
+
+| Tool | Description |
+|------|-------------|
+| **Cursor** | Default pointer for panning, selecting, and interacting with chart elements. |
+| **Dot Cursor** | Crosshair dot for precise coordinate positioning. Shows exact price and time at the pointer. |
+| **Arrow Cursor** | Directional arrow pointer. Functional equivalent of the standard cursor with a different visual. |
+| **Eraser** | Click any drawing to immediately delete it. Useful for quick cleanup without selecting and pressing Delete. |
+
+### 2. Trend Lines (6 tools)
+
+Core technical analysis lines for identifying direction, levels, and channels.
+
+| Tool | Points | Description |
+|------|--------|-------------|
+| **Trend Line** | 2 | A straight line between two anchor points. The fundamental tool for marking trend direction. Supports extension in both directions (configurable). |
+| **Ray** | 2 | A line that starts at the first anchor and extends infinitely in the direction of the second anchor. Useful for projecting trend direction into the future. |
+| **Horizontal Line** | 1 | A price-level line that extends across the entire visible chart. Supports price alerts (cross, above, below). The most commonly used drawing tool. |
+| **Vertical Line** | 1 | A time marker that extends from top to bottom. Useful for marking events, news releases, or session boundaries. |
+| **Arrow** | 2 | A directional line with an arrowhead. Configure arrow style (filled, open, none) and which end(s) display the arrowhead. |
+| **Parallel Channel** | 3 | Two parallel lines defining a price channel. Place two points for the first line, then a third point to set the channel width. The channel width is also adjustable via a drag handle after placement. |
+
+<Note>
+**Horizontal Line** is the only trend line tool that supports **price alerts**. When an alert is enabled, you can configure the condition (cross, price above, or price below) and the notification behavior (once or repeat). See the [Alerts](/indicators/alerts) page for full details.
+</Note>
+
+### 3. Fibonacci (3 tools)
+
+Fibonacci-based measurement and projection tools for identifying retracement levels, extension targets, and institutional order zones.
+
+| Tool | Points | Description |
+|------|--------|-------------|
+| **Fib Retracement** | 2 | Standard Fibonacci retracement. Place from swing high to swing low (or vice versa) to display key levels: 0%, 23.6%, 38.2%, 50%, 61.8%, 78.6%, 100%. Custom levels can be added. |
+| **Fib Extension** | 2 | Projects Fibonacci levels beyond the measured move for target identification: 127.2%, 141.4%, 161.8%, 200%, 261.8%. |
+| **Premium/Discount** | 2 | ICT-style premium and discount zones with an Optimal Trade Entry (OTE) zone highlighted between 62% and 79%. Separate colors for premium zone, discount zone, and OTE zone. Supports OTE ray extension. |
+
+#### Fibonacci Customization
+
+| Setting | Description |
+|---------|-------------|
+| **Custom Levels** | Add or remove Fibonacci levels (e.g., add 88.6% for harmonic patterns) |
+| **Level Colors** | Assign individual colors to each Fibonacci level |
+| **Background Fill** | Fill zones between levels with semi-transparent color |
+| **Show Labels** | Display percentage and price value at each level |
+| **Show Price Labels** | Show the computed price at each Fibonacci level |
+| **Reverse** | Flip the direction of the Fibonacci measurement |
+| **Extend Left/Right** | Extend level lines beyond the anchor points |
+
+{/* screenshot: Fibonacci Retracement with all levels labeled, background fill between levels, and price labels */}
+
+### 4. Gann (2 tools)
+
+W.D. Gann geometric analysis tools for studying price-time relationships.
+
+| Tool | Points | Description |
+|------|--------|-------------|
+| **Gann Box** | 2 | A price-time grid that divides the selected range into proportional sections based on Gann angles (1x1, 1x2, 2x1, etc.). Useful for identifying time-price symmetry and potential turning points. |
+| **Gann Fan** | 2 | Fan of angle lines radiating from a pivot point at standard Gann angles. The 1x1 line (45 degrees when the chart is properly scaled) is the equilibrium angle. Price above the 1x1 is bullish; below is bearish. |
+
+### 5. Shapes (12 tools)
+
+Geometric shapes for marking zones, regions, areas of interest, and freehand annotations.
+
+| Tool | Points | Description |
+|------|--------|-------------|
+| **Rectangle** | 2 | Axis-aligned rectangle defined by two diagonal corners. The most common zone-marking tool -- used for supply/demand zones, order blocks, and session ranges. |
+| **Rotated Rectangle** | 3 | A rectangle that can be rotated to any angle. First two points define one edge; the third point sets the width. |
+| **Triangle** | 3 | A three-point triangle. Useful for marking ascending/descending triangles and wedge formations. |
+| **Circle** | 2 | A circle defined by center and radius (drag from center outward). |
+| **Ellipse** | 2 | An adjustable oval defined by a bounding box. Useful for highlighting rounded zones. |
+| **Arc** | 2 | A curved arc segment. Configurable start and end angles. |
+| **Path** | Multi | A free-form path with multiple control points. Click to add points; double-click to finish. |
+| **Polyline** | Multi | Multi-segment connected line. Each click adds a vertex; double-click to complete. |
+| **Curve** | 2 | A smooth Bezier curve between two points, with draggable control handles for curvature. |
+| **Double Curve** | 3+ | Two connected curves forming an S-shape or compound curve. |
+| **Brush** | Freehand | Freehand drawing that follows your mouse movement. Stroke width and color apply. |
+| **Highlighter** | Freehand | Semi-transparent freehand overlay. Similar to brush but with forced low opacity for a highlighter pen effect. |
+
+### 6. Text and Annotations (3 tools)
+
+| Tool | Points | Description |
+|------|--------|-------------|
+| **Text** | 1 | A plain text label placed on the chart at a specific price/time coordinate. Configurable font size, color, and alignment (left, center, right / top, middle, bottom). |
+| **Note** | 1 | A text block with a colored background box. Useful for longer annotations that need a visible boundary. |
+| **Callout** | 2 | A text bubble with a pointer line connecting the text to a specific price/time location. First click sets the pointer target; drag to position the text box. |
+
+### 7. Chart Patterns (11 tools)
+
+Pre-built templates for classical chart patterns and market structure models. Each pattern provides labeled anchor points that you position on the chart.
+
+| Tool | Description |
+|------|-------------|
+| **Head and Shoulders** | Classic reversal pattern with left shoulder, head, and right shoulder. Drag anchor points to match the pattern on the chart. Includes neckline. |
+| **XABCD (Harmonic)** | Five-point harmonic pattern for Gartley, Bat, Butterfly, Crab, and other harmonic formations. Label each point (X, A, B, C, D) and the tool calculates the ratios. |
+| **Elliott Wave** | Multi-point impulse and corrective wave labels (1-2-3-4-5 or A-B-C). Place points at each wave pivot. |
+| **Quasimodo Bull** | Bullish QM reversal pattern template. Marks the key structural points of the pattern. |
+| **Quasimodo Bear** | Bearish QM reversal pattern template. |
+| **Wyckoff Accumulation #1** | Schematic accumulation structure (Spring model). Includes labeled events: PS, SC, AR, ST, Spring, Test, SOS, LPS, BU. |
+| **Wyckoff Accumulation #2** | Alternative accumulation schematic with different structural emphasis. |
+| **Wyckoff Distribution #1** | Schematic distribution structure (UTAD model). Includes labeled events: PSY, BC, AR, ST, UT, UTAD, LPSY, SOW. |
+| **Wyckoff Distribution #2** | Alternative distribution schematic. |
+| **Wyckoff Re-accumulation** | Continuation accumulation pattern that forms within an existing uptrend. |
+| **Wyckoff Re-distribution** | Continuation distribution pattern that forms within an existing downtrend. |
+
+#### Wyckoff Pattern Settings
+
+| Setting | Description |
+|---------|-------------|
+| **Hide Line** | Hide the zigzag trajectory line, showing only the event labels |
+| **Hidden Events** | Selectively hide specific event labels (e.g., hide "AR" and "ST" to reduce clutter) |
+
+{/* screenshot: Wyckoff Accumulation #1 overlaid on a chart with all event labels visible */}
+
+### 8. Trading Positions (2 tools)
+
+Visual risk/reward overlays for trade planning.
+
+| Tool | Points | Description |
+|------|--------|-------------|
+| **Long Position** | 3 | Displays entry price, take profit (TP), and stop loss (SL) for a long trade. Shows the risk/reward ratio, potential profit, and potential loss in dollar terms. |
+| **Short Position** | 3 | Same as Long Position but for short trades. Entry above, TP below, SL above. |
+
+#### Position Calculator Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Account Size** | Your trading account balance for P&L calculation | 10,000 |
+| **Lot Size** | Position size in contracts or units | 1 |
+| **Tick Value** | Dollar value of one tick movement | Auto-detected |
+| **Risk Opacity** | Opacity of the stop-loss zone | 0.2 |
+| **Reward Opacity** | Opacity of the take-profit zone | 0.2 |
+| **Show Stats** | Display P&L numbers and R:R ratio on the drawing | On |
+
+The position tool automatically calculates and displays:
+
+- Risk in dollars (entry to SL * lot size * tick value)
+- Reward in dollars (entry to TP * lot size * tick value)
+- Risk/Reward ratio
+- Percentage of account at risk
+
+<Tip>
+Use the position tool before every trade to visually confirm that your risk/reward ratio meets your minimum threshold. A common rule is to require at least 2:1 reward-to-risk before entering a trade.
+</Tip>
+
+### 9. Forecast and Analysis (11 tools)
+
+Tools for projection, measurement, and advanced analysis overlays.
+
+| Tool | Points | Description |
+|------|--------|-------------|
+| **Forecast** | 2 | A directional prediction marker showing expected price movement over a time period. |
+| **Bars Pattern** | Multi | Copy a historical price pattern and project it forward. Select a range of candles, then place the projection at the current price. |
+| **Ghost Feed** | Multi | A semi-transparent overlay of a past price sequence projected forward. Similar to Bars Pattern but rendered as translucent candles. |
+| **Projection** | 3 | Measured-move projection. Place three points (A-B-C) and the tool projects the D point where the measured move completes. |
+| **Anchored VWAP** | 1 | Volume-weighted average price calculated from a user-defined anchor point. Drag the anchor to any candle to compute VWAP from that point forward. |
+| **Fixed Range Volume Profile** | 2 | Volume distribution histogram for a selected time range. Shows volume at each price level within the selected period. |
+| **Anchored Volume Profile** | 1 | Volume profile computed from a user-defined anchor point to the current time. Continuously updates as new data arrives. |
+| **Price Range** | 2 | Vertical distance measurement between two price levels. Displays the difference in price, percentage, and ticks. |
+| **Date Range** | 2 | Horizontal time measurement between two points. Displays the duration in bars and calendar time. |
+| **Date and Price Range** | 2 | Combined measurement box showing both price distance and time duration. |
+
+#### Volume Profile Drawing Settings
+
+Both **Fixed Range Volume Profile** and **Anchored Volume Profile** support customization:
+
+| Setting | Description |
+|---------|-------------|
+| **Profile Rows** | Number of horizontal bins for the volume histogram |
+| **Position** | Render the profile on the left or right side of the range |
+| **POC** | Highlight the Point of Control within the profile |
+| **Value Area** | Show the value area boundaries |
+
+{/* screenshot: Fixed Range Volume Profile drawing showing volume distribution for a selected 4-hour range */}
+
+### 10. Icons (5 tools)
+
+Quick-place marker icons for annotating specific points on the chart.
+
+| Tool | Description |
+|------|-------------|
+| **Star** | Place a star marker at a specific price/time. Useful for marking setups or watchlist levels. |
+| **Heart** | A heart icon for bookmarking favorite trade locations or patterns. |
+| **Flag** | A flag marker for noting events, news, or milestones. |
+| **Arrow Up** | An upward arrow for marking bullish signals or entry points. |
+| **Arrow Down** | A downward arrow for marking bearish signals or exit points. |
+
+## Common Drawing Properties
+
+All drawings share a set of configurable visual properties:
+
+| Property | Description | Range |
+|----------|-------------|-------|
+| **Stroke Color** | The outline/line color | Any color via picker |
+| **Stroke Opacity** | Transparency of the stroke | 0.0 -- 1.0 |
+| **Fill Color** | The interior fill color (shapes, zones) | Any color via picker |
+| **Fill Opacity** | Transparency of the fill | 0.0 -- 1.0 |
+| **Line Width** | Stroke thickness in pixels | 1.5 -- 10 |
+| **Line Style** | Stroke pattern | Solid, Dashed, Dotted, Dot-Dash |
+| **Glow Intensity** | Luminous glow effect around the drawing | 0.0 -- 1.0 |
+
+<Note>
+The **glow effect** adds a colored halo around the drawing using the stroke color. It works best on dark themes and is particularly effective for highlighting key levels and zones.
+</Note>
+
+## Keyboard Shortcuts
+
+| Key | Tool |
+|-----|------|
+| `V` | Cursor (select mode) |
+| `L` | Trend Line |
+| `Y` | Ray |
+| `A` | Arrow |
+| `H` | Horizontal Line |
+| `R` | Rectangle |
+| `M` | Toggle Magnet mode |
+| `Esc` | Cancel current drawing / close panel |
+| `Delete` | Delete selected drawing |
+| `Backspace` | Delete selected drawing (alternative) |
+
+## Right-Click Context Menu
+
+Right-clicking on any selected drawing opens a context menu with these actions:
+
+| Action | Description |
+|--------|-------------|
+| **Edit Properties** | Open the full properties panel for this drawing |
+| **Duplicate** | Create an identical copy of the drawing at a slight offset |
+| **Delete** | Remove the drawing from the chart |
+| **Lock / Unlock** | Prevent or allow moving and resizing |
+| **Show / Hide** | Toggle visibility without deleting |
+| **Bring to Front** | Move the drawing above all other drawings |
+| **Send to Back** | Move the drawing behind all other drawings |
+| **Clone to All Tabs** | Copy this drawing to every chart tab in the workspace |
+
+<Tip>
+Use **Clone to All Tabs** for horizontal lines and key levels that you want visible across all your chart views. When you update the original, the clones update automatically.
+</Tip>
+
+## Working with Drawings
+
+### Selecting and Moving
+
+Click any drawing with the standard cursor to select it. Selected drawings display anchor handles at their control points. Drag the handles to resize or reshape; drag the drawing body to reposition.
+
+### Multi-Select
+
+Hold `Shift` and click multiple drawings to select them as a group. You can then move the entire group together or delete them all at once.
+
+### Style Templates
+
+Save a drawing's visual properties as a named style template. Apply the template to other drawings of the same type for consistent visual treatment across your chart. Templates persist across workspaces and are included in cloud sync.
+
+### Persistence
+
+All drawings are saved automatically as part of your workspace. They persist across application restarts and are included in cloud sync if your license supports it. Switching symbols or timeframes does not remove drawings -- they remain anchored to their price/time coordinates.
+
+{/* screenshot: drawing tools panel open with favorites strip, showing a chart with multiple drawing types */}

@@ -1,0 +1,115 @@
+---
+title: "Bar Statistics"
+description: "Displays detailed buy/sell volume and trade count statistics for each candle."
+icon: "table"
+---
+
+# Bar Statistics
+
+Bar Statistics renders a compact **statistics footer below each candle**, breaking down every bar into its core order flow components: buy volume, sell volume, total volume, delta, buy trades, and sell trades. Instead of reading individual cluster cells, you get an instant per-bar summary that reveals the participation balance at a glance.
+
+{/* screenshot: Bar Statistics footer rows below candles showing buy/sell volume, delta, and trade counts */}
+
+## How It Works
+
+For each candle on the chart, Bar Statistics extracts data from the underlying cluster (footprint) and displays it as a set of labeled rows beneath the candle. Each row represents a different metric, and its cell is color-graded to reflect the magnitude of the value relative to other bars.
+
+The indicator processes the following metrics per bar:
+
+| Metric | Calculation |
+|--------|-------------|
+| **Buy Volume** | Sum of all volume executed at the ask price (aggressive buyers) |
+| **Sell Volume** | Sum of all volume executed at the bid price (aggressive sellers) |
+| **Total Volume** | Buy Volume + Sell Volume |
+| **Delta** | Buy Volume − Sell Volume |
+| **Buy Trades** | Number of individual buy trade executions |
+| **Sell Trades** | Number of individual sell trade executions |
+
+Each metric is independently color-graded using the selected grading mode, allowing you to visually compare relative magnitudes across bars.
+
+## Indicator Type
+
+**Side Panel** (footer table) — renders as rows of colored cells directly below the candle chart. Does not occupy a separate subchart panel.
+
+## Settings
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `showBuyVol` | boolean | `true` | Show the buy volume row |
+| `showSellVol` | boolean | `true` | Show the sell volume row |
+| `showTotalVol` | boolean | `true` | Show the total volume row |
+| `showDeltaVol` | boolean | `true` | Show the delta (buy − sell) row |
+| `showBuyTrades` | boolean | `true` | Show the buy trade count row |
+| `showSellTrades` | boolean | `true` | Show the sell trade count row |
+| `grading` | select | `visible` | Color intensity normalization mode (see below) |
+| `buyColor` | color | `#22c55e` | Color for buy-side statistics |
+| `sellColor` | color | `#ef4444` | Color for sell-side statistics |
+
+### Toggling Rows
+
+You can enable or disable any combination of the six rows. For a minimal setup, show only `Delta` to see net order flow. For full analysis, enable all six rows to compare volume, delta, and trade counts side by side.
+
+## Grading Modes
+
+The grading mode determines how cell colors are normalized — i.e., which range of values maps to the lightest and darkest color intensities. This is one of the most important settings because it controls what "high" and "low" mean visually.
+
+| Mode | Normalization Range | Best For |
+|------|---------------------|----------|
+| `individual` | Each bar is colored relative to its own metrics only | Seeing the internal balance of a single bar |
+| `daily` | Values are normalized across all bars in the current trading day | Intraday session analysis — finding the day's extremes |
+| `visible` | Values are normalized across all bars currently visible on screen | Scanning the current view for relative anomalies |
+| `whole` | Values are normalized across the entire loaded dataset | Long-term comparison — identifying historically significant bars |
+
+{/* screenshot: Side-by-side comparison of the four grading modes on the same data */}
+
+### Choosing a Grading Mode
+
+- **`visible`** (default) is the most versatile choice. As you scroll or zoom, the color normalization recalculates, always highlighting the standout bars in your current view.
+- **`daily`** is useful for intraday traders who want to see where the session's peak activity occurred.
+- **`whole`** is ideal for higher timeframes where you want to compare today's activity against weeks of history.
+- **`individual`** has a narrow use case: it shows whether buy or sell volume dominated within each bar, but does not compare bars to each other.
+
+<Tip>
+Use **visible** grading to quickly spot volume anomalies in the current view. The brightest cells immediately draw your eye to bars with outsized participation — potential institutional activity or news-driven spikes.
+</Tip>
+
+## Practical Usage
+
+### Identifying Institutional Participation
+
+When a bar shows very high total volume but a relatively small delta, it indicates heavy two-sided participation — both buyers and sellers are active. This often occurs at institutional accumulation or distribution zones.
+
+### Trade Count vs. Volume Divergence
+
+Compare the trade count rows with the volume rows:
+
+- **High volume + low trade count** = few large orders (institutional / whale activity)
+- **Low volume + high trade count** = many small orders (retail / algorithmic noise)
+
+This divergence is one of the most reliable footprints of smart money activity.
+
+### Delta Confirmation
+
+Use the delta row to confirm the direction of a breakout. A breakout candle with a large delta in the breakout direction suggests genuine aggression. A breakout with neutral or contrary delta is more likely to fail.
+
+{/* screenshot: Breakout candle with strong positive delta in Bar Statistics footer */}
+
+## Combining with Other Indicators
+
+Bar Statistics pairs naturally with:
+
+- **Clouds** — when Clouds highlights a specific price level, check Bar Statistics on that bar for the full breakdown.
+- **CVD (Cumulative Volume Delta)** — CVD shows the running total, while Bar Statistics shows the per-bar contribution.
+- **Volume Profile** — Profile shows where volume concentrated by price; Bar Statistics shows how volume broke down by direction on each bar.
+
+<Tip>
+Bar Statistics is one of the lowest-overhead indicators you can add — it reads data that is already loaded in the cluster and simply reformats it. There is no performance penalty for enabling all six rows.
+</Tip>
+
+## Alerts
+
+Bar Statistics does not support alerts. For volume-based alerting, use the Delta or Volume indicators with anomaly highlighting enabled.
+
+## Summary
+
+Bar Statistics gives you a structured, color-coded decomposition of every candle without requiring you to read the raw footprint. It answers the essential order flow questions — who was more aggressive, how many participants were involved, and how does this bar compare to its neighbors — in a single glance.

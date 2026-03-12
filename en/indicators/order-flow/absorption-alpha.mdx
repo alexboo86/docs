@@ -1,0 +1,143 @@
+---
+title: "Absorption Alpha"
+description: "Detects absorption patterns where aggressive orders are absorbed by passive limit orders."
+icon: "shield"
+---
+
+Absorption Alpha is one of the most powerful order flow indicators in Cluster Terminal. It identifies price levels where aggressive market orders (buying or selling) are being absorbed by passive limit orders, causing the expected price move to fail. When a large delta occurs at a level but price does not continue in the aggressor's direction, it reveals hidden institutional supply or demand that is quietly absorbing the pressure.
+
+## How Absorption Works
+
+In a healthy market move, aggressive buying pushes price higher and aggressive selling pushes price lower. Absorption occurs when this relationship breaks down: heavy aggression in one direction is met by even heavier passive limit orders on the other side, preventing price from moving.
+
+The algorithm evaluates each candle by scanning for price levels where:
+
+1. **Significant delta** exists (one side traded much more aggressively than the other).
+2. **Price failed to follow** the expected direction within a configurable time window.
+3. **Optional confirmations** pass (cluster grouping, candle delta, volume location, stacked imbalance).
+
+When all conditions are met, a marker is placed directly on the chart at the absorption level.
+
+<Tip>
+Absorption is the footprint of large institutional participants who use limit orders to accumulate or distribute positions without moving the market. Spotting absorption early gives you a significant edge in anticipating reversals.
+</Tip>
+
+## Signal Types
+
+- **Bullish absorption** (green marker): Heavy selling was absorbed at a price level. Aggressive sellers hit the bid in size, but price did not drop. This indicates hidden demand below the surface and suggests a potential reversal upward.
+- **Bearish absorption** (red marker): Heavy buying was absorbed at a price level. Aggressive buyers lifted the ask, but price did not advance. This indicates hidden supply and suggests a potential reversal downward.
+
+{/* screenshot: chart showing bullish and bearish absorption markers at key reversal points */}
+
+## Core Settings
+
+These parameters control the primary detection logic.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **minCandleSizeTicks** | Minimum candle body size in ticks. Filters out small candles that lack meaningful price movement. | 10 |
+| **minDeltaThreshold** | Minimum absolute delta at the absorption level. Higher values filter for stronger absorption events. | 1000 |
+| **priceMovePercent** | Expected price move threshold as a percentage. If price moves less than this after the absorption event, the signal is confirmed. | 0.3 |
+| **priceMoveTimeSeconds** | Time window (in seconds) to evaluate whether the expected price move occurred. | 60 |
+| **searchLocation** | Where to search for absorption within the candle: `everywhere`, `body`, or `shadow`. Shadow-only searches focus on wicks where rejection is most visible. | everywhere |
+| **tickSlippage** | Allowance in ticks for price proximity when matching levels. Useful for fast-moving markets where exact level matching is too strict. | 0 |
+
+## Confirmation Filters
+
+These optional filters reduce false signals by requiring additional conditions to be met before an absorption marker is placed.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **requireClusterGroup** | Require multiple absorption levels to be clustered together. A single isolated absorption level is less significant than several at adjacent prices. | false |
+| **clusterGroupSize** | Minimum number of consecutive price levels that must show absorption when cluster grouping is enabled. | 3 |
+| **checkVolumeLocation** | Verify that the dominant volume is at the expected location within the candle (e.g., selling volume concentrated at the low for bullish absorption). | true |
+| **checkCandleDelta** | Confirm that the overall candle delta matches the absorption direction. For bullish absorption, the candle delta should be negative (sellers were dominant overall). | true |
+| **checkCandleDirection** | Require the candle to close in a specific direction relative to the absorption signal. | false |
+| **checkCloseRelativeToPOC** | Check that the candle close is positioned relative to the Point of Control in a way consistent with the absorption direction. | false |
+| **checkStackedImbalanceInShadow** | Require a stacked imbalance pattern in the candle's shadow (wick) to confirm the absorption. This adds a strong structural confirmation. | false |
+| **stackedImbalanceLevels** | Minimum number of consecutive imbalance levels required when the stacked imbalance check is enabled. | 3 |
+| **stackedImbalanceRatio** | Imbalance ratio threshold (as percentage) for the stacked imbalance confirmation. A value of 150 means one side must be at least 1.5x the other. | 150 |
+
+<Note>
+Enabling multiple confirmation filters simultaneously produces fewer but higher-quality signals. Start with the defaults and add confirmations one at a time to find the balance that matches your trading style.
+</Note>
+
+## Visual Settings
+
+Control the appearance of absorption markers on the chart.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **markerShape** | Shape of the absorption marker: `arrow`, `circle`, `triangle`, `square`, `diamond`, `star`, `hexagon`, `pentagon`, `cross`, `plus` | arrow |
+| **markerStyle** | Rendering style: `flat` (solid color) or `3d` (premium lighting and depth effect) | flat |
+| **signalSize** | Marker size on a scale of 1 to 100. | 25 |
+| **longColor** | Color for bullish absorption markers. | #22c55e |
+| **shortColor** | Color for bearish absorption markers. | #ef4444 |
+
+{/* screenshot: comparison of flat vs 3D marker styles with different shapes */}
+
+## Absorption Lines
+
+When enabled, Absorption Alpha draws horizontal lines at confirmed absorption levels. These lines extend to the right, acting as dynamic support and resistance levels until price revisits them.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showAbsorptionLines** | Enable horizontal lines at absorption levels. | false |
+| **absorptionLineStyle** | Line visual style: `flat`, `neon`, `gradient`, `chrome`. Premium styles add glow and depth effects. | flat |
+| **width** | Line thickness in pixels. | 1 |
+| **opacity** | Line opacity from 0 (invisible) to 100 (fully opaque). | 100 |
+| **maxTouchCount** | Maximum number of times price can touch the line before it is removed. Lines that survive multiple touches are the strongest. | 0 (unlimited) |
+
+<Tip>
+Absorption lines that survive multiple retests without breaking often mark institutional accumulation or distribution zones. Watch for price reactions at these levels on subsequent visits.
+</Tip>
+
+## Premium Styles
+
+Absorption Alpha supports Cluster Terminal's premium rendering engine:
+
+- **3D Markers**: When `markerStyle` is set to `3d`, markers receive realistic lighting, shadow, and depth effects that make them visually prominent on the chart.
+- **Neon Lines**: The `neon` line style adds a colored glow around absorption lines, making them highly visible even on busy charts.
+- **Gradient Lines**: The `gradient` style renders lines with a smooth color transition.
+- **Chrome Lines**: The `chrome` style adds a metallic reflective effect.
+
+## Alert Rules
+
+Absorption Alpha supports the following alert events:
+
+| Event | Fires When |
+|-------|-----------|
+| **new_signal** | A new absorption marker is placed on the chart (bullish or bearish). |
+| **line_tested** | Price returns to and touches a previously drawn absorption line. |
+
+Configure alert sounds and notifications in the global Alerts settings panel.
+
+## Practical Usage
+
+### Best Timeframes
+
+Absorption is most visible on lower timeframes where individual trade data is granular:
+
+| Timeframe | Suitability | Notes |
+|-----------|-------------|-------|
+| **1m** | Excellent | Maximum granularity for scalping setups |
+| **5m** | Excellent | Good balance of detail and noise reduction |
+| **15m** | Good | Intraday swing entries |
+| **1h+** | Limited | Absorption details get aggregated away |
+
+### Confluence Setups
+
+Absorption signals are strongest when they align with other structural levels:
+
+- **Volume Profile POC or HVN**: Absorption at a high-volume node confirms that institutional participants are defending the level.
+- **Session highs/lows**: Absorption at the previous session's extreme suggests that the level is being defended for another session.
+- **Stacked Imbalance zones**: When absorption occurs at a level that also has a stacked imbalance, the confluence significantly increases signal reliability.
+- **Unfinished Business levels**: Absorption near an unfinished auction level suggests price may complete the auction before reversing.
+
+### Common Pitfalls
+
+- **Low delta threshold**: Setting `minDeltaThreshold` too low produces excessive signals on high-volume instruments like BTCUSDT. Start with 1000 and adjust upward.
+- **Ignoring context**: Absorption in a strong trend is often temporary. Focus on absorption at structural levels (support, resistance, session boundaries).
+- **Over-filtering**: Enabling all confirmation filters at once may produce zero signals. Add filters incrementally.
+
+{/* screenshot: absorption alpha with absorption lines enabled, showing a bullish absorption cluster that held on retest */}

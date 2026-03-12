@@ -1,0 +1,89 @@
+---
+title: "Volume Ratio"
+description: "Normalized ratio of buy to sell volume — ranges from -1 to +1."
+icon: "sliders"
+---
+
+## Overview
+
+Volume Ratio calculates the normalized difference between buy and sell volume for each bar:
+
+```
+Volume Ratio = (buyVolume - sellVolume) / (buyVolume + sellVolume)
+```
+
+The result always falls between **-1** (all selling) and **+1** (all buying), making it easy to compare directional pressure across different symbols and timeframes regardless of absolute volume.
+
+{/* screenshot: Volume Ratio subchart showing green/red histogram with values oscillating between -1 and +1 */}
+
+## How It Works
+
+Unlike raw delta which can vary wildly in magnitude, Volume Ratio normalizes the buy/sell imbalance into a fixed range. This lets you:
+
+- Compare directional pressure across assets with very different volumes
+- Spot extreme imbalances without needing to know typical volume levels
+- Use fixed thresholds that work consistently across symbols
+
+A reading of **0** means perfectly balanced buying and selling. Values above **+0.3** indicate meaningful buy dominance; below **-0.3** indicates sell dominance.
+
+## Interpretation
+
+| Range | Meaning |
+|-------|---------|
+| +0.7 to +1.0 | Extreme buy dominance — strong bullish pressure |
+| +0.3 to +0.7 | Moderate buy dominance |
+| -0.3 to +0.3 | Balanced / neutral zone |
+| -0.7 to -0.3 | Moderate sell dominance |
+| -1.0 to -0.7 | Extreme sell dominance — strong bearish pressure |
+
+<Tip>
+Sustained extreme readings (above +0.5 or below -0.5) over multiple bars signal strong directional pressure and often precede continuation moves.
+</Tip>
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `positiveColor` | Color for positive (buy-dominant) bars | `#22c55e` |
+| `negativeColor` | Color for negative (sell-dominant) bars | `#ef4444` |
+| `displayMode` | Visualization style: `line`, `columns`, or `candles` | `columns` |
+| `highlightAnomalies` | Highlight statistically unusual readings | `true` |
+| `anomalyThreshold` | Standard deviations for anomaly detection | `2.5` |
+| `anomalyPeriod` | Lookback period for anomaly calculation | `30` |
+| `gradientIntensity` | Scale bar opacity by value magnitude | `true` |
+
+## Display Modes
+
+- **Columns** — Default histogram view. Bar height and color show direction and magnitude.
+- **Line** — Continuous line plot. Useful for spotting trends in the ratio over time.
+- **Candles** — OHLC-style rendering of the ratio values within each bar.
+
+## Anomaly Detection
+
+When `highlightAnomalies` is enabled, bars where the Volume Ratio deviates more than `anomalyThreshold` standard deviations from the rolling mean (over `anomalyPeriod` bars) are visually highlighted. These anomalies often correspond to:
+
+- News-driven spikes
+- Large institutional orders
+- Liquidation cascades
+
+## Gradient Intensity
+
+When `gradientIntensity` is enabled, bar opacity scales with the absolute value of the ratio. Bars near zero appear faded, while extreme readings appear at full opacity — drawing your eye to the most significant imbalances.
+
+<Note>
+Volume Ratio uses market order data (taker buys vs taker sells). It does not account for limit order activity visible in the order book.
+</Note>
+
+## Practical Examples
+
+**Trend Confirmation**: During an uptrend, Volume Ratio consistently above +0.3 confirms genuine buying pressure behind the move.
+
+**Divergence**: Price making new highs while Volume Ratio trends lower suggests weakening buy conviction — a potential reversal signal.
+
+**Range Trading**: In a sideways market, Volume Ratio oscillating tightly around zero confirms the lack of directional conviction.
+
+## Related Indicators
+
+- [Trade Count Ratio](/en/indicators/metrics/trade-count-ratio) — Same concept using trade count instead of volume
+- [CVD (Cumulative Volume Delta)](/en/indicators/metrics/cvd) — Cumulative version without normalization
+- [Whale vs Retail](/en/indicators/metrics/whale-vs-retail) — Volume split by order size

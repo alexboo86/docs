@@ -1,0 +1,224 @@
+---
+title: "Clouds"
+description: "Multi-layer configurable search engine for finding specific volume/trade patterns in cluster data."
+icon: "cloud"
+---
+
+# Clouds
+
+Clouds is the **most powerful and configurable indicator** in Cluster Terminal. It functions as a multi-layer search engine that scans every cell in the cluster (footprint) data for specific conditions you define — volume thresholds, delta, trade counts, bid/ask imbalance, position within the candle, and more. Matching cells are highlighted with configurable markers, and optional horizontal lines extend from significant levels.
+
+Think of Clouds as a programmable filter for the footprint: you describe what you are looking for, and the indicator highlights every occurrence on the chart.
+
+{/* screenshot: Clouds indicator with multiple layers — 3D diamond markers at high-volume cells, neon cloud lines extending from key levels */}
+
+## How It Works
+
+Clouds supports up to **5 independent layers**, each with its own search criteria and visual settings. Every layer scans the cluster data independently and produces its own set of markers and lines.
+
+For each candle, and for each price level within that candle, each layer evaluates its filter conditions. If all conditions in a layer are met, a marker is placed at that cell. If cloud lines are enabled, a horizontal line extends from the marker until price touches it a configurable number of times.
+
+## Indicator Type
+
+**Overlay + Side Panel** — markers are drawn directly on the price chart at specific cells; cloud lines extend as horizontal overlays. The layer configuration panel appears as a side panel.
+
+## Layer Configuration
+
+Each layer is an independent pattern scanner. You can enable or disable layers individually, and each has its own data filters and visual settings.
+
+### Data Type
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `dataType` | select | `volume` | The metric to search. See table below. |
+
+Available data types:
+
+| Data Type | Description |
+|-----------|-------------|
+| `volume` | Total volume at the price level |
+| `maxVol` | Only the level with maximum volume in the candle |
+| `trades` | Number of individual trades at the level |
+| `bid` | Volume executed at the bid price |
+| `ask` | Volume executed at the ask price |
+| `delta` | Bid − Ask at the level |
+| `deltaPlus` | Only positive delta values |
+| `deltaMinus` | Only negative delta values (absolute value) |
+
+### Value Range Filter
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `minimum` | number | — | Minimum value for the data type (leave empty for no lower bound) |
+| `maximum` | number | — | Maximum value for the data type (leave empty for no upper bound) |
+
+For example, to find cells where volume is between 500 and 5000: set `minimum: 500`, `maximum: 5000`.
+
+### Price Range Grouping
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `priceRange` | number | `1` | Number of price levels to group together |
+| `priceRangeDir` | select | `all` | Direction for range grouping: `all`, `downward`, `upward` |
+
+When `priceRange` is greater than 1, adjacent price levels are combined before evaluation. This is useful for finding zones of concentrated activity rather than single-tick events.
+
+### Advanced Filters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `minDelta` | number | — | Minimum delta at the price level |
+| `bidAskImbalance` | number | — | Required bid/ask ratio (e.g., 3.0 = bid must be 3x ask) |
+| `rangeFromHigh` | number | — | Maximum distance from candle high (in ticks) |
+| `rangeFromLow` | number | — | Maximum distance from candle low (in ticks) |
+| `maxAvgTrade` | number | — | Maximum average trade size (volume / trades) |
+| `minAvgTrade` | number | — | Minimum average trade size |
+| `barDirection` | select | `any` | Candle direction: `any`, `up`, `down` |
+| `priceLocation` | select | `any` | Position within candle (see below) |
+
+### Price Location Options
+
+| Location | Description |
+|----------|-------------|
+| `any` | No position filter |
+| `high` | At or near the candle high |
+| `low` | At or near the candle low |
+| `body` | Within the candle body (between open and close) |
+| `wick` | In the upper or lower wick |
+| `upperWick` | In the upper wick only |
+| `lowerWick` | In the lower wick only |
+
+Price location is powerful for identifying specific footprint patterns. For example:
+
+- High volume at the candle `low` in an `up` bar = absorption (buyers absorbed selling at the bottom).
+- High delta at the `high` of a `down` bar = trapped buyers at the top.
+
+### Time Filter
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `useTimeFilter` | boolean | `false` | Enable time-of-day filter |
+| `startTime` | time | `00:00` | Start of time window (UTC) |
+| `endTime` | time | `00:00` | End of time window (UTC) |
+
+When enabled, the layer only scans candles that fall within the specified time window. Useful for session-specific analysis (e.g., only scan during US trading hours).
+
+### Lookback
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `lookbackDays` | number | `0` | History range to scan (0 = all loaded data) |
+
+## Visual Settings per Layer
+
+### Marker Shape and Style
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `objectType` | select | `rectangle` | Marker shape: `rectangle`, `triangle`, `diamond`, `circle`, `square`, `star`, `hexagon`, `pentagon`, `cross`, `plus` |
+| `objectStyle` | select | `flat` | Rendering style: `flat` or `3d` |
+| `objectMinSize` | number | `5` | Minimum marker size in pixels |
+| `objectMaxSize` | number | `20` | Maximum marker size in pixels |
+| `objectGlowIntensity` | number | `0` | Glow effect intensity around markers (0 = off) |
+| `showValues` | boolean | `false` | Display the numeric value as a label on each marker |
+
+Marker size scales linearly with the matched value between `objectMinSize` and `objectMaxSize`. Higher-value matches produce larger markers, creating an intuitive visual hierarchy.
+
+{/* screenshot: Different marker shapes — 3D diamonds for high volume, flat circles for trades, stars for delta extremes */}
+
+### Cloud Lines
+
+When a significant cluster of markers forms at a price level, an optional horizontal line can extend from that level into the future.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `showCloudLine` | boolean | `false` | Enable horizontal cloud lines from marker clusters |
+| `cloudLineVisual` | select | `flat` | Line style: `flat`, `neon`, `gradient`, `chrome` |
+| `cloudLineMaxTouches` | number | `3` | Number of times price can touch the line before it is removed |
+
+Cloud lines behave similarly to Trades Filter levels: they extend rightward and are invalidated after a configurable number of price touches. The premium visual styles (`neon`, `gradient`, `chrome`) apply the same rendering as described in the [Indicators Overview](/en/indicators/overview#premium-visual-styles).
+
+<Tip>
+Start with a single layer searching for high volume. Once you are comfortable with the results, gradually add layers for delta, trades, or position within the candle. Each additional layer adds a dimension of analysis.
+</Tip>
+
+## Multi-Layer Strategies
+
+### Layer 1: High Volume Levels
+
+- **dataType**: `volume`
+- **minimum**: set to a high threshold for the symbol
+- **objectType**: `diamond`, **objectStyle**: `3d`
+- **showCloudLine**: `true`
+
+This base layer identifies where the most volume traded. Cloud lines from these levels act as support/resistance.
+
+### Layer 2: Aggressive Delta
+
+- **dataType**: `deltaPlus` (or `deltaMinus`)
+- **minimum**: high threshold
+- **barDirection**: `up` (for deltaPlus)
+- **objectType**: `triangle`
+- **color**: green for buy, red for sell
+
+This layer highlights where aggressive directional participation occurred.
+
+### Layer 3: Absorption Pattern
+
+- **dataType**: `volume`
+- **minimum**: high threshold
+- **priceLocation**: `low`
+- **barDirection**: `up`
+- **objectType**: `star`
+
+This finds cells where high volume occurred at the low of an up bar — classic absorption where buyers absorbed selling pressure at the bottom.
+
+### Layer 4: Low Average Trade Size (Retail)
+
+- **dataType**: `volume`
+- **minimum**: moderate threshold
+- **maxAvgTrade**: low value (e.g., 0.5)
+- **objectType**: `circle`, small size
+
+This identifies levels where many small trades contributed to volume — likely retail participation.
+
+### Layer 5: Large Orders (Institutional)
+
+- **dataType**: `volume`
+- **minimum**: high threshold
+- **minAvgTrade**: large value (e.g., 10.0)
+- **objectType**: `hexagon`, **objectStyle**: `3d`
+
+This identifies levels where few large trades contributed to volume — likely institutional activity.
+
+## Premium Styles
+
+Clouds fully supports premium visual rendering:
+
+- **3D markers**: the `3d` object style renders markers with depth, shadows, and lighting effects.
+- **Cloud line styles**: `neon` (glowing lines), `gradient` (color gradient along the line), `chrome` (metallic reflective finish).
+
+These styles are purely cosmetic and do not affect the detection logic.
+
+## Alerts
+
+Clouds supports two alert events:
+
+| Event | Description |
+|-------|-------------|
+| `cloud_formed` | Fires when a new cloud (cluster of markers) is detected at a price level |
+| `cloud_touched` | Fires when price touches an active cloud line |
+
+Configure alerts in the indicator settings dialog under the Alerts section. See [Alerts](/en/alerts) for general alert configuration.
+
+## Performance Notes
+
+Clouds is the most computationally intensive order flow indicator because it scans every cell in the cluster data against multiple layers of filter conditions. Performance considerations:
+
+- **Reduce `lookbackDays`**: scanning the entire loaded dataset on 1m timeframe can process millions of cells. Limit to 7–14 days for responsive interaction.
+- **Limit active layers**: each additional layer multiplies the work. Use 2–3 layers for real-time analysis; enable all 5 only for post-session review.
+- **Increase `priceRange`**: grouping price levels reduces the number of evaluations and can improve performance on high-resolution data.
+
+## Summary
+
+Clouds transforms raw cluster data into a visual pattern detection system. By defining up to 5 independent layers with fine-grained filter conditions, you can simultaneously search for high volume, aggressive delta, absorption patterns, institutional footprints, and retail noise — all rendered with configurable markers and optional cloud lines that act as dynamic support and resistance.

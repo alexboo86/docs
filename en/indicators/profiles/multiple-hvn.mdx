@@ -1,0 +1,143 @@
+---
+title: "Multiple HVN"
+description: "Detects clusters of High Volume Nodes across multiple bars — strong S/R zones."
+icon: "layer-group"
+---
+
+# Multiple HVN
+
+Multiple HVN (High Volume Node) identifies price levels where **multiple consecutive bars share their highest volume at the same price**. When several bars independently confirm heavy trading at a specific level, it creates a strong support or resistance zone that acts as a price magnet.
+
+{/* screenshot: Multiple HVN lines on a 5m BTC/USDT chart showing yellow lines at levels where 3+ bars had their highest volume at the same price */}
+
+## How It Works
+
+The indicator scans each bar's cluster data to find the price level with the highest traded volume (the bar's local Point of Control). It then looks for clusters of bars where these local POCs fall at the same price level, within a configurable tolerance.
+
+### Detection Algorithm
+
+1. For each bar within the `lookbackBars` window, compute the price level with the highest volume (the bar's HVN).
+2. Group HVNs that fall within `priceTolerancePct` or `priceToleranceTicks` of each other.
+3. If a group contains at least `minHVNCount` bars, and those bars are within `maxBarsBetweenHVN` bars of each other, mark this price as a Multiple HVN level.
+4. Optionally filter out levels where the bar's HVN is too close to the current price (`minFootprintsAway`).
+5. Track level validity: once price touches the level more than `maxTouchesToBreakLine` times, consider it broken and remove it.
+### Why Multiple HVNs Matter
+
+A single bar's highest-volume level can be coincidental. But when three, four, or five bars all independently generate their highest volume at the same price, it reveals a structural level where the market has repeatedly found equilibrium. These levels attract price because:
+
+- Large participants have established positions there and will defend them.
+- The volume concentration creates natural friction that slows price movement through the level.
+- Algorithmic systems detect the same volume clustering and place orders accordingly.
+
+### Indicator Type
+
+**Overlay** -- Multiple HVN levels are drawn as horizontal lines directly on the price chart.
+
+## Settings
+
+### Detection Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `minHVNCount` | number | `2` | Minimum number of bars that must have their HVN at the same price to create a signal. Higher values produce fewer but stronger levels. |
+| `maxBarsBetweenHVN` | number | `3` | Maximum gap (in bars) allowed between qualifying HVN bars. If bars are farther apart, they are not clustered together. |
+| `priceTolerancePct` | number | `0.01` | Price tolerance as a percentage for grouping HVNs. Two HVNs within this percentage of each other are considered the same level. |
+| `priceToleranceTicks` | number | `5` | Price tolerance in ticks. Used in conjunction with `priceTolerancePct` -- whichever is larger determines the grouping window. |
+| `lookbackBars` | number | `100` | Number of historical bars to scan for HVN clusters. |
+| `minVolume` | number | `0` | Minimum absolute volume required for a bar's HVN to qualify. Filters out low-volume bars that may produce noise. |
+| `minFootprintsAway` | number | `2` | Minimum distance (in footprint rows) from the current price for a level to be displayed. Prevents clutter around the current trading range. |
+| `maxTouchesToBreakLine` | number | `1` | Number of times price can touch a level before it is considered broken and removed. Set to `0` to never remove levels. |
+### Single HVN Mode
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `enableSingleHVN` | boolean | `false` | Also display levels from single bars (not clustered) if they have been touched multiple times. |
+| `minTouchesForSingleHVN` | number | `2` | When `enableSingleHVN` is true, a single bar's HVN must have been touched at least this many times to be displayed. |
+
+<Note>
+Single HVN mode is off by default. Enable it when you want to see all significant volume levels, not just clustered ones. The `minTouchesForSingleHVN` filter ensures that only battle-tested levels are shown.
+</Note>
+
+### Visual Settings
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `showVPOC` | boolean | `true` | Display a marker at the Volume Point of Control for each qualifying bar. |
+| `showLine` | boolean | `true` | Draw a horizontal line extending from the Multiple HVN level. |
+| `lineColor` | color | `#eab308` | Color of the Multiple HVN lines. |
+| `lineStyle` | select | `solid` | Line style: `solid`, `dash`, `dot`. |
+| `lineWidth` | number | `1` | Line thickness in pixels. |
+| `enableGlow` | boolean | `false` | Add a glow effect to the lines for better visibility on busy charts. |
+| `glowIntensity` | number | `50` | Intensity of the glow effect (0-100). Only applies when `enableGlow` is true. |
+
+## Interpretation
+
+### Level Strength
+
+The strength of a Multiple HVN level is proportional to:
+
+| Factor | Higher = Stronger |
+|--------|-------------------|
+| Number of clustered HVN bars | 3+ bars at the same level is very strong |
+| Total volume at the level | High absolute volume indicates institutional participation |
+| Recency | Recent levels are more relevant than old ones |
+| Proximity of HVN bars | Consecutive bars are stronger than widely spaced ones |
+### As Support and Resistance
+
+Multiple HVN levels function as natural support and resistance:
+
+- **Price approaching from above**: the level acts as support. The accumulated volume represents buyers who may defend their positions.
+- **Price approaching from below**: the level acts as resistance. Sellers who transacted at this level may look to exit at breakeven.
+- **Price breaking through**: a clean break through a Multiple HVN level (beyond `maxTouchesToBreakLine`) suggests strong momentum. The level often flips from support to resistance or vice versa.
+
+{/* screenshot: Price bouncing off a Multiple HVN support level with 4 clustered HVN bars, then eventually breaking through on the fifth attempt */}
+
+### As Price Magnets
+
+Multiple HVN levels are not just barriers -- they are also magnets. When price is in a low-volume area between two Multiple HVN levels, it tends to drift toward the nearest one. This makes them useful for:
+
+- Setting profit targets at the next Multiple HVN level.
+- Identifying likely pullback destinations during trends.
+- Anticipating consolidation zones.
+
+<Tip>
+Three or more bars with their HVN at the same price create a very strong level. These are among the most reliable support/resistance zones derived from volume data. They act as price magnets when price is nearby and as barriers when approached.
+</Tip>
+
+## Practical Usage
+
+### Recommended Configurations
+
+| Trading Style | lookbackBars | minHVNCount | maxBarsBetweenHVN |
+|---------------|-------------|-------------|-------------------|
+| Scalping (1m-5m) | 50-80 | 2 | 2 |
+| Day Trading (5m-15m) | 100-150 | 3 | 3 |
+| Swing (1h-4h) | 100-200 | 2 | 5 |
+### Confluence with Other Indicators
+
+Multiple HVN levels are most powerful when they align with other references:
+
+| Companion | Confluence Signal |
+|-----------|-------------------|
+| **Volume Profile POC** | Multiple HVN at the session POC = double-confirmed volume level |
+| **Session Levels** | Multiple HVN at PDH/PDL = structural + volume confirmation |
+| **Unfinished Business** | Multiple HVN at an unfinished auction = both magnet and volume barrier |
+| **Order Blocks** | Multiple HVN inside an SMC order block = institutional footprint confirmed by volume |
+| **Liquidation Levels** | Multiple HVN near a liquidation cluster = volume defense at a liquidation zone |
+
+### Common Pitfalls
+
+1. **Too many levels**: With `minHVNCount` at 1, the chart can become cluttered. Start with 2 or 3 and only lower it if you see too few levels.
+2. **Stale levels**: Old levels from 200+ bars ago may no longer be relevant. Keep `lookbackBars` appropriate for your timeframe.
+3. **Ignoring broken levels**: When a level has been cleanly broken, do not expect it to hold again. Use `maxTouchesToBreakLine` to auto-remove broken levels.
+4. **Low-volume bars**: On thin overnight sessions, bars may have their HVN at an arbitrary price due to a single large trade. Use `minVolume` to filter these out.
+
+## Performance Notes
+
+The indicator scans `lookbackBars` bars on each update. On most timeframes, this is lightweight. If you notice performance issues on very low timeframes (1m) with large `lookbackBars` values (500+), reduce the lookback or increase `minHVNCount` to reduce the number of rendered lines.
+
+## Related Indicators
+
+- [Volume Profile](/en/indicators/profiles/volume-profile) -- session-based volume distribution with POC and Value Area
+- [TPO Profile](/en/indicators/profiles/tpo-profile) -- time-based distribution at each price
+- [Unfinished Business](/en/indicators/order-flow/unfinished-business) -- incomplete auction levels that attract price

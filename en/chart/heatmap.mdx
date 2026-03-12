@@ -1,0 +1,203 @@
+---
+title: "Heatmap"
+description: "Visualize volume distribution as a color-coded heat map overlay."
+icon: "fire"
+---
+
+The heatmap displays order book depth over time, rendering the density of resting limit orders as a color gradient behind the price action. This visualization reveals support and resistance zones, iceberg orders, spoofing behavior, and liquidity concentrations that are completely invisible on standard candlestick or cluster charts.
+
+## How the Heatmap Works
+
+The heatmap captures snapshots of the order book at regular intervals and renders them as a continuous color field behind the price chart. Each pixel column represents a point in time, and each pixel row represents a price level. The color intensity at any point corresponds to the volume of resting limit orders at that price and time.
+
+- **Bright / hot colors** indicate large concentrations of limit orders (high liquidity).
+- **Dark / cold colors** indicate sparse order book levels (low liquidity).
+- **No color** indicates negligible or zero resting orders at that price and time.
+
+<Note>
+The heatmap displays **limit orders** (resting liquidity), not executed trades. This is fundamentally different from cluster volume, which shows completed transactions. A bright heatmap level means orders are *waiting* to be filled there, not that trades already occurred.
+</Note>
+
+{/* screenshot: full heatmap view with price action overlaid, showing bright horizontal bands at key levels */}
+
+## Enabling Heatmap Mode
+
+To switch to heatmap mode:
+
+<Steps>
+  <Step title="Open the preset selector">
+    Click the chart type dropdown in the toolbar (it shows the current preset name, e.g., "Volume" or "Candles").
+  </Step>
+  <Step title="Select Heatmap">
+    Choose **Heatmap** from the preset list. The chart immediately switches to heatmap rendering with a candlestick overlay.
+  </Step>
+</Steps>
+
+The heatmap replaces the cluster cell rendering. Candle bodies and wicks are drawn on top of the heatmap, giving you both price action and order book context in a single view.
+
+## Color Schemes
+
+Cluster Terminal provides five perceptually optimized color schemes for the heatmap. All schemes are designed to encode order density as a gradient from "cold" (low density) to "hot" (high density).
+
+| Scheme | Gradient | Characteristics |
+|--------|----------|----------------|
+| **Viridis** | Dark purple to green to yellow | Default. Perceptually uniform, colorblind-safe. Works on both dark and light themes. |
+| **Plasma** | Dark purple to orange to yellow | Higher contrast warm tones. Emphasizes medium-density regions well. |
+| **Inferno** | Black to red to bright yellow | Dark-to-bright gradient that strongly emphasizes extreme values. Best on dark themes. |
+| **Magma** | Black to dark pink to light yellow | Softer gradient with a pink midrange. Good for extended viewing sessions. |
+| **Cividis** | Dark blue to yellow | Fully colorblind-safe. Excellent contrast on both dark and light backgrounds. |
+
+<Tip>
+On bright or light themes, **Cividis** or **Viridis** tend to produce the best contrast. On dark themes, **Inferno** and **Plasma** stand out well against the background. Experiment with different schemes to find the one that suits your monitor and trading environment.
+</Tip>
+
+### Choosing the Right Scheme
+
+| Trading Situation | Recommended Scheme |
+|---------------------|---------------------|
+| General-purpose analysis | Viridis (default) |
+| Identifying extreme liquidity levels | Inferno (bright extremes) |
+| Long trading sessions (eye comfort) | Magma (softer gradient) |
+| Colorblind accessibility | Cividis or Viridis |
+| Presentations and screen sharing | Plasma (high visual impact) |
+
+{/* screenshot: same chart section rendered with all five color schemes in a grid */}
+
+## Opacity Settings
+
+The **Opacity** control determines the transparency of the heatmap layer relative to the candlestick overlay. This is a critical setting for balancing the visibility of both layers.
+
+| Opacity Range | Visual Effect | Use Case |
+|---------------|---------------|----------|
+| **20 -- 40%** | Subtle background context | Primary focus on price action; heatmap for ambient awareness |
+| **50 -- 70%** | Balanced view | Equally weight price action and order book data |
+| **80 -- 100%** | Full emphasis on order book | Dedicated heatmap analysis, identifying large resting orders |
+
+<Tip>
+Start with **50 -- 60% opacity** as a baseline. If you find yourself squinting at the heatmap, increase it. If the candles are hard to read, decrease it. The optimal setting depends on your color scheme, theme, and monitor brightness.
+</Tip>
+
+### Adjusting Opacity
+
+Access the opacity slider in the heatmap settings panel by clicking the **gear icon** in the toolbar when heatmap mode is active.
+
+## Reading Heatmap Patterns
+
+The heatmap encodes order book behavior over time. Learning to read its patterns is essential for understanding where institutional participants are placing their orders.
+
+### Bright Horizontal Bands
+
+A persistent bright band at a price level indicates a large concentration of limit orders that has remained stable over time. These levels frequently act as:
+
+- **Support** (when below the current price): Buy limit orders absorb incoming sell market orders, preventing price from falling through.
+- **Resistance** (when above the current price): Sell limit orders absorb incoming buy market orders, preventing price from rising through.
+
+The brighter and wider (in time) the band, the more significant the level. Narrow bands that appear for only a few minutes are less reliable than bands that persist for hours.
+
+{/* screenshot: heatmap with a bright horizontal band acting as support, with price bouncing off it */}
+
+### Fading Bands (Potential Spoofing)
+
+A bright band that suddenly disappears before price reaches it means orders were pulled. This is a hallmark of **spoofing** -- a manipulative practice where large orders are placed to influence other participants' decisions, then canceled before execution.
+
+Characteristics of spoofing patterns:
+
+- Orders appear at a level, creating a bright band.
+- As price approaches the level, the band fades or vanishes entirely.
+- Price passes through the level with little resistance (because the orders were never real).
+- The pattern repeats at new levels in the same direction.
+
+<Warning>
+Not every fading band is spoofing. Legitimate participants also cancel orders as market conditions change. Look for repeated patterns of placement and cancellation at the same level, especially if they coincide with price moving in the opposite direction, for stronger evidence of manipulative intent.
+</Warning>
+
+### Moving Bands
+
+Bands that shift up or down over time indicate **algorithmic order management**. An algorithm is adjusting its resting orders to maintain a target distance from the current price, track a VWAP/TWAP execution benchmark, or follow a moving average.
+
+Moving bands reveal:
+
+- **Trailing buy walls**: Ascending bands below price that move up as price rises, providing a "floor" of support.
+- **Trailing sell walls**: Descending bands above price that move down as price falls, creating a "ceiling" of resistance.
+- **Execution algorithms**: Smooth, consistent movement patterns suggest large institutional orders being worked over time.
+
+### Stacked Bands
+
+Multiple bright bands clustered within a narrow price range suggest a **zone of significant interest** rather than a single level. These zones tend to produce stronger reactions than isolated lines because they represent multiple independent participants choosing similar price levels.
+
+### Diagonal Patterns
+
+Diagonal bright lines on the heatmap indicate orders that are being placed aggressively at progressively higher or lower prices over time:
+
+- **Rising diagonal**: Aggressive limit buying at increasingly higher prices. The buyer is "chasing" the market upward with limit orders.
+- **Falling diagonal**: Aggressive limit selling at increasingly lower prices. The seller is pushing offers down.
+
+### Dark Gaps (Liquidity Voids)
+
+A consistently dark vertical band at a price level means there are very few resting orders. These **liquidity voids** are significant because:
+
+- Price tends to move quickly through low-liquidity zones (no orders to absorb market orders).
+- Breakouts through dark zones are often swift and difficult to trade.
+- Conversely, if price enters a void and then reverses, it may indicate that a large hidden buyer or seller is operating there without showing resting orders.
+
+## Heatmap vs. Clusters: When to Use Which
+
+| Analysis Goal | Best Tool | Why |
+|---------------|-----------|-----|
+| Where were trades executed? | Clusters | Clusters show completed transactions |
+| Where are orders waiting? | Heatmap | Heatmap shows resting limit orders |
+| Support/resistance identification | Both | Clusters show historical S/R; heatmap shows current S/R |
+| Spoofing detection | Heatmap | Only the heatmap shows order placement and cancellation |
+| Order flow imbalance | Clusters | Bid/ask breakdown in cluster cells |
+| Liquidity void identification | Heatmap | Dark zones show absence of resting orders |
+| Volume profile analysis | Clusters | Volume at each price level from completed trades |
+
+<Tip>
+Combine heatmap with candles for a clean view that shows both price action and order book context. This is lighter than full cluster rendering while still providing critical liquidity information. Use clusters when you need the granular bid/ask breakdown.
+</Tip>
+
+## Performance Considerations
+
+The heatmap is a **medium-weight** rendering mode -- lighter than full cluster charts but heavier than pure candlestick mode. The main performance factors are:
+
+| Factor | Impact | Recommendation |
+|--------|--------|----------------|
+| Time range visible | More history = more data to render | Limit visible range to 2-4 hours on 1m charts |
+| Price range visible | Wider price range = more rows | Zoom in to the relevant price zone |
+| Color scheme | All schemes have similar cost | No significant difference |
+| Opacity | Zero opacity still renders data | Switch to candlestick mode if you do not need the heatmap |
+
+The heatmap works well in multi-chart layouts because it requires significantly less GPU and CPU than cluster mode. You can comfortably run 3-4 heatmap panes simultaneously on a modern system.
+
+## Settings Reference
+
+Access all heatmap settings by clicking the **gear icon** in the toolbar when heatmap mode is active.
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Color Scheme** | Gradient palette for order density | Viridis |
+| **Opacity** | Transparency of the heatmap layer | 60% |
+| **Show Candles** | Overlay candlesticks on the heatmap | On |
+
+<Note>
+Candle appearance settings (body color, border, shadow, glow) apply to the candle overlay on the heatmap. Customize them in the **Appearance** panel to ensure candles remain readable against the heatmap background.
+</Note>
+
+## Practical Workflow
+
+<Steps>
+  <Step title="Identify key levels on the heatmap">
+    Look for bright horizontal bands above and below the current price. These are the levels where significant resting orders are waiting.
+  </Step>
+  <Step title="Assess band stability">
+    Watch whether the bands persist over time or fade. Persistent bands are more likely to hold as support/resistance. Fading bands may be spoofed.
+  </Step>
+  <Step title="Combine with cluster data">
+    Switch to a cluster preset for the same symbol on a second chart pane, or toggle between modes. Verify that high-volume cluster levels align with bright heatmap bands for confluence.
+  </Step>
+  <Step title="Trade the reaction">
+    When price approaches a bright band, watch for signs of absorption (high volume with little price movement) or breakthrough (rapid move through the level). Use cluster data for the precise entry.
+  </Step>
+</Steps>
+
+{/* screenshot: heatmap with annotations showing a spoof pattern, a stable support band, and a liquidity void */}

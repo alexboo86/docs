@@ -1,0 +1,89 @@
+---
+title: "CVD"
+description: "Cumulative Volume Delta — running total of buy minus sell volume."
+icon: "chart-line"
+---
+
+## Overview
+
+**Cumulative Volume Delta (CVD)** is a running sum of the difference between buy volume and sell volume across all bars. Unlike per-bar delta, CVD accumulates over time, producing a continuous line that reveals the underlying buying or selling pressure driving price action.
+
+- **Rising CVD** means buyers are consistently dominating — more volume is being executed at the ask.
+- **Falling CVD** means sellers are in control — more volume is hitting the bid.
+
+CVD is one of the most widely used order-flow indicators because it strips away noise and shows the net commitment of market participants over time.
+
+{/* screenshot: CVD line rising alongside price, then diverging as price makes a new high but CVD does not */}
+
+## How It Works
+
+Each bar contributes its delta (buy volume minus sell volume) to a running total:
+
+```
+CVD[n] = CVD[n-1] + (buyVolume[n] - sellVolume[n])
+```
+
+The result is plotted as a continuous series in a subchart below price. The slope and direction of CVD tell you whether aggressive buyers or sellers are winning over time.
+
+## Chart Type
+
+| Property | Value |
+|----------|-------|
+| Type | Subchart |
+| Position | Below main chart |
+| Data source | Trade-level buy/sell classification |
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| color | Line color | `#22d3ee` |
+| lineWidth | Line thickness | `1.5` |
+| displayMode | Rendering style | `line` |
+| highlightAnomalies | Flag statistical outliers | `false` |
+| anomalyThreshold | Standard deviation multiplier for anomalies | `2.0` |
+| anomalyPeriod | Lookback period for anomaly calculation | `50` |
+| gradientIntensity | Fill gradient strength (0-1) | `0` |
+| positiveColor | Color when CVD is rising | `#22c55e` |
+| negativeColor | Color when CVD is falling | `#ef4444` |
+
+### Display Modes
+
+| Mode | Description |
+|------|-------------|
+| `line` | Continuous line (default). Best for trend reading. |
+| `columns` | Per-bar columns showing cumulative value. |
+| `candles` | OHLC-style candles of CVD itself. Useful for spotting CVD reversals. |
+
+## Interpretation
+
+### CVD Confirms Price
+
+When CVD moves in the same direction as price, the trend has genuine order-flow backing. Buyers are lifting offers on rallies, or sellers are hitting bids on drops.
+
+### CVD Diverges from Price
+
+This is the primary signal. When price makes a new high but CVD does not (bearish divergence), it suggests that the rally is not supported by aggressive buying. The reverse applies for bullish divergences.
+
+<Tip>
+CVD diverging from price is one of the most powerful signals in order-flow analysis. A rising price paired with falling CVD indicates hidden selling — large participants distributing into the rally.
+</Tip>
+
+### Anomaly Detection
+
+When `highlightAnomalies` is enabled, bars where the CVD change exceeds the rolling mean by more than `anomalyThreshold` standard deviations are flagged. These often correspond to institutional activity or news-driven bursts.
+
+## Practical Examples
+
+- **Trend confirmation**: Price trending up with CVD making higher highs — strong trend, stay with it.
+- **Exhaustion**: Price pushes to a new high, CVD flattens or drops — buyers are thinning out.
+- **Accumulation**: Price consolidating while CVD steadily rises — hidden buying before a breakout.
+
+<Note>
+CVD is cumulative and unbounded. Its absolute value matters less than its slope and divergences relative to price.
+</Note>
+
+## Related Indicators
+
+- [Delta Volume](/en/indicators/metrics/delta-volume) — the per-bar (non-cumulative) version
+- [Active Buy/Sell Volume](/en/indicators/metrics/active-buy-sell-volume) — separated buy and sell with anomaly detection

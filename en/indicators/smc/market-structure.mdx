@@ -1,0 +1,154 @@
+---
+title: "Market Structure"
+description: "Automatic detection of BOS (Break of Structure) and CHoCH (Change of Character) — core SMC concepts."
+icon: "arrows-split-up-and-left"
+---
+
+Market Structure is a foundational Smart Money Concepts indicator that automatically identifies swing points and marks the two most important structural events: **Break of Structure (BOS)** and **Change of Character (CHoCH)**. Instead of manually tracking highs and lows, Cluster Terminal detects them algorithmically and labels every structural break in real time.
+
+## Core Concepts
+
+### Swing Points
+
+The indicator uses a fractal-based algorithm to detect swing highs and swing lows. A swing high is a candle whose high is higher than the highs of the surrounding candles (controlled by `swingLength`). A swing low is the inverse.
+
+These swing points form the skeleton of market structure — connecting them reveals the trend.
+
+### Break of Structure (BOS)
+
+A BOS occurs when price breaks through a previous swing point **in the direction of the existing trend**. It confirms that the current trend is continuing:
+
+- **Bullish BOS**: Price breaks above a previous swing high during an uptrend. Higher high confirmed.
+- **Bearish BOS**: Price breaks below a previous swing low during a downtrend. Lower low confirmed.
+
+### Change of Character (CHoCH)
+
+A CHoCH occurs when price breaks through a swing point **against the current trend direction**. It is the first signal that the trend may be reversing:
+
+- **Bullish CHoCH**: During a downtrend, price breaks above a previous swing high. The sequence of lower highs is broken.
+- **Bearish CHoCH**: During an uptrend, price breaks below a previous swing low. The sequence of higher lows is broken.
+
+{/* screenshot: chart showing labeled BOS and CHoCH events with swing points visible */}
+
+<Tip>
+CHoCH is the earliest warning of a potential trend reversal. However, a single CHoCH is not confirmation — wait for follow-through or confluence from order flow indicators before committing to a reversal trade.
+</Tip>
+
+## Swing Detection Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **swingLength** | Number of bars on each side of a candle required to confirm it as a swing point. Higher values detect only major swings and reduce noise. Lower values capture minor swings for granular structure. | 5 |
+| **breakDetection** | How a structural break is confirmed: `close` or `wick`. | close |
+
+### Break Detection Modes
+
+The `breakDetection` parameter significantly affects signal behavior:
+
+| Mode | Behavior | Use Case |
+|------|----------|----------|
+| **close** | Structure is broken only when a candle **closes** beyond the swing level. More conservative — avoids false breaks from wicks. | Swing trading, higher timeframes |
+| **wick** | Structure is broken when any part of the candle (including wicks) trades beyond the swing level. More sensitive — catches breaks earlier. | Scalping, fast markets |
+
+<Note>
+Using `close` mode eliminates many false breakouts where price wicks through a level but closes back inside. This is the recommended setting for most traders.
+</Note>
+
+## Display Settings
+
+### BOS Appearance
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showBos** | Enable BOS labels and lines on the chart. | true |
+| **bosLineColor** | Color of the BOS horizontal line. | #3b82f6 |
+| **bosLineWidth** | Thickness of the BOS line in pixels. | 1 |
+| **bosLineStyle** | Line style: `solid`, `dashed`, or `dotted`. | dashed |
+| **bosLabelShow** | Display "BOS" text label at the break point. | true |
+| **bosLabelSize** | Font size for the BOS label. | 11 |
+
+### CHoCH Appearance
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showChoch** | Enable CHoCH labels and lines on the chart. | true |
+| **chochLineColor** | Color of the CHoCH horizontal line. | #f59e0b |
+| **chochLineWidth** | Thickness of the CHoCH line in pixels. | 1 |
+| **chochLineStyle** | Line style: `solid`, `dashed`, or `dotted`. | dashed |
+| **chochLabelShow** | Display "CHoCH" text label at the break point. | true |
+| **chochLabelSize** | Font size for the CHoCH label. | 11 |
+
+### Swing Points Appearance
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showSwingPoints** | Display dots at detected swing highs and lows. | true |
+| **swingBullColor** | Color for swing low dots (support). | #22c55e |
+| **swingBearColor** | Color for swing high dots (resistance). | #ef4444 |
+| **swingDotSize** | Diameter of swing point dots in pixels. | 6 |
+
+### Zigzag Display
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showZigzag** | Draw a zigzag line connecting consecutive swing points. Useful for visualizing the overall structural flow. | false |
+| **zigzagColor** | Color of the zigzag line. | #9ca3af |
+| **zigzagWidth** | Thickness of the zigzag line in pixels. | 1 |
+
+{/* screenshot: chart with zigzag enabled connecting swing points, with BOS and CHoCH labels */}
+
+## Alert Rules
+
+Market Structure supports the following alert events:
+
+| Event | Fires When |
+|-------|-----------|
+| **bos_bullish** | A bullish Break of Structure is confirmed (price breaks above swing high in an uptrend). |
+| **bos_bearish** | A bearish Break of Structure is confirmed (price breaks below swing low in a downtrend). |
+| **choch_bullish** | A bullish Change of Character is detected (downtrend structure broken to the upside). |
+| **choch_bearish** | A bearish Change of Character is detected (uptrend structure broken to the downside). |
+
+Configure alert sounds and notifications in the global Alerts settings panel.
+
+<Tip>
+Set alerts for CHoCH events only — they are rarer and more actionable than BOS events. A CHoCH alert gives you time to prepare for a potential reversal setup.
+</Tip>
+
+## Practical Usage
+
+### Choosing Swing Length
+
+The `swingLength` parameter defines how "major" the detected swing points are:
+
+| swingLength | Effect | Best For |
+|-------------|--------|----------|
+| **2–3** | Captures minor swings, many BOS/CHoCH labels. Noisy but granular. | Scalping on 1m–5m |
+| **5** (default) | Balanced detection. Captures intermediate structure. | Intraday on 5m–1H |
+| **8–15** | Only major swing points. Fewer but more significant structural breaks. | Swing trading on 1H–Daily |
+
+### Reading Structure in Context
+
+Market structure tells you **who is in control**:
+
+- **Series of bullish BOS** = buyers are in control, trend is up. Look for longs at pullbacks.
+- **Series of bearish BOS** = sellers are in control, trend is down. Look for shorts at rallies.
+- **CHoCH appears** = control is shifting. The first CHoCH is a warning, not a signal.
+- **CHoCH + BOS in new direction** = trend has likely reversed. Now look for entries with the new trend.
+
+### Confluence with Other Indicators
+
+- **Order Blocks**: A CHoCH followed by a return to an order block at the break level is a classic SMC entry setup.
+- **FVG**: A BOS often creates an FVG in the process. The FVG then becomes a re-entry zone on pullback.
+- **Absorption Alpha**: Absorption at a swing high/low that subsequently produces a CHoCH confirms that institutions were active at that level.
+
+### Common Pitfalls
+
+- **Trading CHoCH in isolation**: A single CHoCH in a strong trend is often a temporary fake-out. Wait for confirmation.
+- **Swing length too low in ranging markets**: Very low `swingLength` in a sideways market produces constant BOS/CHoCH flips. Increase `swingLength` or focus on higher timeframe structure.
+- **Ignoring multi-timeframe structure**: A CHoCH on the 5m chart is meaningless if the 1H structure is still strongly trending. Always check at least one timeframe higher.
+
+<Warning>
+Market Structure is a directional framework, not a standalone entry signal. Use it to determine trend bias, then time entries with order flow tools like delta, imbalance, and absorption.
+</Warning>
+
+{/* screenshot: multi-timeframe structure analysis showing 1H trend vs 5m counter-trend CHoCH */}

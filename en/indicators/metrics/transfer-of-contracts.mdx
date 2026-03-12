@@ -1,0 +1,92 @@
+---
+title: "Transfer of Contracts"
+description: "Tracks the net flow of contracts between market participants."
+icon: "right-left"
+---
+
+## Overview
+
+Transfer of Contracts measures the net flow of futures contracts between market participants within each bar. It captures the directional transfer of risk:
+
+- **Positive values** — Net transfer to buyers (buyers absorbing contracts)
+- **Negative values** — Net transfer to sellers (sellers absorbing contracts)
+
+This indicator goes beyond simple volume delta by incorporating open interest changes to reveal whether contracts are being **opened, closed, or transferred** between participants.
+
+{/* screenshot: Transfer of Contracts subchart with purple histogram bars */}
+
+## How It Works
+
+The indicator analyzes the relationship between volume delta and open interest changes:
+
+| Volume Delta | OI Change | Interpretation |
+|-------------|-----------|---------------|
+| Positive | Rising | New longs opening — buyers initiating |
+| Positive | Falling | Shorts closing — buyers absorbing |
+| Negative | Rising | New shorts opening — sellers initiating |
+| Negative | Falling | Longs closing — sellers absorbing |
+
+Transfer of Contracts synthesizes these relationships into a single metric showing the net directional flow of contract ownership.
+
+<Tip>
+Large transfer spikes combined with open interest changes reveal institutional positioning. A surge in contract transfer with rising OI means new positions are being established — not just existing ones changing hands.
+</Tip>
+
+## Interpretation
+
+**Positive Transfer + Rising Price**: Aggressive buying with new position creation. Strong bullish signal.
+
+**Positive Transfer + Falling Price**: Buyers absorbing selling pressure. Potential accumulation zone — watch for reversal.
+
+**Negative Transfer + Falling Price**: Aggressive selling with new short positions. Strong bearish signal.
+
+**Negative Transfer + Rising Price**: Sellers absorbing buying pressure. Potential distribution zone — watch for reversal.
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `color` | Primary indicator color | `#a855f7` |
+| `displayMode` | Visualization style: `line`, `columns`, or `candles` | `columns` |
+| `highlightAnomalies` | Highlight extreme transfer events | `true` |
+| `anomalyThreshold` | Standard deviations for anomaly detection | `2.5` |
+| `anomalyPeriod` | Lookback period for anomaly calculation | `30` |
+| `gradientIntensity` | Scale bar opacity by magnitude | `true` |
+
+## Display Modes
+
+- **Columns** — Default histogram. Purple bars showing positive/negative transfer magnitude.
+- **Line** — Continuous plot connecting transfer values. Good for trend analysis.
+- **Candles** — OHLC rendering per bar.
+
+## Anomaly Detection
+
+When `highlightAnomalies` is enabled, extreme transfer events (exceeding `anomalyThreshold` standard deviations) are highlighted. These anomalies typically coincide with:
+
+- Large institutional position changes
+- Liquidation cascades triggering contract transfers
+- Market maker inventory rebalancing
+- Forced position closures
+
+## Gradient Intensity
+
+With `gradientIntensity` enabled, bar opacity scales with the transfer magnitude. Small transfers fade into the background while large transfers demand attention.
+
+<Note>
+Transfer of Contracts is a futures-only indicator. It requires open interest data to calculate and is not available for spot markets.
+</Note>
+
+## Practical Examples
+
+**Institutional Entry**: Transfer of Contracts shows a sustained positive reading over multiple bars with rising OI — a large fund is building a long position across several candles.
+
+**Liquidation Cascade**: A sharp negative spike in Transfer of Contracts accompanied by a price drop and falling OI — long positions are being forcefully liquidated, transferring contracts to short sellers.
+
+**Quiet Accumulation**: Transfer readings are mildly positive over an extended period while price trades sideways — someone is quietly accumulating a large position without moving the price.
+
+## Related Indicators
+
+- [Open Interest](/en/indicators/metrics/open-interest) — Raw OI data
+- [Anchored OI](/en/indicators/metrics/anchored-oi) — OI changes from session start
+- [CVD](/en/indicators/metrics/cvd) — Cumulative volume delta
+- [Enhanced Liquidations](/en/indicators/metrics/enhanced-liquidations) — Forced position closures

@@ -1,0 +1,176 @@
+---
+title: "FAQ"
+description: "Frequently asked questions."
+icon: "circle-question"
+---
+
+# Frequently Asked Questions
+
+Common questions about Cluster Terminal, its features, supported data, and platform availability.
+
+## Exchanges & Data
+
+<AccordionGroup>
+  <Accordion title="Which exchanges are supported?">
+    Cluster Terminal currently supports **Binance Futures (USDT-M)** perpetual contracts. This covers all actively traded USDT-margined perpetual futures on Binance.
+
+    Additional exchanges (Bybit, OKX) are planned for future releases.
+  </Accordion>
+
+  <Accordion title="What data types are available?">
+    The following data types are available:
+
+    | Data Type | Description |
+    |-----------|-------------|
+    | **Candles (OHLCV)** | Standard candlestick data with open, high, low, close, and volume |
+    | **Clusters / Footprint** | Volume-at-price data aggregated from individual trades |
+    | **Open Interest** | OHLC of open interest over time |
+    | **Order Book (DOM)** | Real-time bid/ask depth (live only) |
+    | **Liquidations** | Forced liquidation events (live only) |
+    | **Funding Rate** | Perpetual futures funding rate (live only) |
+    | **Long/Short Ratio** | Aggregate long vs short positioning (live only) |
+  </Accordion>
+
+  <Accordion title="How far back does historical data go?">
+    Historical data is available from each symbol's **listing date** on Binance Futures. For major symbols like BTCUSDT, this means data going back to 2019. Newer symbols have data starting from when they were listed.
+
+    The server imports historical data from Binance's public data archives with SHA256 checksum verification to ensure accuracy.
+  </Accordion>
+
+  <Accordion title="How often is data updated?">
+    - **Real-time data** (candles, trades, DOM): streams continuously via WebSocket with sub-second latency.
+    - **Historical data**: the server runs a daily import at 03:00 UTC to fill in the previous day's data.
+    - **Symbol list**: refreshed every 6 hours to pick up newly listed or delisted symbols.
+  </Accordion>
+
+  <Accordion title="Where does the data come from?">
+    All data comes directly from Binance. Historical data is imported from Binance's public data archive (ZIP files with checksum verification). Real-time data streams through the Binance WebSocket API. The Cluster Terminal server aggregates and caches this data for fast delivery to the desktop client.
+  </Accordion>
+</AccordionGroup>
+
+## Charts & Analysis
+
+<AccordionGroup>
+  <Accordion title="What timeframes are available?">
+    Cluster Terminal supports the following timeframes:
+
+    | Timeframe | Code |
+    |-----------|------|
+    | 1 minute | 1m |
+    | 5 minutes | 5m |
+    | 15 minutes | 15m |
+    | 1 hour | 1h |
+    | 4 hours | 4h |
+    | 1 day | 1D |
+    | 1 week | 1W |
+    | 1 month | 1M |
+
+    Cluster data is available on all timeframes -- the server aggregates trade-level data into the requested timeframe on the fly.
+  </Accordion>
+
+  <Accordion title="What is a cluster (footprint) chart?">
+    A cluster chart (also called a footprint chart) shows the volume traded at each price level within a candle. Instead of just seeing total volume for a bar, you see how that volume is distributed across prices.
+
+    This reveals:
+    - Where the most trading activity occurred within a candle
+    - Buy vs. sell volume (delta) at each price level
+    - Absorption patterns where large orders were filled
+    - Imbalances between aggressive buyers and sellers
+
+    Cluster charts are the core feature of Cluster Terminal and power many of the order flow indicators.
+  </Accordion>
+
+  <Accordion title="What chart types are available?">
+    | Chart Type | Description |
+    |-----------|-------------|
+    | **Candlestick** | Standard OHLCV candles |
+    | **Cluster / Footprint** | Volume-at-price within each candle |
+    | **TPO (Time Price Opportunity)** | Market Profile-style chart |
+    | **Heatmap** | Color-coded volume heatmap across price and time |
+  </Accordion>
+
+  <Accordion title="How many indicators are available?">
+    Over 50 indicators across multiple categories:
+
+    - **Classic**: RSI, MACD, Bollinger Bands, EMA, SMA, VWAP, and more
+    - **Volume**: Volume Profile, Session Levels, OI
+    - **Order Flow**: Absorption Alpha, CVD, Delta Divergence, Stacked Imbalances, Clouds, DOM on Chart, Liquidation Levels
+    - **Structure**: Fair Value Gaps (FVG), Market Structure (BOS/CHoCH), Order Blocks
+
+    Most indicators support configurable alert notifications. See [Alerts](/en/advanced/alerts) for the full list.
+  </Accordion>
+</AccordionGroup>
+
+## Platform & Installation
+
+<AccordionGroup>
+  <Accordion title="Which operating systems are supported?">
+    Cluster Terminal is currently available for **Windows** (64-bit). The application is built with Tauri 2 and uses WebGL for chart rendering.
+
+    macOS and Linux builds are planned but not yet available.
+  </Accordion>
+
+  <Accordion title="Is there a mobile version?">
+    No. Cluster Terminal is a desktop-only application. The complex charting, multi-pane layouts, and WebGL rendering require a desktop environment. There are no plans for a mobile version at this time.
+  </Accordion>
+
+  <Accordion title="What are the system requirements?">
+    | Component | Minimum | Recommended |
+    |-----------|---------|-------------|
+    | **OS** | Windows 10 (64-bit) | Windows 11 |
+    | **RAM** | 4 GB | 8 GB or more |
+    | **GPU** | Any with WebGL 2.0 | Dedicated GPU |
+    | **Display** | 1366x768 | 1920x1080 or higher |
+    | **Internet** | Stable connection | Low-latency connection |
+
+    A dedicated GPU is recommended for smooth rendering with many indicators and multiple panes open.
+  </Accordion>
+
+  <Accordion title="How do I install Cluster Terminal?">
+    1. Download the latest installer (`.exe` file) from the official source.
+    2. Run the installer -- it is an NSIS setup wizard.
+    3. Follow the prompts to complete installation.
+    4. Launch Cluster Terminal from the Start menu or desktop shortcut.
+    5. On first launch, enter the server URL and optionally activate your license key.
+  </Accordion>
+</AccordionGroup>
+
+## License & Trial
+
+<AccordionGroup>
+  <Accordion title="Is there a free trial?">
+    Yes. On first launch without a license key, Cluster Terminal enters a **7-day trial** with full functionality. No credit card or registration is required.
+
+    After the trial expires, a license key is needed to continue using the application.
+  </Accordion>
+
+  <Accordion title="What does a license include?">
+    A license provides:
+    - Unlimited access to all chart types and indicators
+    - Real-time data streaming
+    - Full historical data access
+    - Optional features depending on the license tier (e.g., `cloud_sync`, `priority_support`)
+  </Accordion>
+
+  <Accordion title="How many devices can I use?">
+    Each license has a configurable device limit (set by the administrator). When you activate the license on a new device, it registers a device fingerprint. If you reach the device limit, deactivate an existing device or contact support.
+  </Accordion>
+
+  <Accordion title="How do I activate a license?">
+    Go to **Settings > License**, enter your license key (format: `CT-XXXX-XXXX-XXXX-XXXX`), and click **Activate**. The application validates the key with the server and registers your device. See [Settings](/en/workspace/settings) for details.
+  </Accordion>
+</AccordionGroup>
+
+## Bug Reports & Support
+
+<AccordionGroup>
+  <Accordion title="How do I report a bug?">
+    See the [Feedback](/en/support/feedback) page for detailed instructions on reporting bugs. In short: describe the issue, include steps to reproduce, expected vs. actual behavior, and a screenshot if possible.
+  </Accordion>
+
+  <Accordion title="Where can I get help?">
+    - **Telegram**: [t.me/clusterterminal](https://t.me/clusterterminal) for community support
+    - **Troubleshooting**: Check the [Troubleshooting](/en/support/troubleshooting) page for solutions to common issues
+    - **Feedback page**: [Report bugs or suggest features](/en/support/feedback)
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,97 @@
+---
+title: "Net Longs/Shorts"
+description: "Combined view of net long and short positioning on a single chart."
+icon: "scale-balanced"
+---
+
+## Overview
+
+**Net Longs/Shorts** overlays both net long and net short positioning from order book depth data on a single subchart. This combined view reveals the balance (or imbalance) between passive buyers and sellers, providing a direct read on order book sentiment.
+
+Instead of switching between two separate indicators, this combined view lets you instantly see which side has more conviction and how the balance shifts over time.
+
+{/* screenshot: Net Longs/Shorts subchart with green (longs) and red (shorts) overlaid, showing divergence at a key price level */}
+
+## How It Works
+
+The indicator overlays two series on the same chart:
+- **Net Longs** (bid-side depth bias) shown in green
+- **Net Shorts** (ask-side depth bias) shown in red
+
+Both series use the same `depthIndex` for consistent depth comparison. A neutral color highlights zones where longs and shorts are approximately equal.
+
+## Chart Type
+
+| Property | Value |
+|----------|-------|
+| Type | Subchart |
+| Position | Below main chart |
+| Data source | Order book depth snapshots |
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| longColor | Color for net long series | `#22c55e` |
+| shortColor | Color for net short series | `#ef4444` |
+| neutralColor | Color for balanced/crossover zones | `#f59e0b` |
+| depthIndex | Depth bucket to analyze (0-9) | `3` |
+| displayMode | Rendering style | `columns` |
+| highlightAnomalies | Flag statistical outliers | `false` |
+| anomalyThreshold | Standard deviation multiplier | `2.5` |
+| anomalyPeriod | Lookback period for anomaly stats | `30` |
+| gradientIntensity | Fill gradient strength (0-1) | `0` |
+
+## Interpretation
+
+### Dominant Side
+
+When one series is consistently above the other, that side of the market has more passive positioning:
+
+| Longs vs. Shorts | Interpretation |
+|-------------------|----------------|
+| Longs dominant | Buyers are more committed, bid depth exceeds ask depth |
+| Shorts dominant | Sellers are more committed, ask depth exceeds bid depth |
+| Roughly equal | Balanced book, no clear bias — indecision |
+
+### Convergence and Divergence
+
+<Tip>
+When longs and shorts converge toward the same level, expect increased volatility. The balanced positioning means neither side has a clear edge, and a catalyst will likely trigger a directional move.
+</Tip>
+
+### Crossover Signals
+
+When the net longs line crosses above net shorts, buying interest is overtaking selling interest — a potential bullish signal. The reverse crossover suggests growing bearish pressure.
+
+### Extreme Imbalances
+
+Large gaps between the two series indicate strong one-sided positioning. While this confirms the current bias, extreme imbalances can also set up contrarian reversals when the dominant side gets crowded.
+
+## Reading the Chart
+
+| Pattern | Market State | Possible Outcome |
+|---------|-------------|------------------|
+| Longs rising, shorts flat | Growing buy interest | Bullish pressure building |
+| Shorts rising, longs flat | Growing sell interest | Bearish pressure building |
+| Both rising | Increasing participation on both sides | Volatility expansion imminent |
+| Both falling | Reduced participation | Low volatility, range-bound |
+| Crossover (longs over shorts) | Shift in order book bias | Potential trend change to bullish |
+| Crossover (shorts over longs) | Shift in order book bias | Potential trend change to bearish |
+
+<Note>
+The neutral color (`#f59e0b` amber by default) appears at crossover points and balanced zones, making transitions between regimes visually distinct.
+</Note>
+
+## Practical Examples
+
+- **Breakout anticipation**: Both longs and shorts rising during consolidation — large participation on both sides means one side will be wrong. The breakout direction will trigger forced exits from the losing side.
+- **Trend confirmation**: Longs consistently above shorts during an uptrend — order book supports the move.
+- **Reversal warning**: Shorts overtaking longs at a support level — passive sellers taking control.
+
+## Related Indicators
+
+- [Net Longs](/en/indicators/metrics/net-longs) — buy-side positioning only
+- [Net Shorts](/en/indicators/metrics/net-shorts) — sell-side positioning only
+- [Open Interest](/en/indicators/metrics/open-interest) — total outstanding contracts
+- [Funding Rate](/en/indicators/metrics/funding-rate) — cost of holding positions

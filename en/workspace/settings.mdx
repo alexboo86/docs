@@ -1,0 +1,156 @@
+---
+title: "Settings"
+description: "Configure application settings — server, appearance, behavior."
+icon: "gear"
+---
+
+# Settings
+
+The Settings panel lets you configure every aspect of Cluster Terminal -- from the server connection and visual theme to chart defaults, data loading behavior, and sound preferences.
+
+Open Settings from the gear icon in the header bar, or press `Ctrl + ,`.
+
+{/* screenshot: settings panel overview */}
+
+## Server Connection
+
+The server URL determines where Cluster Terminal fetches all market data (candles, clusters, open interest) and connects for real-time WebSocket streaming.
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Server URL** | Base URL of the Cluster Terminal data server | Set during first launch |
+
+<Steps>
+  <Step title="Open Settings">
+    Click the gear icon or press `Ctrl + ,`.
+  </Step>
+  <Step title="Edit Server URL">
+    In the **Server** section, enter the full URL including protocol and port (e.g., `http://95.216.29.184:8080`).
+  </Step>
+  <Step title="Test Connection">
+    The application automatically tests the connection when you save. A green checkmark indicates success; a red icon indicates the server is unreachable.
+  </Step>
+</Steps>
+
+<Warning>
+  Changing the server URL disconnects all active WebSocket streams and reloads chart data. Only change this if you are migrating to a different server instance.
+</Warning>
+
+## Appearance
+
+### Language
+
+Cluster Terminal supports multiple interface languages.
+
+| Language | Status |
+|----------|--------|
+| **English** | Full support |
+| **Russian** | Full support |
+
+Switch language in **Settings > Appearance > Language**. The change takes effect immediately without restarting.
+
+### Theme
+
+| Theme | Description |
+|-------|-------------|
+| **Dark** | Dark background, light text. Optimized for extended screen time. |
+| **Light** | Light background, dark text. |
+
+{/* screenshot: dark vs light theme comparison */}
+
+<Tip>
+  Dark theme is recommended for trading to reduce eye strain during long sessions, especially with multiple monitors.
+</Tip>
+
+## Chart Defaults
+
+These settings control the initial configuration when you create a new chart tab.
+
+| Setting | Description | Options |
+|---------|-------------|---------|
+| **Default chart type** | Chart type for new tabs | Candlestick, Cluster, TPO, Heatmap |
+| **Default timeframe** | Initial timeframe | 1m, 5m, 15m, 1h, 4h, 1D, 1W, 1M |
+| **Default symbol** | Initial symbol | Any available symbol (e.g., BTCUSDT) |
+| **Candle colors** | Bullish / bearish candle colors | Color picker |
+
+<Note>
+  These defaults only apply to newly created tabs. Existing tabs retain their own settings.
+</Note>
+
+## Data Loading
+
+Control how historical data is fetched and cached.
+
+| Setting | Description |
+|---------|-------------|
+| **Progressive loading** | Load volume/cluster data in chunks with a progress bar. Keeps the UI responsive for large date ranges. |
+| **History depth** | How far back to load data on chart open. Deeper history means longer initial load times. |
+
+### Progressive Loading
+
+When enabled, large data requests (especially cluster volumes) are split into daily chunks and loaded sequentially. A progress bar in the chart toolbar shows loading status.
+
+<Tip>
+  Keep progressive loading enabled. It prevents the UI from freezing when loading months of cluster data, especially for high-volume symbols like BTCUSDT.
+</Tip>
+
+## Sound Settings
+
+Configure audio notifications for alerts and system events.
+
+| Setting | Description |
+|---------|-------------|
+| **Alert sounds** | Enable or disable sound when price/indicator alerts trigger |
+| **Sound volume** | Master volume for all notification sounds |
+
+Alert sounds are synthesized in-browser -- no external audio files are needed. Each alert type has a distinct sound pattern to help you distinguish between price alerts, indicator signals, and system notifications without looking at the screen.
+
+## License
+
+View and manage your license status.
+
+| Field | Description |
+|-------|-------------|
+| **License key** | Your active license key (CT-XXXX-XXXX-XXXX-XXXX format) |
+| **Status** | Active, Trial, or Expired |
+| **Features** | Enabled features (e.g., cloud_sync, priority_support) |
+| **Devices** | Number of activated devices out of maximum allowed |
+| **Expiry** | License expiration date |
+
+### Trial Mode
+
+If you have not entered a license key, Cluster Terminal runs in trial mode for 7 days with full functionality. After the trial expires, you need a license key to continue using the application.
+
+<Note>
+  Trial duration may vary. The server administrator can configure the trial period via the admin panel.
+</Note>
+
+### Activating a License
+
+<Steps>
+  <Step title="Obtain a license key">
+    Purchase a license or receive one from the project administrator. Keys are in the format `CT-XXXX-XXXX-XXXX-XXXX`.
+  </Step>
+  <Step title="Enter the key">
+    Go to **Settings > License** and paste your key into the license field.
+  </Step>
+  <Step title="Activate">
+    Click **Activate**. The application validates the key with the server and registers your device.
+  </Step>
+</Steps>
+
+<Warning>
+  Each license has a maximum device limit. If you reach the limit, deactivate an existing device from the server admin panel or contact support.
+</Warning>
+
+## Resetting Settings
+
+To reset all settings to defaults, clear the application data directory. On Windows, this is located at:
+
+```
+%APPDATA%/com.cluster-terminal/
+```
+
+<Warning>
+  Resetting application data removes all local workspaces, license activation, trial state, and cached data. This cannot be undone.
+</Warning>

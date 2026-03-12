@@ -1,0 +1,108 @@
+---
+title: "Anchored CVD"
+description: "CVD that resets at configurable session boundaries — daily, 4H, or 1H."
+icon: "anchor"
+---
+
+## Overview
+
+Anchored CVD (Cumulative Volume Delta) works like standard CVD but **resets at session boundaries**. Instead of accumulating delta from the beginning of your data, it starts fresh at each session open.
+
+This eliminates long-term cumulative drift and focuses on **intra-session buying and selling pressure**, making it far more useful for short-term trading.
+
+{/* screenshot: Anchored CVD subchart showing daily resets with green/red coloring */}
+
+## How It Works
+
+Standard CVD accumulates buy volume minus sell volume from the first bar in your dataset. Over days and weeks, the absolute value drifts far from zero, making it hard to interpret.
+
+Anchored CVD solves this by resetting the accumulation at configurable intervals:
+
+- **D1 (Daily)** — Resets at the start of each trading day
+- **4H** — Resets every 4 hours
+- **1H** — Resets every hour
+
+After each reset, the CVD starts accumulating from zero again. This means:
+
+- A positive Anchored CVD on D1 = net buying since the session opened today
+- A negative reading = net selling since the session opened
+
+<Tip>
+Daily-anchored CVD is excellent for intraday trading — it shows the session's net buying or selling pressure from the open. Compare it to price: if price is flat but Anchored CVD is rising, hidden buying is occurring.
+</Tip>
+
+## Interpretation
+
+| Pattern | Meaning |
+|---------|---------|
+| Rising Anchored CVD + rising price | Healthy trend with genuine buying |
+| Rising Anchored CVD + flat price | Hidden accumulation — bullish |
+| Falling Anchored CVD + flat price | Hidden distribution — bearish |
+| Falling Anchored CVD + falling price | Genuine selling pressure |
+| Anchored CVD makes new session high | Session buyers in control |
+| Anchored CVD makes new session low | Session sellers in control |
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `positiveColor` | Color when CVD is above zero | `#22c55e` |
+| `negativeColor` | Color when CVD is below zero | `#ef4444` |
+| `anchor` | Reset interval: `D1`, `4H`, or `1H` | `D1` |
+| `sessionStartHour` | Hour (UTC) to start the daily session | `0` |
+| `displayMode` | Visualization style: `line`, `columns`, or `candles` | `columns` |
+| `highlightAnomalies` | Highlight extreme session delta readings | `true` |
+| `anomalyThreshold` | Standard deviations for anomaly detection | `2.0` |
+| `anomalyPeriod` | Lookback period for anomaly calculation | `50` |
+| `gradientIntensity` | Scale bar opacity by magnitude | `true` |
+
+## Anchor Modes
+
+### D1 — Daily Reset
+
+Resets at `sessionStartHour` UTC each day. The most common setting. Shows the cumulative buy/sell imbalance for the current trading day.
+
+Use `sessionStartHour` to align with your preferred market session:
+- `0` — UTC midnight (default, aligned with Binance daily close)
+- `8` — Asian session open
+- `13` — US session open (approximate)
+
+### 4H — Four-Hour Reset
+
+Resets every 4 hours from midnight UTC. Useful for swing traders who want to see buying/selling pressure within each 4H candle's formation period.
+
+### 1H — Hourly Reset
+
+Resets every hour. Shows micro-level buying/selling pressure. Best for scalping and very short-term trading.
+
+## Display Modes
+
+- **Columns** — Default. Green above zero, red below. Shows the running session CVD as a histogram.
+- **Line** — Continuous line plot. Better for seeing the shape of intra-session accumulation.
+- **Candles** — OHLC of CVD values. Shows the range of cumulative delta within each bar.
+
+<Note>
+The `sessionStartHour` setting only applies when `anchor` is set to `D1`. For `4H` and `1H` anchors, resets occur at fixed UTC intervals starting from midnight.
+</Note>
+
+## Anomaly Detection
+
+With `highlightAnomalies` enabled, bars where the session CVD exceeds `anomalyThreshold` standard deviations from the rolling mean are marked. Intra-session anomalies indicate:
+
+- One-sided session dominated by a single participant type
+- Major news causing sustained directional flow
+- Liquidation cascades creating extreme delta
+
+## Practical Examples
+
+**Intraday Reversal Setup**: Anchored CVD (D1) reaches an extreme negative reading in the first few hours. Price stabilizes. As CVD starts recovering toward zero, it signals the session selling is exhausted — look for long entries.
+
+**Session Trend Confirmation**: Price breaks above the session high. Anchored CVD is at its session high as well — the breakout is backed by genuine cumulative buying, not just a single spike.
+
+**Hidden Divergence**: Price makes a new session high, but Anchored CVD makes a lower high than its previous session peak — buying pressure is weakening despite higher prices. Potential for reversal.
+
+## Related Indicators
+
+- [CVD](/en/indicators/metrics/cvd) — Standard cumulative volume delta (no reset)
+- [Anchored OI](/en/indicators/metrics/anchored-oi) — Open interest changes from session start
+- [Volume Ratio](/en/indicators/metrics/volume-ratio) — Per-bar normalized buy/sell ratio

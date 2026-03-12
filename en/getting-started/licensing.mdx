@@ -1,0 +1,359 @@
+---
+title: "Licensing"
+description: "Understand license types, trials, activation, and device management."
+icon: "key"
+---
+
+Cluster Terminal uses a server-validated licensing system to manage access,
+device registration, and feature entitlements. This page covers everything
+from the initial free trial through activation, device management, and
+renewal.
+
+## Free Trial
+
+Every new installation of Cluster Terminal includes a **free trial period**
+that starts automatically on first launch. No account creation, email
+address, or credit card is required.
+
+| Detail | Value |
+|--------|-------|
+| **Default duration** | 7 days |
+| **Features included** | All core features (charts, clusters, heatmap, TPO, indicators, drawings) |
+| **Features excluded** | Cloud Workspace Sync |
+| **Extensions** | Contact your server administrator — trial duration is configurable server-side |
+
+During the trial, a **banner** at the top of the window displays the number
+of days remaining. You can use all chart types, all indicators, and all
+drawing tools without restriction.
+
+{/* screenshot: Trial banner showing "5 days remaining in your free trial" */}
+
+<Note>
+  The trial is tied to your device, not to an account. Reinstalling the
+  application on the same machine does not reset the trial period because the
+  device fingerprint remains the same.
+</Note>
+
+### What Happens When the Trial Expires
+
+When the 7-day trial ends and no license key has been activated:
+
+- The application displays the **License Activation** screen on startup.
+- You cannot access charts, indicators, or any analysis features.
+- Any workspaces you created during the trial are **preserved locally** and
+  will become accessible again once you activate a license.
+- No data is deleted. Your drawings, indicator configurations, and
+  workspace layouts are all retained.
+
+<Tip>
+  If you need more time to evaluate Cluster Terminal, contact your
+  administrator or reach out on Telegram. The trial duration is configurable
+  on the server side and can be extended for individual evaluations.
+</Tip>
+
+## License Key Format
+
+License keys for Cluster Terminal follow a standardized format:
+
+```
+CT-XXXX-XXXX-XXXX-XXXX
+```
+
+Where each `XXXX` is a group of alphanumeric characters. For example:
+
+```
+CT-A1B2-C3D4-E5F6-G7H8
+```
+
+<Warning>
+  Treat your license key like a password. Do not share it publicly or post it
+  in open forums. Each key is tracked server-side and unauthorized
+  distribution may result in revocation.
+</Warning>
+
+## Activating a License
+
+Activation connects your license key to your device and unlocks full access
+to Cluster Terminal. The process requires an active internet connection to
+reach the licensing server.
+
+<Steps>
+  <Step title="Navigate to the activation screen">
+    The activation screen appears automatically when the trial expires. You
+    can also access it at any time during or after the trial from **Settings**
+    in the application menu.
+
+    {/* screenshot: License Activation screen with Server URL and License Key fields */}
+  </Step>
+
+  <Step title="Enter the server URL">
+    If not already configured, enter the **Server URL** for your Cluster
+    Terminal data server. This is the same URL used for market data and is
+    typically pre-filled if you configured it during initial setup.
+  </Step>
+
+  <Step title="Enter your license key">
+    Paste your license key (in the `CT-XXXX-XXXX-XXXX-XXXX` format) into the
+    **License Key** input field.
+  </Step>
+
+  <Step title="Click Activate">
+    Press the **Activate** button. The application sends your key and a
+    unique device fingerprint to the licensing server for validation.
+  </Step>
+
+  <Step title="Activation confirmed">
+    If the key is valid and you have not exceeded your device limit, a
+    success message appears. Your device is now registered against the
+    license, and you are redirected to the main application.
+
+    {/* screenshot: Successful activation confirmation message */}
+  </Step>
+</Steps>
+
+### Activation Errors
+
+If activation fails, the screen displays an error message. Common causes:
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| **Invalid key** | The key is mistyped or does not exist | Double-check the key, ensure no extra spaces |
+| **Key expired** | The license has passed its expiration date | Contact your administrator to renew |
+| **Device limit reached** | All device slots for this key are occupied | Deactivate an old device (via admin) or upgrade |
+| **Server unreachable** | No network connection to the licensing server | Check your internet and server URL |
+| **Key disabled** | The administrator has deactivated the key | Contact your administrator |
+
+<Note>
+  Activation requires a one-time connection to the licensing server. After
+  initial activation, the license is cached locally and validated
+  periodically in the background (approximately every 24 hours).
+</Note>
+
+## Device Management
+
+Each license key supports a limited number of **simultaneous device
+activations**. The default is typically 2 devices, but this is configurable
+by the license administrator.
+
+### How Device Fingerprinting Works
+
+When you activate a license, Cluster Terminal generates a unique
+**device fingerprint** based on your hardware characteristics. This
+fingerprint identifies your machine on the licensing server without
+collecting personal information.
+
+- The fingerprint is deterministic — reinstalling the application on the
+  same hardware produces the same fingerprint.
+- Significant hardware changes (such as replacing the motherboard) may
+  generate a new fingerprint, which would consume an additional device slot.
+
+### Device Slot Scenarios
+
+| Scenario | What Happens |
+|----------|-------------|
+| **First activation** | Device is registered, one slot consumed |
+| **Second device** | New device registered if a slot is available |
+| **Device limit reached** | Activation fails with "device limit" error |
+| **Reinstalling same machine** | Same fingerprint reused, no new slot consumed |
+| **Major hardware change** | New fingerprint generated, may need admin assistance |
+| **Deactivating a device** | Admin removes the device from the license via the admin panel |
+
+<Warning>
+  You cannot deactivate devices yourself from within the application. Device
+  management is handled server-side by the license administrator. If you need
+  to free up a device slot, contact your admin or support.
+</Warning>
+
+### Checking Your Active Devices
+
+Currently, active device information is managed through the server admin
+panel. If you need to know how many devices are registered on your license,
+contact your administrator. A future update will add device visibility
+directly within the application settings.
+
+## License Features
+
+Not all licenses are equal. Each key can have specific **features** enabled,
+which unlock additional capabilities beyond the core analysis tools.
+
+### Base Access
+
+Every valid license (or active trial) includes:
+
+- All chart types: Candles, Clusters, Heatmap, TPO
+- Full indicator library (Classic, Order Flow, Metrics, Profiles, SMC)
+- Drawing tools
+- Multiple workspaces and split-pane layouts
+- Real-time WebSocket data feed
+- Historical data access
+- Depth of Market (DOM) widget
+- Auto-updates
+
+### Cloud Sync (`cloud_sync` feature)
+
+The **Cloud Sync** feature enables workspace synchronization across
+multiple devices. When enabled on your license:
+
+- Workspaces are **uploaded to the server** periodically (every 5 minutes)
+  and when the application closes.
+- Opening Cluster Terminal on another device with the same license
+  **downloads** your latest workspaces automatically.
+- An **offline queue** stores changes made without connectivity and
+  synchronizes them when the connection is restored.
+- A **"Sync Now" button** in the Workspace Dialog lets you trigger an
+  immediate sync at any time.
+
+{/* screenshot: Workspace dialog showing cloud sync badges on synced workspaces */}
+
+<Note>
+  Cloud Sync is not included in the free trial. It is a premium feature that
+  requires a license with the `cloud_sync` entitlement. Contact your
+  administrator to check if your license includes this feature.
+</Note>
+
+For full details on how Cloud Sync works, see
+[Cloud Sync](/en/workspace/cloud-sync).
+
+### Priority Support (`priority_support` feature)
+
+Licenses with the **Priority Support** feature receive faster response
+times and dedicated assistance through the support channel. This is
+typically included in higher-tier license plans.
+
+## License Validation and Offline Behavior
+
+After initial activation, Cluster Terminal periodically validates your
+license with the server in the background. This ensures the license is
+still active and has not been revoked.
+
+### Validation Schedule
+
+| Event | Frequency |
+|-------|-----------|
+| **Application launch** | Validation check on every startup |
+| **Background check** | Approximately every 24 hours while the app is running |
+| **Server URL change** | Re-validation triggered immediately |
+
+### Offline Grace Period
+
+If the licensing server becomes unreachable (due to network issues,
+server maintenance, or other causes):
+
+- The application continues to function normally using the **cached
+  license** stored locally on your device.
+- A **grace period** of up to 7 days begins during which all features
+  remain fully accessible.
+- After 7 days without a successful validation, the application prompts
+  you to reconnect to the licensing server.
+- **Local data (charts, drawings, workspaces) remains accessible** even
+  if the grace period expires. Only server-dependent features (real-time
+  data feed, cloud sync) require connectivity.
+
+<Tip>
+  If you know you will be offline for an extended period, launch the
+  application while connected at least once within 7 days to reset the
+  grace period timer.
+</Tip>
+
+## What Happens When a License Expires
+
+When a license reaches its expiration date:
+
+1. The application displays a **notification** indicating the license has
+   expired.
+2. On the next launch, the **License Activation** screen appears.
+3. You cannot create new workspaces or access charts until the license is
+   renewed or a new key is activated.
+4. All existing workspaces, drawings, and configurations are **preserved
+   locally** and will be available again after reactivation.
+5. Cloud Sync stops functioning — no uploads or downloads occur.
+
+<Note>
+  License expiration does not delete any data. Everything you created is
+  stored locally and will be accessible again once a valid license is
+  restored.
+</Note>
+
+## Renewing or Upgrading
+
+To renew an expired license or upgrade to a higher tier:
+
+<Steps>
+  <Step title="Contact your administrator or support">
+    Reach out through the official support channel (Telegram:
+    [t.me/clusterterminal](https://t.me/clusterterminal)) or contact the
+    person who provided your original license.
+  </Step>
+
+  <Step title="Receive a new or renewed key">
+    Depending on the arrangement, you may receive:
+    - An **extension** on your existing key (the same key with a new
+      expiration date — no action needed in the app).
+    - A **new license key** with upgraded features (activate it in Settings
+      to replace the old key).
+  </Step>
+
+  <Step title="Verify in the application">
+    After renewal, the application validates the updated license on its next
+    background check (or immediately if you relaunch). The expiration
+    banner disappears and full functionality is restored.
+  </Step>
+</Steps>
+
+<Tip>
+  If your administrator extends your existing key server-side, you do not
+  need to re-enter anything in the application. The next validation cycle
+  picks up the new expiration automatically.
+</Tip>
+
+## Frequently Asked Questions
+
+### Can I transfer my license to a different machine?
+
+Yes. Ask your administrator to deactivate your old device from the admin
+panel, which frees up a device slot. Then activate on your new machine
+using the same license key.
+
+### What happens if I format my computer?
+
+A fresh Windows installation may change the device fingerprint depending on
+hardware. If the fingerprint changes, the system treats it as a new device.
+Contact your administrator to deactivate the old fingerprint if you have
+reached your device limit.
+
+### Can I use the same license on a desktop and a laptop?
+
+Yes, as long as you have available device slots. The default is 2
+simultaneous devices per license, so activating on both a desktop and a
+laptop is the most common use case.
+
+### Is an internet connection required at all times?
+
+No. After initial activation, the application caches the license locally
+and can operate offline for up to 7 days. Real-time data features naturally
+require connectivity, but the license itself does not need constant
+validation.
+
+### How do I change my server URL after activation?
+
+Open **Settings** from the application menu and update the **Server URL**
+field. The application will re-validate your license against the new server.
+Note that your license must exist on the target server for validation to
+succeed.
+
+## Getting Help
+
+If you encounter licensing issues that you cannot resolve:
+
+- **Telegram:** [t.me/clusterterminal](https://t.me/clusterterminal) —
+  the primary support channel for licensing questions, renewals, and
+  device management.
+- **Administrator:** If you received your license from a specific person
+  or organization, contact them directly for server-side assistance such
+  as device deactivation or key renewal.
+
+When reaching out, include:
+- Your license key (or the first and last 4 characters if you prefer not
+  to share the full key).
+- The error message you are seeing.
+- Your operating system version.

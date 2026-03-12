@@ -1,0 +1,119 @@
+---
+title: "Orderflows Divergence"
+description: "Multi-factor divergence combining price action with order flow metrics."
+icon: "arrows-rotate"
+---
+
+Orderflows Divergence is a composite divergence indicator that analyzes multiple order flow dimensions simultaneously before generating a signal. Rather than relying on a single metric like delta or CVD, it examines the structural relationship between price extremes and the underlying order flow data, producing higher-conviction signals at the cost of lower frequency.
+
+## How It Works
+
+The indicator identifies structural price extremes (swing highs and swing lows) and then evaluates whether the underlying order flow metrics confirm or contradict the price move. A divergence is flagged only when price makes a new extreme but multiple order flow factors fail to support it.
+
+### Multi-Factor Analysis
+
+The algorithm evaluates several order flow dimensions at each price swing:
+
+- **Delta trend**: Is the net delta at the new extreme weaker than at the previous extreme?
+- **Volume characteristics**: Does the volume profile at the new swing suggest genuine participation or thin-liquidity overshoot?
+- **Trade distribution**: Are the trades concentrated or dispersed across price levels?
+- **Composite scoring**: All factors are combined into a single divergence score. Only when the composite score exceeds an internal threshold is the signal generated.
+
+This multi-factor approach filters out the many false divergences that single-metric indicators produce, especially in choppy or range-bound markets.
+
+{/* screenshot: orderflows divergence bearish signal at a swing high with connecting line to previous swing high */}
+
+## Signal Types
+
+| Signal | Price Action | Order Flow | Interpretation |
+|--------|-------------|------------|----------------|
+| **Bearish divergence** | Higher high | Order flow metrics weaker at the new high | Rally is losing structural support. Multiple dimensions of buying pressure are declining. |
+| **Bullish divergence** | Lower low | Order flow metrics weaker at the new low | Decline is losing structural support. Multiple dimensions of selling pressure are declining. |
+
+Because multiple factors must align, Orderflows Divergence signals tend to appear at more significant turning points than single-metric divergences.
+
+## Settings
+
+### Detection Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **lookbackPeriod** | Number of bars scanned for swing point detection. Larger values detect longer-term structural divergences. | 50 |
+| **localExtremumPeriod** | Number of bars on each side required to confirm a swing high or low. Higher values demand more established price pivots. | 3 |
+| **minDistanceBetweenSignals** | Minimum number of bars between two divergence signals. Prevents signal clustering in volatile conditions. | 5 |
+| **minDistanceFromPreviousExtremum** | Minimum number of bars between two swing points used in a divergence comparison. Ensures the divergence spans a meaningful price structure. | 2 |
+| **priceTolerancePct** | Price tolerance percentage for determining whether a new extreme exceeds the previous one. A value of 0.1 means price must exceed the prior swing by at least 0.1% to qualify as a new extreme. | 0.1 |
+
+<Note>
+The `lookbackPeriod` of 50 bars (default) is intentionally larger than the default for Delta Divergence (20) or CVD Divergence (20). This reflects the structural nature of Orderflows Divergence -- it is designed to catch significant swing points, not minor fluctuations.
+</Note>
+
+### Visual Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **showLines** | Draw connecting lines between the two swing points that form the divergence. | true |
+| **lineThickness** | Width of the divergence connecting lines in pixels. | 1 |
+| **symbolSize** | Size of the divergence marker symbol in pixels. | 10 |
+| **bullishColor** | Color for bullish divergence markers and lines. | #22c55e |
+| **bearishColor** | Color for bearish divergence markers and lines. | #ef4444 |
+
+## Alert Rules
+
+| Event | Fires When |
+|-------|-----------|
+| **new_divergence** | A new multi-factor divergence is confirmed. The alert includes the direction, the price level of both swing points, and the bar timestamp. |
+
+Orderflows Divergence alerts fire less frequently than single-metric divergence alerts, making them suitable for notification-based workflows where you want to be alerted only to high-conviction setups.
+
+## Comparison with Other Divergence Indicators
+
+Cluster Terminal includes three divergence indicators. Each serves a different purpose:
+
+| Aspect | Delta Divergence | CVD Divergence | Orderflows Divergence |
+|--------|-----------------|----------------|----------------------|
+| **Input** | Single candle delta vs. price | Cumulative delta vs. price | Multiple order flow factors vs. price |
+| **Scope** | One bar | Multi-bar trend | Multi-bar structure |
+| **Signal frequency** | High | Medium | Low |
+| **False positive rate** | Higher | Medium | Lower |
+| **Best for** | Tactical entry timing | Trend exhaustion | Structural turning points |
+| **Confirmation delay** | Minimal | Moderate (fractal) | Moderate (extremum + multi-factor) |
+
+### When to Use Which
+
+- **Scalping**: Delta Divergence for quick entry signals at known levels.
+- **Intraday swing**: CVD Divergence for identifying when intraday trends are losing steam.
+- **Swing / position**: Orderflows Divergence for high-conviction structural reversals.
+
+All three can be enabled simultaneously. When they all agree at the same price level, the confluence is exceptionally strong.
+
+## Practical Usage
+
+### Best Timeframes
+
+| Timeframe | Suitability | Notes |
+|-----------|-------------|-------|
+| **1m - 5m** | Moderate | Signals are rare due to multi-factor requirements. Use for confirmation only. |
+| **15m - 1h** | Excellent | Ideal for intraday swing setups. Enough data for meaningful factor analysis. |
+| **4h - 1d** | Excellent | Strong structural signals for multi-day position entries. |
+
+### Confluence Setups
+
+Orderflows Divergence produces the most reliable signals when it aligns with:
+
+- **Established support/resistance**: Divergence at a level that has been tested multiple times adds order flow evidence to a proven price level.
+- **Volume Profile POC / Value Area**: Divergence at the Point of Control or the boundary of the Value Area suggests that the market's fair value assessment is shifting.
+- **Absorption Alpha**: When multi-factor divergence coincides with visible absorption at the swing point, institutional activity is confirmed from two independent angles.
+- **Session levels**: Divergence at the previous session high, low, or close carries additional weight because these levels are widely watched by market participants.
+
+### Parameter Tuning
+
+- **Conservative (fewer signals, higher quality)**: Increase `lookbackPeriod` to 80, `localExtremumPeriod` to 5, and `minDistanceBetweenSignals` to 10. This configuration only fires at major structural turning points.
+- **Moderate (balanced)**: Use defaults. Suitable for most intraday swing trading scenarios.
+- **Aggressive (more signals)**: Reduce `lookbackPeriod` to 30, `localExtremumPeriod` to 2, and `minDistanceBetweenSignals` to 3. Produces more signals but with a higher noise ratio.
+
+<Tip>
+Orderflows Divergence is stronger than single-metric divergences because it requires agreement across multiple order flow dimensions. However, this also means it fires less often. Use it as a structural filter: when it signals, pay close attention. When it does not, rely on other indicators for tactical entries.
+</Tip>
+
+{/* screenshot: orderflows divergence bullish signal at a significant multi-day low with previous swing low connected by line */}

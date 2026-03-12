@@ -1,0 +1,116 @@
+---
+title: "Workspaces"
+description: "Create, manage, and organize multiple trading workspaces."
+icon: "folder-open"
+---
+
+# Workspaces
+
+Workspaces are isolated trading environments. Each workspace stores its own charts, indicators, drawings, layout configuration, and settings. Switch between workspaces to move between different trading setups instantly.
+
+{/* screenshot: workspace selector dropdown */}
+
+## What a Workspace Contains
+
+Each workspace is a self-contained environment that remembers:
+
+| Component | Description |
+|-----------|-------------|
+| **Charts** | Symbol, exchange, timeframe, and chart type (candlestick, cluster, TPO, heatmap) |
+| **Indicators** | All added indicators with their individual settings |
+| **Drawings** | Trendlines, horizontal lines, rectangles, Fibonacci tools, and other annotations |
+| **Layout** | Tab arrangement, pane splits, and sizing |
+| **Alerts** | Price alerts attached to drawing tools |
+
+<Tip>
+  Use separate workspaces for different trading strategies or market conditions. For example, one workspace for scalping BTC on 1m clusters and another for swing trading altcoins on 4h candles.
+</Tip>
+
+## Creating a Workspace
+
+<Steps>
+  <Step title="Open the workspace dialog">
+    Click the workspace name in the top-left corner of the application, or use the workspace icon in the header bar.
+  </Step>
+  <Step title="Click Create New">
+    In the workspace dialog, click the **Create New** button at the bottom.
+  </Step>
+  <Step title="Configure the workspace">
+    Enter a name for the workspace. The default symbol (BTCUSDT), exchange (Binance Futures), and timeframe (1m) can be changed after creation from within the chart.
+  </Step>
+  <Step title="Confirm">
+    Click **Create**. The new workspace opens immediately with a single chart pane.
+  </Step>
+</Steps>
+
+{/* screenshot: create workspace dialog */}
+
+## Managing Workspaces
+
+### Switching Between Workspaces
+
+Click the workspace name in the header bar to open the workspace dialog. All your workspaces are listed with their last-modified timestamps. Click any workspace to switch to it.
+
+### Renaming a Workspace
+
+1. Open the workspace dialog.
+2. Hover over the workspace you want to rename.
+3. Click the **edit** (pencil) icon.
+4. Enter the new name and confirm.
+
+### Duplicating a Workspace
+
+Duplicating creates an exact copy of a workspace, including all charts, indicators, drawings, and layout settings.
+
+1. Open the workspace dialog.
+2. Hover over the workspace you want to duplicate.
+3. Click the **copy** icon.
+4. A new workspace is created with the suffix "(Copy)" appended to the name.
+
+<Note>
+  Duplicating is useful when you want to experiment with a different indicator setup without losing your current configuration.
+</Note>
+
+### Deleting a Workspace
+
+1. Open the workspace dialog.
+2. Hover over the workspace you want to delete.
+3. Click the **delete** (trash) icon.
+4. Confirm the deletion in the popup.
+
+<Warning>
+  Deleting a workspace is permanent. If cloud sync is enabled, the workspace will also be removed from the cloud on the next sync cycle. There is no undo.
+</Warning>
+
+## Workspace Storage
+
+Workspaces are stored locally in the application data directory managed by Tauri. Each workspace is saved automatically whenever you make changes -- there is no manual save button.
+
+### Cloud Sync
+
+If your license includes the **cloud_sync** feature, workspaces are automatically synchronized to the server. See [Cloud Sync](/en/workspace/cloud-sync) for details.
+
+The workspace dialog shows sync status badges next to each workspace:
+
+| Badge | Meaning |
+|-------|---------|
+| **Cloud icon** | Synced and up to date |
+| **Upload arrow** | Local changes pending upload |
+| **No badge** | Local only (no cloud sync) |
+
+A **Sync Now** button in the workspace dialog lets you trigger an immediate sync instead of waiting for the automatic 5-minute cycle.
+
+## Best Practices
+
+<Tip>
+  **Organize by strategy.** Create dedicated workspaces for each trading strategy: "BTC Scalp 1m", "ETH Swing 4h", "Altcoin Scanner". This keeps each setup clean and focused.
+</Tip>
+
+- **Name workspaces descriptively** -- include the symbol and timeframe in the name for quick identification.
+- **Duplicate before experimenting** -- copy a workspace before making major changes to indicators or layout.
+- **Use multiple tabs** within a workspace for correlated analysis (e.g., BTC + ETH + total OI on one screen). See [Tabs & Layouts](/en/workspace/tabs-layouts).
+- **Enable cloud sync** if you work on multiple machines so your workspaces follow you automatically.
+
+## Limits
+
+There is no hard limit on the number of workspaces you can create. However, each workspace with many indicators and deep drawing history will consume more memory. If you notice performance degradation, consider consolidating rarely-used workspaces.

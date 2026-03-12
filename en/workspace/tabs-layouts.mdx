@@ -1,0 +1,153 @@
+---
+title: "Tabs & Layouts"
+description: "Split screen with multiple chart panes and tabs."
+icon: "table-columns"
+---
+
+# Tabs & Layouts
+
+Cluster Terminal supports multi-pane layouts within each workspace. You can view multiple symbols, timeframes, or chart types side by side using tabs and split panes.
+
+{/* screenshot: split layout with 4 panes showing different symbols */}
+
+## Tabs
+
+Tabs are separate chart views within a single workspace. Each tab can display a completely independent chart configuration.
+
+### What Each Tab Contains
+
+Every tab has its own:
+
+- **Symbol and exchange** (e.g., BTCUSDT on Binance Futures)
+- **Timeframe** (1m, 5m, 15m, 1h, 4h, 1D, 1W, 1M)
+- **Chart type** (Candlestick, Cluster/Footprint, TPO, Heatmap)
+- **Indicators** with individual settings
+- **Drawing annotations**
+
+### Creating a Tab
+
+<Steps>
+  <Step title="Click the + button">
+    Click the **+** icon next to the existing tab headers at the top of a pane.
+  </Step>
+  <Step title="Configure the chart">
+    The new tab opens with the default symbol and timeframe. Change them using the symbol selector and timeframe bar in the toolbar.
+  </Step>
+</Steps>
+
+### Renaming a Tab
+
+Double-click the tab header to enter edit mode. Type the new name and press **Enter** to confirm, or **Escape** to cancel.
+
+<Tip>
+  Name your tabs with the symbol and timeframe for quick identification, e.g., "BTC 1m", "ETH 4h", "SOL Cluster".
+</Tip>
+
+### Reordering Tabs
+
+Drag and drop tab headers to reorder them within the same pane. The tab order is preserved when you switch workspaces or restart the application.
+
+### Closing a Tab
+
+Click the **x** icon on the tab header to close it. If the tab is the last one in a pane, the pane itself will be removed.
+
+<Warning>
+  Closing a tab removes all its charts, indicators, and drawings from the workspace. This action cannot be undone.
+</Warning>
+
+## Split Layouts
+
+Split layouts let you divide the workspace area into multiple panes, each containing its own set of tabs.
+
+### Split Directions
+
+| Layout | Description | Use Case |
+|--------|-------------|----------|
+| **Horizontal split** | Panes stacked top and bottom | Compare same symbol on two timeframes |
+| **Vertical split** | Panes side by side | Watch correlated symbols simultaneously |
+| **Grid** | 2x2 or custom grid | Multi-symbol dashboard |
+
+{/* screenshot: horizontal split showing BTC 1m on top and BTC 1h on bottom */}
+
+### Creating a Split
+
+<Steps>
+  <Step title="Open the layout menu">
+    Right-click on a tab header or use the layout button in the toolbar to access split options.
+  </Step>
+  <Step title="Choose split direction">
+    Select **Split Right**, **Split Down**, or drag the tab to a drop zone indicator that appears at the edges of existing panes.
+  </Step>
+  <Step title="Configure the new pane">
+    The new pane opens with a default chart. Set the symbol, timeframe, and chart type as needed.
+  </Step>
+</Steps>
+
+### Resizing Panes
+
+Drag the divider between panes to resize them. The cursor changes to a resize handle when hovering over the divider.
+
+- **Horizontal dividers** adjust the height of top/bottom panes.
+- **Vertical dividers** adjust the width of left/right panes.
+
+Pane sizes are saved as part of the workspace and restored on next load.
+
+### Moving Tabs Between Panes
+
+Drag a tab header from one pane and drop it onto another pane's tab bar to move it. This is useful for reorganizing your layout without recreating charts.
+
+### Removing a Pane
+
+Close all tabs in a pane to remove it. The remaining panes automatically resize to fill the available space.
+
+## Layout Examples
+
+### Scalping Setup (2 panes)
+
+A vertical split with:
+- **Left pane**: BTCUSDT 1m cluster chart with absorption alpha and stacked imbalances
+- **Right pane**: BTCUSDT DOM (Depth of Market) or order book heatmap
+
+### Multi-Timeframe Analysis (3 panes)
+
+A layout with one large pane on the left and two stacked panes on the right:
+- **Left (large)**: ETHUSDT 5m cluster chart (primary analysis)
+- **Top right**: ETHUSDT 1h candlestick (trend context)
+- **Bottom right**: ETHUSDT 1m for entry timing
+
+### Correlation Dashboard (4 panes)
+
+A 2x2 grid showing:
+- **Top left**: BTCUSDT 15m
+- **Top right**: ETHUSDT 15m
+- **Bottom left**: SOLUSDT 15m
+- **Bottom right**: BTC Dominance or other macro indicator
+
+<Tip>
+  For correlation analysis, set all panes to the same timeframe so candle timestamps align visually across charts.
+</Tip>
+
+## Performance Considerations
+
+Each pane runs its own WebGL chart renderer and WebSocket subscriptions. Adding more panes increases memory and CPU usage.
+
+| Panes | Typical RAM | Recommended |
+|-------|-------------|-------------|
+| 1-2 | Under 1 GB | All systems |
+| 3-4 | 1-2 GB | 8 GB+ RAM |
+| 5-6 | 2-3 GB | 16 GB+ RAM |
+
+<Note>
+  If you experience lag with many panes open, try reducing the number of indicators per chart or closing panes you are not actively using.
+</Note>
+
+## Keyboard Navigation
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl + T` | New tab in current pane |
+| `Ctrl + W` | Close current tab |
+| `Ctrl + Tab` | Next tab |
+| `Ctrl + Shift + Tab` | Previous tab |
+
+See [Keyboard Shortcuts](/en/advanced/hotkeys) for the full list.

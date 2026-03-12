@@ -1,0 +1,94 @@
+---
+title: "Average Order Size"
+description: "Mean size of market orders — detects institutional vs retail activity."
+icon: "ruler"
+---
+
+## Overview
+
+Average Order Size calculates the mean volume per trade for each bar:
+
+```
+Average Order Size = Total Volume / Number of Trades
+```
+
+Rising average order size indicates larger players are entering the market. Falling average order size suggests retail-dominated, small-order activity.
+
+{/* screenshot: Average Order Size subchart with yellow histogram bars */}
+
+## How It Works
+
+Every trade on the exchange has a size. By computing the average across all trades in a bar, this indicator reveals the **character** of the current market activity:
+
+- **Large average** — Institutional or whale activity. Fewer, bigger orders.
+- **Small average** — Retail activity. Many small orders.
+- **Spike from low to high** — Sudden entry of a large participant.
+- **Gradual decline** — Institutional interest fading, retail taking over.
+
+This is one of the most direct ways to detect when "smart money" enters or exits a market.
+
+<Tip>
+A sudden increase in average order size at a key support or resistance level often signals institutional interest. These levels are more likely to hold when backed by large orders.
+</Tip>
+
+## Interpretation
+
+| Pattern | Meaning |
+|---------|---------|
+| Rising average + rising price | Institutions buying — strong trend |
+| Rising average + falling price | Institutions selling — strong downtrend |
+| Falling average + rising price | Retail FOMO — weakening rally |
+| Falling average + falling price | Retail panic — capitulation may be near |
+| Spike at support | Institutional bid — level likely to hold |
+| Spike at resistance | Institutional offer — level likely to hold |
+
+## Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `color` | Primary indicator color | `#eab308` |
+| `displayMode` | Visualization style: `line`, `columns`, or `candles` | `columns` |
+| `highlightAnomalies` | Highlight unusually large average orders | `true` |
+| `anomalyThreshold` | Standard deviations for anomaly detection | `2.5` |
+| `anomalyPeriod` | Lookback period for anomaly calculation | `30` |
+| `gradientIntensity` | Scale bar opacity by magnitude | `true` |
+
+## Display Modes
+
+- **Columns** — Default histogram in yellow. Bar height represents the average order size.
+- **Line** — Continuous line. Effective for spotting trends in order size over time.
+- **Candles** — OHLC rendering showing the range of average sizes within each bar.
+
+## Anomaly Detection
+
+When `highlightAnomalies` is enabled, bars where average order size exceeds `anomalyThreshold` standard deviations above the rolling mean are highlighted. These events indicate:
+
+- Large block trades hitting the market
+- Institutional algorithms executing large orders
+- Market maker inventory adjustments
+- OTC desk hedging activity
+
+## Gradient Intensity
+
+With `gradientIntensity` enabled, bars with smaller-than-average order sizes appear faded while above-average bars appear at full opacity. This naturally draws attention to institutional activity.
+
+<Note>
+Average Order Size varies significantly between assets. BTCUSDT will have very different baseline values than a small-cap altcoin. The anomaly detection normalizes for this, but absolute values should be compared within the same symbol only.
+</Note>
+
+## Practical Examples
+
+**Accumulation Phase**: Price trades sideways in a narrow range. Average Order Size gradually increases over several hours — an institution is accumulating without tipping off the market.
+
+**Retail Blow-Off Top**: Price accelerates upward sharply. Average Order Size collapses to very low levels — the move is entirely driven by small retail orders. This is a classic blow-off top signal.
+
+**Institutional Defense of Level**: Price drops to a key support level. Average Order Size spikes dramatically on the bounce — a large buyer stepped in. The support is more credible.
+
+**Fading Institutional Interest**: After a strong trend move, Average Order Size declines bar after bar. The large players who initiated the move are stepping back — the trend may be exhausting.
+
+## Related Indicators
+
+- [Whale vs Retail](/en/indicators/metrics/whale-vs-retail) — Explicit large vs small order segmentation
+- [Trade Count Ratio](/en/indicators/metrics/trade-count-ratio) — Number of trades directional analysis
+- [Volume Ratio](/en/indicators/metrics/volume-ratio) — Directional volume imbalance
+- [Participation Ratio](/en/indicators/metrics/participation-ratio) — Overall activity level
