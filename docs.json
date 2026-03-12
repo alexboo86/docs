@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Cluster Terminal",
+  "name": "InCrypto Cluster Terminal",
   "colors": {
     "primary": "#10b981",
     "light": "#34d399",
@@ -164,12 +164,7 @@
             "pages": [
               "support/faq",
               "support/troubleshooting",
-              "support/feedback"
-            ]
-          },
-          {
-            "group": "",
-            "pages": [
+              "support/feedback",
               "changelog"
             ]
           }
@@ -305,12 +300,7 @@
             "pages": [
               "en/support/faq",
               "en/support/troubleshooting",
-              "en/support/feedback"
-            ]
-          },
-          {
-            "group": "",
-            "pages": [
+              "en/support/feedback",
               "en/changelog"
             ]
           }
