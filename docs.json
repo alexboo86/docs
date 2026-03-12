@@ -159,6 +159,12 @@
               "ru/support/troubleshooting",
               "ru/support/feedback"
             ]
+          },
+          {
+            "group": "",
+            "pages": [
+              "ru/changelog"
+            ]
           }
         ]
       },
@@ -293,6 +299,12 @@
               "en/support/faq",
               "en/support/troubleshooting",
               "en/support/feedback"
+            ]
+          },
+          {
+            "group": "",
+            "pages": [
+              "en/changelog"
             ]
           }
         ]
