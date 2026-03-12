@@ -8,7 +8,7 @@ Cluster charts (also called footprint charts) are the primary analytical tool in
 
 ## How Clusters Work
 
-Every trade executed on Binance Futures is classified as either a **buy** (aggressor lifted the ask) or a **sell** (aggressor hit the bid). The server aggregates these trades by price level within each candle period and transmits them as cluster data.
+Every trade executed on Binance Futures or Spot is classified as either a **buy** (aggressor lifted the ask) or a **sell** (aggressor hit the bid). The server aggregates these trades by price level within each candle period and transmits them as cluster data.
 
 Each horizontal row in a cluster candle represents a single price level (or group of levels, depending on the tick size). The data available at each level includes:
 
@@ -101,7 +101,7 @@ For example, if BTCUSDT has a minimum price increment of $0.10 and the tick size
 
 ### Auto-Detection
 
-Cluster Terminal automatically detects the appropriate tick size for each symbol based on the exchange API. For BTCUSDT on Binance Futures, the default is typically 1 tick ($0.10). For lower-priced altcoins, the default adjusts accordingly.
+Cluster Terminal automatically detects the appropriate tick size for each symbol based on the exchange API. For BTCUSDT on Binance Futures or Spot, the default is typically 1 tick ($0.10). For lower-priced altcoins, the default adjusts accordingly.
 
 ### Manual Override
 
