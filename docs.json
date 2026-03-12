@@ -8,7 +8,9 @@
     "dark": "#059669"
   },
   "favicon": "favicon.svg",
-  "appearance": "dark",
+  "appearance": {
+    "default": "dark"
+  },
   "navbar": {
     "links": [
       { "label": "Community", "href": "https://t.me/alexboo_chat" },
