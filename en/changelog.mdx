@@ -10,6 +10,17 @@ All notable user-facing changes to Cluster Terminal are documented here.
 
 ---
 
+## 0.3.6
+
+### Bug Fixes
+
+- **Cluster data flickering** — eliminated candle data flickering/jumping caused by REST and WS data fighting. Removed WS Open correction and cluster H/L expansion ratchet that caused one-way drift.
+- **2x volume in forming candle** — fixed double-counting where raw trade volumes were added on top of REST volume profile during the first ~10 seconds after load.
+- **Trade counts** — corrected trade counting to match industry standard (1 per aggTrade). Previously used individual fill decomposition which inflated numbers vs other platforms (TigerX, ATAS, ExoCharts).
+- **Heatmap stability** — added referential stability check to prevent unnecessary full data replacements on periodic refetches.
+
+---
+
 ## 0.3.0
 
 ### New Indicators
