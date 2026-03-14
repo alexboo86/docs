@@ -10,6 +10,33 @@ All notable user-facing changes to Cluster Terminal are documented here.
 
 ---
 
+## 0.3.14
+
+### Improvements
+
+- **HD Heatmap** — doubled heatmap resolution (~$10.5 price step for BTC instead of ~$21). Order book depth visualization is now significantly more detailed.
+- **Heatmap stability** — eliminated "checkerboard" artifacts where heatmap blocks jumped between snapshots. Price granularity and range are now cached and stabilized.
+- **Server switcher** — quick server selector in the header bar. Switch between Finland (FIN1) and Russia (RU1) data servers on the fly, or enter a custom server URL.
+- **TPO settings localization** — all TPO (Market Profile) settings are now fully translated in Russian locale.
+- **Chart theme system** — 160+ chart color themes including cryptocurrency-inspired (Bitcoin, Ethereum, Solana, BNB, XRP, Cardano, Dogecoin, Toncoin, Avalanche, Chainlink) and gaming-inspired (Valorant, GTA, Cyberpunk 2077) themes, each in dark and light variants.
+- **SciChart license** — removed evaluation watermark from all charts.
+
+### Changes
+
+- **Indicator glow disabled by default** — the premium glow effect on all indicators is now off by default. Enable it per indicator in settings if desired.
+- **History limit reduced** — maximum history depth changed from 730 to 365 days for optimal performance.
+- **Enhanced Liquidations simplified** — removed line and candle display modes; columns is the only display mode (most appropriate for liquidation data).
+
+### Removals
+
+- **Old Liquidations indicator removed** — the legacy "Liquidations" indicator has been removed. Use **Enhanced Liquidations** instead, which provides richer visualization with buy/sell breakdown and volume scaling.
+
+### Bug Fixes
+
+- **Minor tick marks removed** — eliminated barely-visible tick marks from all chart axes for a cleaner look.
+
+---
+
 ## 0.3.6
 
 ### Bug Fixes

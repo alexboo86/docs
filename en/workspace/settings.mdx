@@ -14,18 +14,34 @@ Open Settings from the gear icon in the header bar, or press `Ctrl + ,`.
 
 ## Server Connection
 
-The server URL determines where Cluster Terminal fetches all market data (candles, clusters, open interest) and connects for real-time WebSocket streaming.
+Cluster Terminal connects to a data server for all market data (candles, clusters, open interest) and real-time WebSocket streaming.
 
-| Setting | Description | Default |
-|---------|-------------|---------|
-| **Server URL** | Base URL of the Cluster Terminal data server | Set during first launch |
+### Quick Server Switch
+
+The fastest way to switch servers is the **server indicator** in the header bar. Click the connection status label to open the server selector dropdown:
+
+| Server | Location | URL |
+|--------|----------|-----|
+| **FIN1** | Finland (Hetzner) | `https://fin1-strm.incrypto.ru` |
+| **RU1** | Russia | `https://ru1-strm.incrypto.ru` |
+| **Custom** | User-defined | Any URL |
+
+Selecting a server instantly reconnects both REST and WebSocket connections. All open charts reload data from the new server. The selected server persists across app restarts.
+
+<Tip>
+Choose the server closest to your location for lowest latency. Both FIN1 and RU1 maintain identical data — switching servers does not affect your history or analysis.
+</Tip>
+
+### Manual Server URL
+
+For advanced setups (self-hosted servers, custom ports), use the Settings panel:
 
 <Steps>
   <Step title="Open Settings">
     Click the gear icon or press `Ctrl + ,`.
   </Step>
-  <Step title="Edit Server URL">
-    In the **Server** section, enter the full URL including protocol and port (e.g., `http://95.216.29.184:8080`).
+  <Step title="Select Custom Server">
+    In the **Server** section, select "Custom" and enter the full URL (e.g., `https://my-server.example.com`).
   </Step>
   <Step title="Test Connection">
     The application automatically tests the connection when you save. A green checkmark indicates success; a red icon indicates the server is unreachable.
@@ -33,7 +49,7 @@ The server URL determines where Cluster Terminal fetches all market data (candle
 </Steps>
 
 <Warning>
-  Changing the server URL disconnects all active WebSocket streams and reloads chart data. Only change this if you are migrating to a different server instance.
+  Changing the server disconnects all active WebSocket streams and reloads chart data from the new server.
 </Warning>
 
 ## Appearance
