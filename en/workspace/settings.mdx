@@ -110,6 +110,66 @@ When enabled, large data requests (especially cluster volumes) are split into da
   Keep progressive loading enabled. It prevents the UI from freezing when loading months of cluster data, especially for high-volume symbols like BTCUSDT.
 </Tip>
 
+## Cache
+
+Manage local data caching to speed up chart loading.
+
+| Setting | Description |
+|---------|-------------|
+| **Persistent cache** | Store fetched data locally in IndexedDB so charts load instantly on next open |
+| **Cache size** | Displays the current number of entries and estimated size in MB |
+| **Clear cache** | Removes all cached data (clusters, volumes, heatmap, OI, archives) from memory and IndexedDB |
+
+When persistent cache is enabled, historical data that has already been fetched is stored locally. The next time you open a chart for the same symbol and timeframe, data loads from the cache instead of fetching from the server.
+
+<Tip>
+If charts show stale or incorrect data, clear the cache and reload. This forces a fresh fetch from the server.
+</Tip>
+
+## Telegram Notifications
+
+Send alert notifications directly to a Telegram chat or channel via a bot.
+
+| Setting | Description |
+|---------|-------------|
+| **Enable Telegram** | Toggle Telegram notification delivery |
+| **Bot token** | Token from [@BotFather](https://t.me/BotFather) |
+| **Chat ID** | Telegram chat or channel ID (e.g., `-1001234567890`) |
+| **Test connection** | Send a test message to verify the setup |
+
+### Notification Filters
+
+Choose which events are forwarded to Telegram:
+
+| Filter | Description |
+|--------|-------------|
+| **Price alerts** | Alerts triggered by drawing tool price levels |
+| **Indicator alerts** | Notifications from indicator alert rules |
+| **Calendar alerts** | Economic calendar event reminders |
+
+<Note>
+The bot must be added to the target chat/channel and have permission to send messages. Use [@userinfobot](https://t.me/userinfobot) to find your chat ID.
+</Note>
+
+## Economic Calendar
+
+Display upcoming macroeconomic events on the chart and receive pre-event notifications.
+
+| Setting | Description |
+|---------|-------------|
+| **Enable calendar** | Toggle the economic calendar feature |
+| **Show on chart** | Display event markers on the time axis |
+| **Minimum impact** | Filter events by importance: High, Medium, or Low |
+| **Countries** | Filter by country or currency (e.g., USD, EUR) |
+| **Alert minutes before** | How many minutes before an event to trigger a notification (0--60) |
+| **JBlanked API key** | Optional API key for accessing past and future week data |
+
+The current week's events are fetched from ForexFactory (free, no key required). To browse past or upcoming weeks, enter a JBlanked API key.
+
+<Tip>
+Set "Minimum impact" to High if you only want to see major events like FOMC, NFP, and CPI releases.
+</Tip>
+
 ## Sound Settings
 
 Configure audio notifications for alerts and system events.
