@@ -10,6 +10,26 @@ All notable user-facing changes to Cluster Terminal are documented here.
 
 ---
 
+## 0.3.18
+
+### Improvements
+
+- **Light theme contrast** — significantly improved contrast and readability across all 3 light themes (Light, Moderate Light, Solarized Light). Borders, text, inputs, and indicator colors rebalanced for visibility.
+- **Telemetry diagnostics** — automatic collection of system info (GPU, DPI, screen, OS) sent to server once per day. Helps diagnose rendering issues like chart detachment from axes.
+- **Bug report enrichment** — the bug report button now copies full system info to clipboard before opening the feedback form.
+
+### Bug Fixes
+
+- **Double crosshair markers** — eliminated duplicate price/time axis markers caused by SciChart native labels rendering alongside custom DOM markers.
+- **Crosshair marker clipping** — fixed orange price marker being cut off by overflow container.
+- **Crosshair marker size instability** — marker no longer changes width as cursor moves. Fixed with `tabular-nums` font rendering and consistent precision formatting.
+- **Y-axis too wide** — reduced unnecessary padding on price axis labels for a tighter layout.
+- **Indicator pills invisible in light themes** — replaced hardcoded `text-emerald-200` with CSS variable colors.
+- **Hardcoded white borders/text** — replaced `border-white/*` and `text-white/*` across 8+ components with theme-aware CSS variables.
+- **Logo invisible in light themes** — added brightness filter for startup screen logo.
+
+---
+
 ## 0.3.16
 
 ### Improvements
