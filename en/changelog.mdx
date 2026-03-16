@@ -10,6 +10,21 @@ All notable user-facing changes to Cluster Terminal are documented here.
 
 ---
 
+## 0.3.24
+
+### Bug Fixes
+
+- **DPI scaling fix** — chart no longer detaches from axes on any display scaling (125%, 150%, 200%, 250%). Crosshair markers now display correctly on all DPI settings. Tested across 100–250% scaling range.
+- **Chart rendering under axis labels** — fixed chart content extending behind price/time axis labels on high-DPI screens.
+
+### Improvements
+
+- **Remote diagnostics** — automatic error/warning collection sent to server for faster issue resolution. No personal data collected.
+- **DevTools in release builds** — F12 now opens developer console in release builds for on-site debugging.
+- **Telemetry improvements** — fixed device fingerprint collisions, improved system info accuracy.
+
+---
+
 ## 0.3.18
 
 ### Improvements
