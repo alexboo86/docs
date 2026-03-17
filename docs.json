@@ -83,7 +83,8 @@
                   "indicators/classic/rsi-divergence",
                   "indicators/classic/macd",
                   "indicators/classic/session-levels",
-                  "indicators/classic/volume-bars"
+                  "indicators/classic/volume-bars",
+                  "indicators/classic/mean-rev-channel"
                 ]
               },
               {

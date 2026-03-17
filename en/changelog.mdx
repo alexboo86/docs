@@ -10,6 +10,64 @@ All notable user-facing changes to Cluster Terminal are documented here.
 
 ---
 
+## 0.3.38
+
+### New Features
+
+- **Ruler Tool** — measure distance between two chart points: bars, time, price, change%, volume, delta, bid/ask. Middle-click activation. Configurable rows, colors, font size, line style.
+- **Mean Reversion Channel** — Ehlers SuperSmoother indicator with 6 filter types, inner/outer bands, gradient zones.
+- **OB Depth Overlay: Gradient Mode** — smooth continuous fill showing orderbook depth dominance with border lines.
+- **Diamond Alert Markers** — redesigned "brilliant-cut gem" geometry with crown, pavilion, facets, highlights, and Double Diamond halo.
+- **DrawSidebar** — permanent drawing tools panel docked to left edge of chart.
+- **Resizable Subcharts** — drag dividers to resize subchart indicator panels; height and order persist in tab config.
+- **Appearance Drawer** — slide-in panel for chart appearance settings (replaces dropdown popup).
+- **Workspace Dialog in Header** — folder icon in global header; export/import config to/from JSON.
+- **App Version in Header** — current version displayed in window header.
+- **Double-Click to Live** — double-click chart to scroll to latest candle + auto-fit Y axis.
+
+### Drawing Tools
+
+- **Head & Shoulders** — reworked to 7 points (Start→LS→Valley(L)→Head→Valley(R)→RS→End) with LS/Head/RS labels and full neck line.
+- **XABCD** — auto-finish at 5 points with anchor circles and smart label placement.
+- **Elliott Wave** — auto-finish at 6 points (0→1→2→3→4→5) with standard wave labels.
+- **Early Finish Protection** — double-click/right-click won't finish H&S, XABCD, Elliott, Quasimodo until required point count is reached.
+
+### DOM (Depth of Market)
+
+- **Bar Style** — 3D (rounded, gradient, shadows) or Flat (minimalist rectangles).
+- **Adaptive Grouping** — tick steps auto-calculated from symbol's real tickSize (1x, 5x, 10x, 25x, etc.).
+- **Seamless Tiling** — DOM bars render from price-halfStep to price+halfStep, eliminating gaps at any zoom.
+
+### Widget Tab
+
+- **Compact Header** — symbol search button + indicators button with active count on one row.
+
+### Bug Fixes
+
+- **1000-prefix symbols (PEPE/BONK/SHIB/FLOKI)** — fixed dead overlay on symbol switch via surface.rendered subscription; server symbol converter restores "1000" prefix.
+- **Candle fetch race condition** — scope-key instead of requestSeqRef; data arriving after symbol/interval change is correctly ignored.
+- **CVD Divergence minDistance** — added i-p > minDist check between divergence endpoints; lastAnyIdx prevents bull/bear signal clustering.
+- **Anchored CVD first load** — delta fallback changed to undefined (not price delta); falls back to vb-vs from klines.
+- **Alerts** — trigger only on crossing, not on first render; fixed crash on tab.alerts = undefined.
+- **tickSize** — fallback on error instead of exception; binancef checked first; precision preserved for small prices.
+- **Auto-retry** — dataCache retries 2x on network/timeout errors.
+- **Candle↔Heatmap switch** — scroll state preserved.
+
+### Server
+
+- **Forming candle** — inline OHLCV aggregation without JSON clone/merge/sort.
+- **WS throttle** — separate throttle: candles 100ms, volumes 300ms; separate TF lists.
+- **Feed** — on_trade without tokio::spawn overhead.
+
+### UI/UX
+
+- All hardcoded border-white/5 → border-[var(--border)].
+- Light themes: improved borders and contrast.
+- Full i18n for IndicatorsOverlay (~200 new localization keys).
+- Anomaly highlighting removed from all subchart indicators (code and settings UI).
+
+---
+
 ## 0.3.24
 
 ### Bug Fixes
