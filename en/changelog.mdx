@@ -10,6 +10,35 @@ All notable user-facing changes to Cluster Terminal are documented here.
 
 ---
 
+## 0.3.42
+
+### New Features
+
+- **SMT Divergence** — new Smart Money Technique indicator. Compares fractals and session levels of two correlated assets (e.g. BTC vs ETH). Two modes: fractal (Williams fractal 3/5) and level (PDH/PDL/PWH/PWL sweep detection). Reference symbol search, configurable lines/dots/styles, second asset price overlay.
+- **Server notifications** — banner with important messages from administration (updates, maintenance).
+- **Server watchdog** — health monitoring script for data servers with auto-restart.
+
+### Workspaces
+
+- **Instant switching** — no reload, direct config swap + connector reconnect.
+- **Theme applies correctly** on workspace switch.
+- **Heatmap slider** preserved in workspace config.
+- **"New workspace"** creates with default config.
+- **Delete confirmation** — custom modal before deletion.
+- **Dialog layout** — wider (720px), balanced columns, shortened labels.
+
+### Alerts
+
+- **Global dedup** — 5 second window between identical indicator alerts.
+- **once_per_bar fixed** — disables after fire, re-enables on new candle.
+- **Cluster alerts** — dedup by candleTime+price (not just price).
+
+### Server
+
+- **WS broadcast optimization** — removed redundant String clones.
+
+---
+
 ## 0.3.38
 
 ### New Features

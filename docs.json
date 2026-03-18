@@ -136,7 +136,8 @@
                 "pages": [
                   "indicators/smc/fvg",
                   "indicators/smc/market-structure",
-                  "indicators/smc/order-blocks"
+                  "indicators/smc/order-blocks",
+                  "indicators/smc/smt-divergence"
                 ]
               },
               {
@@ -274,7 +275,8 @@
                 "pages": [
                   "en/indicators/smc/fvg",
                   "en/indicators/smc/market-structure",
-                  "en/indicators/smc/order-blocks"
+                  "en/indicators/smc/order-blocks",
+                  "en/indicators/smc/smt-divergence"
                 ]
               },
               {

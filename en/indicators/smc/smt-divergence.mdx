@@ -1,0 +1,78 @@
+---
+title: "SMT Divergence"
+description: "Smart Money Technique — compare fractals and levels of two correlated assets to find divergences."
+icon: "code-compare"
+---
+
+SMT (Smart Money Technique) Divergence compares the price structure of two correlated assets (e.g., BTC and ETH). When one asset makes a new extreme but the other fails to confirm — it signals a potential reversal.
+
+## How It Works
+
+Two correlated assets normally move in sync. When synchronization breaks at key swing points — it indicates manipulation or repositioning by institutional players.
+
+**Examples:**
+- BTC makes Higher High, ETH makes Lower High → bearish divergence
+- BTC makes Lower Low, ETH makes Higher Low → bullish divergence
+
+## Modes
+
+### Fractal
+
+Compares Williams fractals (pivot highs/lows) of both assets.
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **Fractal Size** | 3 or 5 candles for pivot detection | 5 |
+| **Adjacent Only** | Show only the most recent signal | No |
+| **Max Distance** | Allowed offset between fractals (bars) | 20 |
+| **Min Divergence %** | Minimum difference to filter noise | 0.1% |
+
+Fractals are matched by time proximity (nearest within ±N bars), not by index — this accounts for pivots forming with slight offsets on different assets.
+
+### Level
+
+Detects session level sweeps: when one asset breaks a previous period level but the other doesn't.
+
+Tracked levels:
+- **PDH / PDL** — Previous Day High / Low
+- **PWH / PWL** — Previous Week High / Low
+- **PMH / PML** — Previous Month High / Low
+
+Sweep high → bearish signal (liquidity grab). Sweep low → bullish signal.
+
+### Both
+
+Combines both modes on a single chart.
+
+## Selecting Reference Symbol
+
+Click the search button next to the symbol name to open the standard symbol search dialog. The selected symbol becomes the reference for comparison.
+
+Recommended pairs:
+- **BTCUSDT → ETHUSDT** — primary crypto pair
+- **BTCUSDT → SOLUSDT** — alternative pair
+- **ETHUSDT → SOLUSDT** — alt-to-alt
+
+## Visualization
+
+| Element | Description |
+|---------|-------------|
+| **Dots** | Markers at divergence points (green = bullish, red = bearish) |
+| **Lines** | Connect previous and current pivot, showing movement direction |
+| **Ref Price Line** | Normalized second asset price overlay (optional) |
+
+## Appearance Settings
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| **Bullish Color** | Color for bullish signals | #22c55e |
+| **Bearish Color** | Color for bearish signals | #ef4444 |
+| **Dot Size** | Divergence marker size | 8 |
+| **Line Width** | Connecting line thickness | 2 |
+| **Line Style** | Solid / Dash / Dot | Dash |
+| **Show Labels** | Text labels (HH vs LH etc.) | Yes |
+| **Ref Price Line** | Second asset price overlay | No |
+
+## Alerts
+
+Standard alert modes are supported. Notifications include a description of the divergence (e.g., "BTC HH vs ETH LH" or "PDH sweep").
