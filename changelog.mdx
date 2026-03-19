@@ -10,6 +10,19 @@ icon: "clock-rotate-left"
 
 ---
 
+## 0.3.43
+
+### Оптимизация производительности
+
+- **LOD (Level of Detail)** — пропуск кластерных ячеек < 3px, текста < 14px, упрощённый рендер свечей < 3px
+- **Color batching** — группировка элементов по цвету: 2 вызова fillStyle вместо N
+- **Path2D batching** — все фитили одного цвета → один stroke()
+- **Annotation LOD** — скрытие OB boxes, MS lines, zigzag при размере < 3px
+- **Canvas state** — минимизация переключений font/textAlign в циклах отрисовки
+- Оптимизации применены ко всем 6 Canvas overlay: свечи, кластеры, TPO, Volume Profile, DOM, Economic Calendar
+
+---
+
 ## 0.3.42
 
 ### Новые возможности
